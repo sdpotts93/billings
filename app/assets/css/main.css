@@ -1,6 +1,89 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
+/* Homepage-first theme tokens: edit these lines for global style changes */
+:root {
+  --theme-font-title: 'Public Sans', sans-serif;
+  --theme-font-text: 'Public Sans', sans-serif;
+
+  --theme-font-size-caption: 0.62rem;
+  --theme-font-size-caption-plus: 0.66rem;
+  --theme-font-size-xs: 0.7rem;
+  --theme-font-size-note: 0.73rem;
+  --theme-font-size-note-plus: 0.74rem;
+  --theme-font-size-label: 0.72rem;
+  --theme-font-size-sm: 0.75rem;
+  --theme-font-size-sm-plus: 0.78rem;
+  --theme-font-size-btn: 0.8rem;
+  --theme-font-size-md: 0.82rem;
+  --theme-font-size-md-plus: 0.84rem;
+  --theme-font-size-body: 0.86rem;
+  --theme-font-size-body-lg: 0.95rem;
+  --theme-font-size-brand: 1rem;
+  --theme-font-size-mobile-cta: 0.9rem;
+  --theme-font-size-quote-mark: 3.9rem;
+  --theme-font-size-panel-title: 1.4rem;
+  --theme-font-size-hero-xl: clamp(2rem, 6.2vw, 4rem);
+  --theme-font-size-hero-lg: clamp(2rem, 5vw, 3.8rem);
+  --theme-font-size-hero-mobile: clamp(1.9rem, 9vw, 2.7rem);
+  --theme-font-size-heading-lg: clamp(1.9rem, 3.7vw, 3rem);
+  --theme-font-size-heading-md: clamp(1.8rem, 4.2vw, 3rem);
+  --theme-font-size-display-md: clamp(1.6rem, 2.7vw, 2.5rem);
+  --theme-font-size-display-lg: clamp(2.1rem, 4vw, 3rem);
+  --theme-font-size-display-xl: clamp(2.4rem, 5.4vw, 4rem);
+  --theme-font-size-card-title: clamp(0.96rem, 1.6vw, 1.15rem);
+  --theme-font-size-quote: clamp(1.05rem, 2.2vw, 1.55rem);
+
+  --theme-color-bg: #f6f5f7;
+  --theme-color-bg-glow-1: #f8f2ed;
+  --theme-color-bg-glow-2: #f3f7ff;
+  --theme-color-surface: #ffffff;
+  --theme-color-text: #1f1843;
+  --theme-color-muted: #68617f;
+  --theme-color-muted-2: #585373;
+  --theme-color-muted-3: #4f486d;
+  --theme-color-muted-4: #908aa8;
+  --theme-color-muted-5: #85809f;
+  --theme-color-muted-6: #4c4667;
+  --theme-color-muted-7: #76708f;
+  --theme-color-muted-8: #928ca8;
+  --theme-color-muted-9: #474260;
+  --theme-color-muted-10: #6d6788;
+  --theme-color-muted-11: #746f8f;
+  --theme-color-muted-12: #3f395c;
+  --theme-color-muted-13: #8d868f;
+  --theme-color-muted-14: #8a848d;
+  --theme-color-muted-15: #69636d;
+  --theme-color-muted-16: #4f4a53;
+  --theme-color-muted-17: #7e7881;
+  --theme-color-muted-18: #5e5862;
+  --theme-color-line: #ece6ef;
+  --theme-color-line-soft: #f0ebf2;
+  --theme-color-line-strong: #d8cfc9;
+  --theme-color-line-photo: #efe8e5;
+  --theme-color-accent: #3f2bce;
+  --theme-color-accent-contrast: #ffffff;
+  --theme-color-quote: #d9d1cb;
+  --theme-color-strong-surface: #2e235f;
+  --theme-color-brand-soft: #3d3467;
+  --theme-color-link-soft: #50467a;
+  --theme-color-notice-bg: #fff4ef;
+  --theme-color-notice-text: #b7522d;
+  --theme-color-mobile-close-bg: #f3ece9;
+
+  --theme-card-tone-1: #f2c593;
+  --theme-card-tone-2: #9ce5dd;
+  --theme-card-tone-3: #d7cdfa;
+  --theme-card-tone-4: #f5d0ac;
+  --theme-card-tone-5: #a9ddd6;
+
+  --theme-story-accent-1: #ff6a3d;
+  --theme-story-accent-2: #1d78ff;
+  --theme-story-accent-3: #0b9965;
+  --theme-story-accent-4: #f08a00;
+  --theme-story-accent-5: #6a56d9;
+}
+
 @theme static {
   --font-sans: 'Public Sans', sans-serif;
 

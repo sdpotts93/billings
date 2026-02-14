@@ -11,11 +11,31 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  ui: {
+    experimental: {
+      componentDetection: true
+    },
+    fonts: false,
+    colorMode: false
+  },
+
   routeRules: {
-    '/': { prerender: true }
+    '/': { prerender: true },
+    '/share-your-story': { prerender: true },
+    '/share-your-story/': { prerender: true },
+    '/resources': { prerender: true },
+    '/resources/': { prerender: true },
+    '/behind-the-scenes': { prerender: true },
+    '/behind-the-scenes/': { prerender: true }
   },
 
   compatibilityDate: '2025-01-15',
+
+  nitro: {
+    prerender: {
+      routes: ['/', '/share-your-story', '/share-your-story/', '/resources', '/resources/', '/behind-the-scenes', '/behind-the-scenes/']
+    }
+  },
 
   eslint: {
     config: {
