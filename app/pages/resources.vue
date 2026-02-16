@@ -1768,7 +1768,10 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
       </section>
 
       <div class="page-shell">
-        <section class="help-now content-section section-help">
+        <section
+          id="help-now"
+          class="help-now content-section section-help"
+        >
           <h2>Help now</h2>
           <p>Use one of these first if you need immediate support.</p>
           <div class="help-now-grid">
@@ -1816,7 +1819,10 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           </div>
         </section>
 
-        <section class="cf-spotlight content-section section-cf">
+        <section
+          id="cf-quick-guide"
+          class="cf-spotlight content-section section-cf"
+        >
           <h2 class="title-with-icon">
             Cystic fibrosis quick guide
           </h2>
@@ -1976,7 +1982,10 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           </div>
         </section>
 
-        <section class="docs-library content-section section-docs">
+        <section
+          id="docs-library"
+          class="docs-library content-section section-docs"
+        >
           <p class="section-label section-label--with-icon">
             <UIcon
               name="i-lucide-book-open"
@@ -2081,7 +2090,10 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           </div>
         </section>
 
-        <section class="help-directory content-section section-directory">
+        <section
+          id="help-directory"
+          class="help-directory content-section section-directory"
+        >
           <p class="section-label section-label--with-icon">
             <UIcon
               name="i-lucide-link-2"
@@ -2166,7 +2178,10 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           </div>
         </section>
 
-        <section class="call-script-section content-section section-script">
+        <section
+          id="call-script"
+          class="call-script-section content-section section-script"
+        >
           <p class="section-label section-label--with-icon">
             <UIcon
               name="i-lucide-phone-call"

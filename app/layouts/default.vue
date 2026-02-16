@@ -9,15 +9,43 @@ const navLinks = [
   { label: 'About', to: '/about-the-film' }
 ]
 
-const footerLinks = [
+const sitemapLinks = [
+  { label: 'Home', to: '/' },
+  { label: 'Community', to: '/share-your-story' },
   { label: 'Resources', to: '/resources' },
-  { label: 'Privacy', to: '/resources#faq' },
-  { label: 'Terms', to: '/resources#faq' },
-  { label: 'Contact', to: '/resources#faq' }
+  { label: 'Behind the Scenes', to: '/behind-the-scenes' },
+  { label: 'About', to: '/about-the-film' }
+]
+
+const socialLinks = [
+  { label: 'Instagram', href: 'https://www.instagram.com' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com' },
+  { label: 'Behance', href: 'https://www.behance.net' }
+]
+
+const resourceColumns = [
+  {
+    title: 'Support',
+    links: [
+      { label: 'Help now', to: '/resources#help-now' },
+      { label: 'CF guide', to: '/resources#cf-quick-guide' },
+      { label: 'Conditions', to: '/resources#conditions-section' }
+    ]
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Docs', to: '/resources#docs-library' },
+      { label: 'Directory', to: '/resources#help-directory' },
+      { label: 'Call script', to: '/resources#call-script' },
+      { label: 'FAQ', to: '/resources#faq' }
+    ]
+  }
 ]
 
 const headerEl = ref<HTMLElement | null>(null)
 const headerHeight = ref(69)
+const currentYear = new Date().getFullYear()
 const route = useRoute()
 const isResourcesRoute = computed(() => route.path === '/resources' || route.path.startsWith('/resources/'))
 
@@ -35,6 +63,14 @@ const syncHeaderHeight = () => {
   }
 
   headerHeight.value = Math.ceil(headerEl.value.getBoundingClientRect().height)
+}
+
+const scrollToTop = () => {
+  if (!import.meta.client) {
+    return
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 onMounted(() => {
@@ -98,21 +134,76 @@ onBeforeUnmount(() => {
 
     <footer class="site-footer">
       <div class="layout-shell footer-shell">
-        <NuxtLink
-          to="/"
-          class="brand footer-brand"
-        >
-          billings
-        </NuxtLink>
+        <div class="footer-top">
+          <div class="footer-column">
+            <h3>Sitemap</h3>
+            <ul>
+              <li
+                v-for="item in sitemapLinks"
+                :key="item.label"
+              >
+                <NuxtLink :to="item.to">
+                  {{ item.label }}
+                </NuxtLink>
+              </li>
+            </ul>
+          </div>
 
-        <div class="footer-links">
-          <NuxtLink
-            v-for="item in footerLinks"
-            :key="item.label"
-            :to="item.to"
+          <div
+            v-for="column in resourceColumns"
+            :key="column.title"
+            class="footer-column"
           >
-            {{ item.label }}
+            <h3>{{ column.title }}</h3>
+            <ul>
+              <li
+                v-for="item in column.links"
+                :key="item.label"
+              >
+                <NuxtLink :to="item.to">
+                  {{ item.label }}
+                </NuxtLink>
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h3>Socials</h3>
+            <ul>
+              <li
+                v-for="item in socialLinks"
+                :key="item.label"
+              >
+                <a
+                  :href="item.href"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {{ item.label }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <NuxtLink
+            to="/"
+            class="footer-logo"
+          >
+            Billings
           </NuxtLink>
+
+          <div class="footer-meta">
+            <button
+              type="button"
+              class="back-to-top"
+              @click="scrollToTop"
+            >
+              Back to top ↑
+            </button>
+            <p>Copyright © Billings {{ currentYear }}</p>
+          </div>
         </div>
       </div>
     </footer>
@@ -221,38 +312,125 @@ onBeforeUnmount(() => {
 }
 
 .site-footer {
-  border-top: 1px solid var(--line);
-  background: color-mix(in oklab, var(--surface), white 18%);
+  background: #ececec;
 }
 
 .footer-shell {
-  min-height: 64px;
+  position: relative;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-block: 0.75rem;
+  flex-direction: column;
+  gap: clamp(3.8rem, 11vw, 8.6rem);
+  padding-block: clamp(1.4rem, 2.3vw, 2.2rem) clamp(1.6rem, 2.4vw, 2.1rem);
 }
 
-.footer-brand {
-  font-size: var(--fs-sm);
+.footer-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0 24px auto;
+  border-top: 1px solid #d2d2d2;
 }
 
-.footer-links {
+.footer-top {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: clamp(2.5rem, 8vw, 10rem);
+  padding-top: clamp(2.3rem, 4.9vw, 3.5rem);
 }
 
-.footer-links a {
-  color: var(--muted);
+.footer-column {
+  min-width: min(11rem, 100%);
+}
+
+.footer-column h3 {
+  margin: 0;
+  color: #151515;
+  font-size: clamp(0.95rem, 1.3vw, 1.85rem);
+  font-weight: 700;
+}
+
+.footer-column ul {
+  list-style: none;
+  margin: clamp(0.9rem, 1.5vw, 1.3rem) 0 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(0.42rem, 1vw, 0.95rem);
+}
+
+.footer-column a {
+  color: #8b8b8b;
   text-decoration: none;
-  font-size: var(--fs-sm);
+  font-size: clamp(1rem, 1.25vw, 1.75rem);
+}
+
+.footer-column a:hover,
+.footer-column a:focus-visible {
+  color: #111;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+}
+
+.footer-logo {
+  color: #090909;
+  text-decoration: none;
+  font-family: var(--font-text);
+  font-size: clamp(4.5rem, 15.4vw, 15.5rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.footer-meta {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(1.25rem, 4vw, 6rem);
+  padding-bottom: clamp(0.35rem, 1.3vw, 1rem);
+}
+
+.footer-meta p {
+  margin: 0;
+  color: #171717;
+  font-size: clamp(1rem, 1.15vw, 1.6rem);
+}
+
+.back-to-top {
+  border: 0;
+  background: transparent;
+  color: #171717;
+  font: inherit;
+  font-size: clamp(1rem, 1.15vw, 1.6rem);
+  cursor: pointer;
+  padding: 0;
 }
 
 @media (max-width: 1023px) {
   .nav-links {
     display: none;
+  }
+
+  .footer-shell {
+    gap: 3.1rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .footer-meta {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    padding-bottom: 0;
   }
 }
 
@@ -261,16 +439,23 @@ onBeforeUnmount(() => {
     padding-inline: 16px;
   }
 
-  .footer-shell {
-    min-height: 56px;
+  .footer-shell::before {
+    inset-inline: 16px;
   }
 
-  .footer-links {
-    gap: 0.75rem;
+  .footer-top {
+    flex-direction: column;
+    gap: 2.2rem;
+    padding-top: 2rem;
   }
 
-  .footer-links a {
-    font-size: var(--theme-font-size-label);
+  .footer-logo {
+    font-size: clamp(3.4rem, 21vw, 6.8rem);
+  }
+
+  .footer-meta {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 </style>
