@@ -18,9 +18,9 @@ const sitemapLinks = [
 ]
 
 const socialLinks = [
-  { label: 'Instagram', href: 'https://www.instagram.com' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com' },
-  { label: 'Behance', href: 'https://www.behance.net' }
+  { label: 'Instagram', href: 'https://www.instagram.com', icon: 'i-simple-icons-instagram' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com', icon: 'i-simple-icons-linkedin' },
+  { label: 'Facebook', href: 'https://www.facebook.com', icon: 'i-simple-icons-facebook' }
 ]
 
 const resourceColumns = [
@@ -178,8 +178,14 @@ onBeforeUnmount(() => {
                   :href="item.href"
                   target="_blank"
                   rel="noreferrer"
+                  class="social-link"
                 >
-                  {{ item.label }}
+                  <UIcon
+                    :name="item.icon"
+                    class="social-link-icon"
+                    aria-hidden="true"
+                  />
+                  <span>{{ item.label }}</span>
                 </a>
               </li>
             </ul>
@@ -362,6 +368,18 @@ onBeforeUnmount(() => {
   text-decoration: none;
   font-size: var(--theme-font-size-mobile-cta);
   font-family: var(--font-sans);
+}
+
+.footer-column .social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.social-link-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: currentColor;
 }
 
 .footer-column a:hover,
