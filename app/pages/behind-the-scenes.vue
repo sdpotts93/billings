@@ -281,7 +281,7 @@ onBeforeUnmount(() => {
   max-width: 34ch;
   margin-left: calc(25% + (var(--frame-gap) * 0.5));
   margin-right: auto;
-  color: #141414;
+  color: var(--muted);
   font-size: clamp(0.95rem, 1vw, 1.03rem);
   line-height: 1.45;
   letter-spacing: -0.005em;
