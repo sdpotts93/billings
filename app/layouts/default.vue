@@ -2,8 +2,8 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 const navLinks = [
+  { label: 'Home', to: '/' },
   { label: 'Community', to: '/share-your-story' },
-  { label: 'Healthcare Issues', to: '/share-your-story' },
   { label: 'Resources', to: '/resources' },
   { label: 'Behind the Scenes', to: '/behind-the-scenes' },
   { label: 'About', to: '/about-the-film' }
@@ -18,6 +18,15 @@ const footerLinks = [
 
 const headerEl = ref<HTMLElement | null>(null)
 const headerHeight = ref(69)
+const route = useRoute()
+
+const isCurrentRoute = (to: string) => {
+  if (to === '/') {
+    return route.path === '/'
+  }
+
+  return route.path.startsWith(to)
+}
 
 const syncHeaderHeight = () => {
   if (!headerEl.value) {
@@ -59,6 +68,10 @@ onBeforeUnmount(() => {
             v-for="item in navLinks"
             :key="item.label"
             :to="item.to"
+            :class="{ 'is-current': isCurrentRoute(item.to) }"
+            :tabindex="isCurrentRoute(item.to) ? -1 : undefined"
+            :aria-current="isCurrentRoute(item.to) ? 'page' : undefined"
+            @click="isCurrentRoute(item.to) ? $event.preventDefault() : undefined"
           >
             {{ item.label }}
           </NuxtLink>
@@ -135,7 +148,7 @@ onBeforeUnmount(() => {
 .top-nav {
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(4px);
-  background: color-mix(in oklab, var(--surface), white 35%);
+  background: var(--theme-color-bg);
   position: sticky;
   top: 0;
   z-index: 70;
@@ -152,10 +165,12 @@ onBeforeUnmount(() => {
 .brand {
   color: var(--ink);
   text-decoration: none;
-  font-size: var(--fs-brand);
-  font-weight: 800;
+  font-size: 2.5rem;
+  /* font-weight: 800; */
   letter-spacing: -0.02em;
   font-family: var(--font-title);
+  line-height: 1;
+  letter-spacing: 0.009em;
 }
 
 .nav-links {
@@ -167,8 +182,16 @@ onBeforeUnmount(() => {
 .nav-links a {
   color: var(--muted);
   text-decoration: none;
-  font-size: var(--fs-body);
-  font-weight: 600;
+  font-size: var(--fs-brand);
+  font-weight: 400;
+  opacity: 1;
+  transition: opacity 140ms ease;
+}
+
+.nav-links a.is-current {
+  opacity: 0.2;
+  pointer-events: none;
+  cursor: default;
 }
 
 .nav-cta {

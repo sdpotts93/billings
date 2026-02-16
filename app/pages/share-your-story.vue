@@ -541,7 +541,7 @@ onBeforeUnmount(() => {
   --bg-glow-2: var(--theme-color-bg-glow-2);
   --accent: var(--theme-color-accent);
   --accent-contrast: var(--theme-color-accent-contrast);
-  --quote-mark: var(--theme-color-quote);
+  --quote-mark: var(--ink);
   --notice-bg: var(--theme-color-notice-bg);
   --notice-text: var(--theme-color-notice-text);
   --mobile-close-bg: var(--theme-color-mobile-close-bg);
@@ -565,10 +565,7 @@ onBeforeUnmount(() => {
   --fs-hero-lg: var(--theme-font-size-hero-lg);
   --fs-hero-mobile: var(--theme-font-size-hero-mobile);
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 6% 0%, var(--bg-glow-1) 0%, transparent 42%),
-    radial-gradient(circle at 100% 0%, var(--bg-glow-2) 0%, transparent 46%),
-    var(--surface);
+  background:var(--theme-color-bg);
   color: var(--ink);
   font-family: var(--font-text);
 }
@@ -583,7 +580,7 @@ onBeforeUnmount(() => {
 .top-nav {
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(4px);
-  background: color-mix(in oklab, var(--surface), white 35%);
+  background: var(--theme-color-bg);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -600,10 +597,12 @@ onBeforeUnmount(() => {
 .brand {
   color: var(--ink);
   text-decoration: none;
-  font-size: var(--fs-brand);
-  font-weight: 800;
+  font-size: 2.5rem;
+  /* font-weight: 800; */
   letter-spacing: -0.02em;
   font-family: var(--font-title);
+  line-height: 1;
+  letter-spacing: 0.009em;
 }
 
 .nav-links {
@@ -615,7 +614,7 @@ onBeforeUnmount(() => {
 .nav-links a {
   color: var(--muted);
   text-decoration: none;
-  font-size: var(--fs-body);
+  font-size: var(--fs-brand);
   font-weight: 600;
 }
 
@@ -650,7 +649,6 @@ onBeforeUnmount(() => {
   font-family: var(--font-title);
   font-size: var(--fs-hero-lg);
   line-height: 1.02;
-  letter-spacing: -0.03em;
 }
 
 .hero p {
@@ -658,7 +656,7 @@ onBeforeUnmount(() => {
   max-width: 620px;
   color: var(--muted);
   line-height: 1.45;
-  font-size: var(--fs-body-lg);
+  font-size: var(--fs-brand);
 }
 
 .content-grid {
@@ -703,7 +701,7 @@ onBeforeUnmount(() => {
 
 .story-message {
   margin: 0;
-  color: var(--ink);
+  color: var(--theme-color-accent-contrast);
   font-family: var(--font-text);
   font-size: var(--fs-body-lg);
   line-height: 1.5;
@@ -771,7 +769,6 @@ onBeforeUnmount(() => {
   top: 88px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: linear-gradient(162deg, color-mix(in oklab, var(--paper), var(--surface) 8%) 0%, var(--paper) 100%);
   padding: 1rem;
 }
 
@@ -784,7 +781,7 @@ onBeforeUnmount(() => {
 
 .share-panel p {
   margin: 0.5rem 0 0;
-  color: var(--muted-15);
+  color: var(--theme-color-accent);
   font-size: var(--fs-md);
   line-height: 1.44;
 }
@@ -796,10 +793,10 @@ onBeforeUnmount(() => {
 }
 
 .share-form label {
-  font-size: var(--fs-label);
+  font-size: var(--fs-brand);
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: var(--muted-16);
+  color: var(--ink);
 }
 
 .share-form input,
@@ -809,8 +806,8 @@ onBeforeUnmount(() => {
   border-radius: 8px;
   background: var(--paper);
   padding: 0.6rem 0.7rem;
-  font-size: var(--fs-body);
-  color: var(--ink);
+  font-size: var(--fs-brand);
+  color: var(--accent-contrast);
 }
 
 .share-form textarea {

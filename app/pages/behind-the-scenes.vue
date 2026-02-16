@@ -98,7 +98,7 @@ onBeforeUnmount(() => {
           @pointerleave="resetPointerPull"
         >
           <h1 class="hero-title">
-            why we did this
+            why this story matters
           </h1>
 
           <img
@@ -123,9 +123,9 @@ onBeforeUnmount(() => {
         <p class="eyebrow">
           Behind the scenes
         </p>
-        <h2>What happened between filming and release</h2>
+        <h2>How this documentary was made</h2>
         <p>
-          This page captures the process behind the documentary, from planning and interviews to edit decisions, pacing, and final delivery.
+          From early research through final edit, this page shows how we documented real care-access barriers and built Billings for people navigating the U.S. health system.
         </p>
       </section>
 
@@ -135,10 +135,10 @@ onBeforeUnmount(() => {
       >
         <div class="studio-life-copy">
           <p>
-            We represent a new wave of creative agencies, built with technology in our DNA instead of middle management and outsourced developers. Thanks to the evolution of frameworks, we have the benefit to stay lean as a company while still maintaining a very high level of complexity and quality in our digital productions.
+            Billings was built through interviews with patients, caregivers, clinicians, and advocates who live the reality of health care access every day. We filmed in homes, clinics, and community spaces to capture what happens when coverage, medication costs, and care coordination break down.
           </p>
           <p>
-            So if you find yourself throwing money at a big agency and wondering who is really working on your project - we feel you. At Aino, you will get direct access to the people actually building your products, and we do that really well.
+            Behind each chapter is fact-checking, consent review, and careful editing so every story stays accurate, respectful, and practical. The goal is to make a hard system easier to understand and connect viewers to help they can use right now.
           </p>
         </div>
 

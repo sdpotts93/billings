@@ -3,17 +3,18 @@
 
 /* Homepage-first theme tokens: edit these lines for global style changes */
 :root {
-  --theme-font-title: 'Public Sans', sans-serif;
+  font-size: 16px;
+  --theme-font-title: 'Veneer', 'Public Sans', sans-serif;
   --theme-font-text: 'Public Sans', sans-serif;
 
-  --theme-font-size-caption: 0.62rem;
-  --theme-font-size-caption-plus: 0.66rem;
-  --theme-font-size-xs: 0.7rem;
-  --theme-font-size-note: 0.73rem;
-  --theme-font-size-note-plus: 0.74rem;
-  --theme-font-size-label: 0.72rem;
+  --theme-font-size-caption: 0.75rem;
+  --theme-font-size-caption-plus: 0.75rem;
+  --theme-font-size-xs: 0.75rem;
+  --theme-font-size-note: 0.75rem;
+  --theme-font-size-note-plus: 0.75rem;
+  --theme-font-size-label: 0.75rem;
   --theme-font-size-sm: 0.75rem;
-  --theme-font-size-sm-plus: 0.78rem;
+  --theme-font-size-sm-plus: 0.75rem;
   --theme-font-size-btn: 0.8rem;
   --theme-font-size-md: 0.82rem;
   --theme-font-size-md-plus: 0.84rem;
@@ -31,15 +32,15 @@
   --theme-font-size-display-md: clamp(1.6rem, 2.7vw, 2.5rem);
   --theme-font-size-display-lg: clamp(2.1rem, 4vw, 3rem);
   --theme-font-size-display-xl: clamp(2.4rem, 5.4vw, 4rem);
-  --theme-font-size-card-title: clamp(0.96rem, 1.6vw, 1.15rem);
+  --theme-font-size-card-title: clamp(1.2rem, 1.6vw, 1.4rem);
   --theme-font-size-quote: clamp(1.05rem, 2.2vw, 1.55rem);
 
-  --theme-color-bg: #f6f5f7;
+  --theme-color-bg: #334549;
   --theme-color-bg-glow-1: #f8f2ed;
   --theme-color-bg-glow-2: #f3f7ff;
-  --theme-color-surface: #ffffff;
-  --theme-color-text: #1f1843;
-  --theme-color-muted: #68617f;
+  --theme-color-surface: #e8e5de;
+  --theme-color-text: #ce8040;
+  --theme-color-muted: #E9E2D2;
   --theme-color-muted-2: #585373;
   --theme-color-muted-3: #4f486d;
   --theme-color-muted-4: #908aa8;
@@ -61,12 +62,12 @@
   --theme-color-line-soft: #f0ebf2;
   --theme-color-line-strong: #d8cfc9;
   --theme-color-line-photo: #efe8e5;
-  --theme-color-accent: #3f2bce;
-  --theme-color-accent-contrast: #ffffff;
+  --theme-color-accent: #e8e5de;
+  --theme-color-accent-contrast: #202624;
   --theme-color-quote: #d9d1cb;
-  --theme-color-strong-surface: #2e235f;
-  --theme-color-brand-soft: #3d3467;
-  --theme-color-link-soft: #50467a;
+  --theme-color-strong-surface: #202624;
+  --theme-color-brand-soft: #202624;
+  --theme-color-link-soft: #727272;
   --theme-color-notice-bg: #fff4ef;
   --theme-color-notice-text: #b7522d;
   --theme-color-mobile-close-bg: #f3ece9;
@@ -82,6 +83,10 @@
   --theme-story-accent-3: #0b9965;
   --theme-story-accent-4: #f08a00;
   --theme-story-accent-5: #6a56d9;
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--theme-font-title);
 }
 
 @theme static {

@@ -1031,6 +1031,16 @@ const questionIndex = ref(0)
 const result = ref<GeneratedResult | null>(null)
 const activeTopicFilter = ref('all')
 const activeConditionFilter = ref('all')
+const route = useRoute()
+
+const needQuestion = wizardQuestions.find(question => question.id === 'need')
+const validNeedValues = new Set((needQuestion?.options ?? []).map(option => option.value))
+const queryNeedValue = Array.isArray(route.query.need) ? route.query.need[0] : route.query.need
+
+if (typeof queryNeedValue === 'string' && validNeedValues.has(queryNeedValue)) {
+  answers.need = queryNeedValue
+  questionIndex.value = wizardQuestions.length > 1 ? 1 : 0
+}
 
 const fallbackQuestion: WizardQuestion = {
   id: 'need',

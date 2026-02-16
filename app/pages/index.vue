@@ -1,93 +1,122 @@
 <script setup lang="ts">
+type EmergencyLink = {
+  label: string
+  href: string
+}
+
+type ImpactCard = {
+  label: string
+  brand: string
+  copy: string
+  need: string
+  emergencyLinks?: EmergencyLink[]
+}
+
 const heroCards = [
   {
-    id: 'twse',
-    source: '#TWSE',
-    title: 'How Wise uses observations to build products',
-    cta: 'Watch Video',
-    image: 'https://i.pravatar.cc/300?img=12',
+    id: 'patient-diagnosis-journey',
+    source: '#PatientStory',
+    title: 'I delayed care while uninsured, then went to the ER when symptoms became unbearable.',
+    cta: 'Read All',
+    image: '/images/person-1.jpg',
     tone: 'var(--theme-card-tone-1)'
   },
   {
-    id: 'tyro',
-    source: '#tyro',
-    title: 'Understanding the power of knowing your customer',
-    cta: 'Watch Video',
-    image: 'https://i.pravatar.cc/300?img=47',
+    id: 'family-caregiver-appointments',
+    source: '#FamilyCaregiver',
+    title: 'I manage my dad\'s referrals and labs because one scheduling error can delay treatment.',
+    cta: 'Read All',
+    image: '/images/person-2.jpg',
     tone: 'var(--theme-card-tone-2)'
   },
   {
-    id: 'ideo',
-    source: '#IDEO',
-    title: 'How experimentation reshaped product outcomes',
-    cta: 'Watch Video',
-    image: 'https://i.pravatar.cc/300?img=32',
+    id: 'patient-billing-confusion',
+    source: '#PatientVoice',
+    title: 'As a patient, I still get surprise bills months later and cannot tell which are accurate.',
+    cta: 'Read All',
+    image: '/images/person-3.jpg',
     tone: 'var(--theme-card-tone-3)'
   },
   {
-    id: 'bench',
-    source: '#Bench',
-    title: 'Moving from assumptions to measurable product growth',
-    cta: 'Watch Video',
-    image: 'https://i.pravatar.cc/300?img=21',
+    id: 'family-member-medication-help',
+    source: '#FamilyMember',
+    title: 'I compare pharmacy prices for my sister each month so she can stay on her medication.',
+    cta: 'Read All',
+    image: '/images/person-4.jpg',
     tone: 'var(--theme-card-tone-4)'
   },
   {
-    id: 'north',
-    source: '#North',
-    title: 'Faster user journeys through behavior-driven insights',
-    cta: 'Watch Video',
-    image: 'https://i.pravatar.cc/300?img=15',
+    id: 'patient-prior-auth-delay',
+    source: '#PatientJourney',
+    title: 'My procedure was approved by my doctor, but prior authorization kept pushing it back.',
+    cta: 'Read All',
+    image: '/images/person-5.jpg',
     tone: 'var(--theme-card-tone-5)'
+  },
+  {
+    id: 'family-aftercare-coordination',
+    source: '#CaregiverStory',
+    title: 'After discharge, I coordinated follow-up visits for my spouse across three clinics.',
+    cta: 'Read All',
+    image: '/images/person-6.jpg',
+    tone: 'var(--theme-card-tone-1)'
   }
 ]
 
-const customerLogos = [
-  'Consumer',
-  'Meta',
-  'ServiceNow',
-  'FinanceOnline',
-  'Hotel + Wellness',
-  'SaaS'
-]
-
-const impactCards = [
+const impactCards: ImpactCard[] = [
   {
-    label: 'Retail',
-    brand: 'AB Tasty',
-    copy: 'Adopting a product-led growth strategy to drive free trial conversions'
+    label: 'Emergency / urgent symptoms',
+    brand: 'Emergency support',
+    copy: 'Start with immediate support first if you or someone else may be in danger.',
+    need: 'emergency',
+    emergencyLinks: [
+      {
+        label: 'Call 911',
+        href: 'tel:911'
+      }
+    ]
   },
   {
-    label: 'Services',
-    brand: 'kkday',
-    copy: 'Creating a culture of analytics to drive better user journeys'
+    label: 'Insurance help / uninsured',
+    brand: 'Coverage guidance',
+    copy: 'Get step-by-step help for coverage, denials, appeals, and eligibility.',
+    need: 'insurance'
   },
   {
-    label: 'B2B',
-    brand: 'DocuSign',
-    copy: 'Signing up more customers'
+    label: 'Paying for meds',
+    brand: 'Prescription affordability',
+    copy: 'Use practical options to lower medication costs and avoid interruptions.',
+    need: 'meds'
   },
   {
-    label: 'Financial Services',
-    brand: 'AXA',
-    copy: 'Improving conversion and engagement of product usage in Nepal'
+    label: 'Paying medical bills / debt',
+    brand: 'Medical bills and debt',
+    copy: 'Use scripts and checklists to review charges and negotiate payment plans.',
+    need: 'bills'
   },
   {
-    label: 'SaaS',
-    brand: 'olo',
-    copy: 'Using voice for success: boosting conversion rates by 7.8% with Mixpanel'
+    label: 'Finding care (appointments, specialists)',
+    brand: 'Find care and specialists',
+    copy: 'Locate clinics, referrals, and follow-up support for ongoing conditions.',
+    need: 'finding-care'
   },
   {
-    label: 'Technology',
-    brand: 'LG CNS',
-    copy: 'Using Mixpanel to launch new products and instill a growth culture'
+    label: 'Helping someone else (caregiver)',
+    brand: 'Support for families',
+    copy: 'Tools for caregiver planning, respite options, and long-term coordination.',
+    need: 'caregiver'
   },
   {
-    label: 'Gaming',
-    brand: 'Applovin',
-    copy: 'Using player behavior insights to deliver better player experience'
+    label: 'Understanding a diagnosis',
+    brand: 'Guidance by condition',
+    copy: 'See focused next steps for CF, cancer, diabetes, dementia, and more.',
+    need: 'diagnosis'
   }
 ]
+
+const goToResourcesWithNeed = (need: string) => {
+  void navigateTo({ path: '/resources', query: { need } })
+}
 </script>
 
 <template>
@@ -95,7 +124,7 @@ const impactCards = [
     <main>
       <section class="hero">
         <div class="hero-header shell">
-          <h1>Teams like yours are building from their product data</h1>
+          <h1>Real stories about navigating U.S. healthcare, with practical help you can use now.</h1>
         </div>
 
         <div class="hero-rail shell">
@@ -113,9 +142,6 @@ const impactCards = [
                       :src="card.image"
                       :alt="card.title"
                     >
-                    <span class="media-play">
-                      <UIcon name="i-lucide-play" />
-                    </span>
                   </div>
                   <div class="card-body">
                     <p class="source">
@@ -145,9 +171,6 @@ const impactCards = [
                       :src="card.image"
                       :alt="card.title"
                     >
-                    <span class="media-play">
-                      <UIcon name="i-lucide-play" />
-                    </span>
                   </div>
                   <div class="card-body">
                     <p class="source">
@@ -167,36 +190,37 @@ const impactCards = [
       </section>
 
       <section class="social-proof shell">
-        <p>Join over 20,000+ companies who accelerated their growth with Mixpanel</p>
-        <div class="logo-row">
-          <span
-            v-for="logo in customerLogos"
-            :key="logo"
-          >{{ logo }}</span>
-        </div>
+        <p>
+          Built to unite people affected by the U.S. healthcare system and share resources for patients and caregivers.
+        </p>
       </section>
 
       <section class="testimonial shell">
+        <h2 class="quote-title">
+          Around 7.3% U.S. adults did not get needed medical care in the past year because of cost.
+        </h2>
         <article class="quote-card">
-          <p class="overline">
-            Consumer Tech
-          </p>
-          <p class="quote">
-            "Mixpanel enables our product managers and designers to uncover and focus on large opportunities for product discovery and improvement."
-          </p>
-          <p class="meta">
-            Saif Rehman, Head of Products - Analytics and Experimentation
-          </p>
+          <div class="quote-left">
+            <p class="quote">
+              "One of the goals of the movie is to shed light on the broken American healthcare system."
+            </p>
+            <p class="meta">
+              Quote from the Billings movie team
+            </p>
+          </div>
           <div class="quote-foot">
-            <div class="customer-list">
-              <span>Miro Industry Partners</span>
-              <span>Uber</span>
-              <span>Gitlab</span>
-              <span>NinjaVan</span>
-              <span>NBCU</span>
-            </div>
+            <!-- <div class="customer-list">
+              <span>Denied referrals</span>
+              <span>Prior-auth loops</span>
+              <span>Confusing bills</span>
+              <span>Provider shortages</span>
+              <span>Coverage gaps</span>
+            </div> -->
             <h3 class="quote-logo">
-              yelp
+              Billings
+              <span>
+                Movie
+              </span>
             </h3>
           </div>
         </article>
@@ -204,32 +228,38 @@ const impactCards = [
 
       <section class="stats shell">
         <article>
-          <h3>3X</h3>
-          <p>Improvement in signup rates from core product onboarding.</p>
+          <h3>Real voices</h3>
+          <p>Patient and caregiver stories show what navigating care access actually feels like.</p>
         </article>
         <article>
-          <h3>242M</h3>
-          <p>Product questions answered per year with a self-serve analytics stack.</p>
+          <h3>Free support</h3>
+          <p>Actionable links, helplines, and tools organized by the need you face right now.</p>
         </article>
         <article>
-          <h3>97.2%</h3>
-          <p>Customer satisfaction score across all support experiences.</p>
+          <h3>Clear steps</h3>
+          <p>Simple plans for today, this week, and ongoing follow-up so people can move forward.</p>
         </article>
       </section>
 
       <section class="impact shell">
-        <h2>How can product analytics impact your business?</h2>
+        <h2>Where do you need help first?</h2>
         <UButton
-          label="See Stories"
+          label="Browse Resources"
           size="xs"
           class="stories-btn"
+          to="/resources"
         />
 
         <div class="impact-grid">
           <article
             v-for="card in impactCards"
-            :key="card.brand"
+            :key="card.need"
             class="impact-card"
+            role="link"
+            tabindex="0"
+            @click="goToResourcesWithNeed(card.need)"
+            @keydown.enter.prevent="goToResourcesWithNeed(card.need)"
+            @keydown.space.prevent="goToResourcesWithNeed(card.need)"
           >
             <p class="card-label">
               {{ card.label }}
@@ -238,26 +268,40 @@ const impactCards = [
             <p class="card-copy">
               {{ card.copy }}
             </p>
-            <a
-              href="#"
+            <div
+              v-if="card.emergencyLinks?.length"
+              class="emergency-links"
+            >
+              <a
+                v-for="link in card.emergencyLinks"
+                :key="link.href"
+                :href="link.href"
+                class="emergency-link"
+                @click.stop
+              >
+                {{ link.label }}
+              </a>
+            </div>
+            <span
               class="card-link"
+              aria-hidden="true"
             >
               <UIcon name="i-lucide-arrow-right-circle" />
-            </a>
+            </span>
           </article>
         </div>
       </section>
 
       <section class="cta shell">
-        <h2>Make impactful decisions</h2>
+        <h2>Get support or share your experience</h2>
         <div class="cta-actions">
           <UButton
-            label="Get Demo"
+            label="Explore Resources"
             size="xs"
             class="start-btn"
           />
           <UButton
-            label="Get Started Free"
+            label="Share Your Story"
             size="xs"
             color="neutral"
             variant="outline"
@@ -315,7 +359,7 @@ const impactCards = [
   --fs-display-md: var(--theme-font-size-display-md);
   --fs-display-lg: var(--theme-font-size-display-lg);
   --fs-display-xl: var(--theme-font-size-display-xl);
-  --lane-gap: 12px;
+  --lane-gap: 24px;
   width: 100%;
   background: var(--bg);
   color: var(--ink);
@@ -349,9 +393,12 @@ const impactCards = [
 .brand {
   color: var(--ink);
   text-decoration: none;
-  font-size: var(--fs-brand);
-  font-weight: 800;
+  font-size: 2.5rem;
+  /* font-weight: 800; */
   letter-spacing: -0.02em;
+  font-family: var(--font-title);
+  line-height: 1;
+  letter-spacing: 0.009em;
 }
 
 .nav-links {
@@ -376,12 +423,17 @@ const impactCards = [
 
 .start-btn {
   border-radius: 999px;
-  background: var(--accent) !important;
-  color: var(--accent-contrast) !important;
+  background: #7d5d4a;
+  color: white;
+  font-size: var(--fs-btn);
+  font-weight: 700;
+  padding: 0.52rem 0.92rem;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .hero {
-  padding-top: 2.25rem;
+  padding-top: 5.25rem;
 }
 
 .hero-header h1 {
@@ -390,7 +442,6 @@ const impactCards = [
   text-align: center;
   font-size: var(--fs-hero-xl);
   line-height: 0.98;
-  letter-spacing: -0.03em;
 }
 
 .hero-rail {
@@ -399,14 +450,14 @@ const impactCards = [
 }
 
 .hero-carousel {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  overflow: hidden;
-  padding-top: 12px;
-  padding-bottom: 14px;
-  margin-top: -12px;
-  margin-bottom: -14px;
-  position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    overflow: hidden;
+    padding-top: 32px;
+    padding-bottom: 16px;
+    margin-top: -12px;
+    margin-bottom: -14px;
+    position: relative;
 }
 
 .hero-carousel::before,
@@ -436,7 +487,7 @@ const impactCards = [
   gap: var(--lane-gap);
   padding: 0 0 0.45rem;
   animation: lane-scroll linear infinite;
-  animation-duration: 38s;
+  animation-duration: 90s;
 }
 
 .hero-group {
@@ -445,20 +496,18 @@ const impactCards = [
 }
 
 .hero-card {
-  width: min(86vw, 352px);
-  min-height: 210px;
-  padding: 10px;
+  width: min(86vw, 400px);
+  min-height: 330px;
+  padding: 20px;
   border-radius: 10px;
   border: 1px solid color-mix(in oklab, var(--tone), var(--line) 72%);
-  background: linear-gradient(130deg, color-mix(in oklab, var(--tone), var(--surface) 26%) 0%, var(--surface) 86%);
+  background: #e7e4de;
   box-shadow: 0 10px 20px rgba(29, 23, 69, 0.06);
   display: grid;
-  grid-template-columns: 120px minmax(0, 1fr);
+  grid-template-columns: 55% minmax(0, 1fr);
   gap: 12px;
   transition: transform 220ms ease, box-shadow 220ms ease;
   will-change: transform;
-  animation: card-float 6.6s ease-in-out infinite;
-  animation-delay: var(--card-delay);
 }
 
 .card-media {
@@ -472,20 +521,6 @@ const impactCards = [
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.media-play {
-  position: absolute;
-  left: 8px;
-  bottom: 8px;
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  background: var(--strong-surface);
-  color: var(--accent-contrast);
-  display: grid;
-  place-items: center;
-  font-size: var(--fs-caption);
 }
 
 .card-body {
@@ -520,6 +555,19 @@ const impactCards = [
   font-weight: 740;
 }
 
+.quote-title {
+  color: var(--muted);
+  text-transform: none;
+  font-family: var(--font-sans) !important;
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 2rem;
+  line-height: 1.1;
+  width: 70%;
+  margin: 0 auto;
+  margin-bottom: 32px;
+  letter-spacing: 0;
+}
 .social-proof {
   margin-top: 2rem;
   text-align: center;
@@ -528,7 +576,7 @@ const impactCards = [
 .social-proof p {
   margin: 0;
   font-size: var(--fs-body);
-  color: var(--muted-2);
+  color: var(--muted);
 }
 
 .logo-row {
@@ -543,14 +591,15 @@ const impactCards = [
 }
 
 .testimonial {
-  margin-top: 1.75rem;
+  padding-top: 120px;
 }
 
 .quote-card {
   border-radius: 14px;
   border: 1px solid var(--line);
   background: var(--surface);
-  padding: 1.5rem;
+  padding: 2.5rem;
+  display: flex;
 }
 
 .overline {
@@ -568,6 +617,8 @@ const impactCards = [
   font-size: var(--fs-quote);
   line-height: 1.3;
   letter-spacing: -0.008em;
+  font-weight: 600;
+  margin-bottom: 80px;
 }
 
 .meta {
@@ -578,13 +629,19 @@ const impactCards = [
 }
 
 .quote-foot {
-  margin-top: 1.1rem;
   display: flex;
-  justify-content: space-between;
-  align-items: end;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
+  width: 100%;
 }
 
+.quote-left {
+  border-right: 1px solid var(--muted-4);
+  width: 60%;
+  flex-shrink: 0;
+  padding-right: 1rem;
+}
 .customer-list {
   display: flex;
   flex-wrap: wrap;
@@ -597,8 +654,15 @@ const impactCards = [
 .quote-logo {
   margin: 0;
   font-size: var(--fs-display-lg);
-  letter-spacing: -0.045em;
   line-height: 1;
+  letter-spacing: 0.009em;
+}
+
+.quote-logo span {
+  display: block;
+  font-size: 0.5em;
+  color: var(--muted-2);
+  letter-spacing: 0.009em;
 }
 
 .stats {
@@ -615,20 +679,20 @@ const impactCards = [
 .stats h3 {
   margin: 0;
   font-size: var(--fs-display-xl);
-  letter-spacing: -0.04em;
   line-height: 0.98;
 }
 
 .stats p {
   margin: 0.5rem 0 0;
   max-width: 260px;
-  font-size: var(--fs-sm-plus);
+  font-size: var(--theme-font-size-brand);
   line-height: 1.32;
-  color: var(--muted-7);
+  color: var(--muted);
 }
 
 .impact {
   margin-top: 2.8rem;
+  padding-top: 120px;
 }
 
 .impact h2 {
@@ -636,12 +700,18 @@ const impactCards = [
   margin: 0;
   font-size: var(--fs-heading-md);
   line-height: 1.03;
-  letter-spacing: -0.037em;
 }
 
 .stories-btn {
   margin-top: 0.75rem;
   border-radius: 999px;
+  background: #7d5d4a;
+  color: white;
+  font-size: var(--fs-btn);
+  font-weight: 700;
+  padding: 0.52rem 0.92rem;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .impact-grid {
@@ -652,13 +722,25 @@ const impactCards = [
 }
 
 .impact-card {
-  min-height: 230px;
+  min-height: 260px;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: var(--surface);
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.impact-card:hover,
+.impact-card:focus-visible {
+  background: #ffffff;
+}
+
+.impact-card:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--accent), #ffffff 70%);
+  outline-offset: 2px;
 }
 
 .card-label {
@@ -673,15 +755,36 @@ const impactCards = [
 .impact-card h3 {
   margin: 0.4rem 0 0.6rem;
   font-size: var(--fs-display-md);
-  letter-spacing: -0.041em;
   line-height: 0.98;
 }
 
 .card-copy {
   margin: 0;
-  color: var(--muted-9);
-  font-size: var(--fs-md-plus);
+  color: var(--accent-contrast);
+  font-size: var(--theme-font-size-brand);
   line-height: 1.33;
+}
+
+.emergency-links {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    justify-content: space-evenly;
+}
+
+.emergency-link {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-contrast);
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.3em;
+}
+
+.emergency-link:hover,
+.emergency-link:focus-visible {
+  color: var(--ink);
 }
 
 .card-link {
@@ -691,13 +794,12 @@ const impactCards = [
 
 .cta {
   text-align: center;
-  padding: 4.5rem 0 5rem;
+  padding: 120px 0 5rem;
 }
 
 .cta h2 {
   margin: 0;
   font-size: var(--fs-heading-lg);
-  letter-spacing: -0.037em;
 }
 
 .cta-actions {
@@ -709,6 +811,15 @@ const impactCards = [
 
 .cta-outline {
   border-radius: 999px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: var(--fs-btn);
+  font-weight: 700;
+  padding: 0.52rem 0.92rem;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .site-footer {
@@ -797,7 +908,7 @@ const impactCards = [
   .hero-card:hover,
   .hero-card:focus-within {
     animation: none;
-    transform: translateY(-8px);
+    transform: translateY(-24px);
   }
 }
 

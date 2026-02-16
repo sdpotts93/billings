@@ -1,14 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
-type HeroFigure = {
-  name: string
-  role: string
-  initials: string
-  pose: 'sit' | 'stand'
-  tone: string
-}
-
 type TeamMember = {
   name: string
   role: string
@@ -18,141 +10,71 @@ type TeamMember = {
   tone: string
 }
 
-const heroFigures: HeroFigure[] = [
-  {
-    name: 'Ralph',
-    role: 'Co-founder / MD',
-    initials: 'RA',
-    pose: 'sit',
-    tone: '#d2bca8'
-  },
-  {
-    name: 'Julian',
-    role: 'Co-founder / CD',
-    initials: 'JU',
-    pose: 'stand',
-    tone: '#aec2d1'
-  },
-  {
-    name: 'Pablo',
-    role: 'Designer',
-    initials: 'PA',
-    pose: 'sit',
-    tone: '#d7b2b1'
-  },
-  {
-    name: 'Johann',
-    role: 'Senior Designer',
-    initials: 'JO',
-    pose: 'stand',
-    tone: '#c9c8ac'
-  },
-  {
-    name: 'Nina',
-    role: 'Store Help',
-    initials: 'NI',
-    pose: 'stand',
-    tone: '#c7cad9'
-  },
-  {
-    name: 'Sophie',
-    role: 'Designer',
-    initials: 'SO',
-    pose: 'sit',
-    tone: '#d3c7a8'
-  },
-  {
-    name: 'Senna',
-    role: 'Store Manager',
-    initials: 'SE',
-    pose: 'stand',
-    tone: '#d3bca8'
-  },
-  {
-    name: 'Faye',
-    role: 'Designer',
-    initials: 'FA',
-    pose: 'sit',
-    tone: '#c6a7c5'
-  },
-  {
-    name: 'Nikita',
-    role: 'Brand',
-    initials: 'NK',
-    pose: 'stand',
-    tone: '#adc8ce'
-  },
-  {
-    name: 'Liam',
-    role: 'Strategy',
-    initials: 'LI',
-    pose: 'sit',
-    tone: '#cdc7b2'
-  }
-]
+const heroMissionImageSrc = 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=2200&q=80'
+const uninsuredPeopleTotal = 27_200_000
 
 const teamMembers: TeamMember[] = [
   {
     name: 'Ralph',
-    role: 'Co-founder / MD',
+    role: 'Director / Producer',
     badge: 'NL/SR',
-    bio: 'Leads operations, planning, and partnerships across product and studio work.',
+    bio: 'Leads story direction, interviews, and production decisions across the documentary.',
     initials: 'RA',
     tone: '#d2bca8'
   },
   {
     name: 'Julian',
-    role: 'Co-founder / CD',
+    role: 'Creative Director',
     badge: 'NL',
-    bio: 'Drives creative direction, design craft, and visual quality from concept to launch.',
+    bio: 'Shapes the visual language and keeps the emotional arc consistent from start to finish.',
     initials: 'JU',
     tone: '#aec2d1'
   },
   {
     name: 'Johann',
-    role: 'Senior Designer',
+    role: 'Editor',
     badge: 'DE',
-    bio: 'Builds interaction systems and expressive layouts with strong product discipline.',
+    bio: 'Builds narrative pacing and cuts interviews into clear, human-centered sequences.',
     initials: 'JO',
     tone: '#c9c8ac'
   },
   {
     name: 'Senna',
-    role: 'Store Manager',
+    role: 'Production Manager',
     badge: 'NL/SR',
-    bio: 'Runs day-to-day delivery and keeps production moving across every team lane.',
+    bio: 'Coordinates shoots, schedules, and logistics with patients, caregivers, and clinicians.',
     initials: 'SE',
     tone: '#d3bca8'
   },
   {
     name: 'Nina',
-    role: 'Store Help',
+    role: 'Community Outreach',
     badge: 'NL/SR',
-    bio: 'Supports studio operations and maintains smooth handoffs between disciplines.',
+    bio: 'Works with advocacy groups and families so lived experiences are represented with care.',
     initials: 'NI',
     tone: '#c7cad9'
   },
   {
     name: 'Sophie',
-    role: 'Designer',
+    role: 'Story Producer',
     badge: 'NL/PT',
-    bio: 'Shapes brand expression and interface details with a clear editorial eye.',
+    bio: 'Translates research and interviews into grounded story threads for each chapter.',
     initials: 'SO',
     tone: '#d3c7a8'
   },
   {
     name: 'Faye',
-    role: 'Designer',
+    role: 'Research Lead',
     badge: 'NL/GR',
-    bio: 'Leads product UI explorations and visual prototyping for new initiatives.',
+    bio: 'Validates policy and care-access facts so the film reflects what people face right now.',
     initials: 'FA',
     tone: '#c6a7c5'
   },
   {
     name: 'Pablo',
-    role: 'Designer',
+    role: 'Motion & Sound',
     badge: 'ES',
-    bio: 'Designs expressive systems for campaigns, storytelling pages, and launches.',
+    bio: 'Builds motion and sound design that support difficult topics without overwhelming viewers.',
     initials: 'PA',
     tone: '#d7b2b1'
   }
@@ -161,8 +83,8 @@ const teamMembers: TeamMember[] = [
 useSeoMeta({
   title: 'About the Film | Billings',
   ogTitle: 'About the Film | Billings',
-  description: 'A cinematic, scroll-driven walkthrough of the team and process behind Billings.',
-  ogDescription: 'A cinematic, scroll-driven walkthrough of the team and process behind Billings.'
+  description: 'A scroll-driven story about health care access, uninsured families, and the team behind Billings.',
+  ogDescription: 'A scroll-driven story about health care access, uninsured families, and the team behind Billings.'
 })
 
 const stageSection = ref<HTMLElement | null>(null)
@@ -177,60 +99,44 @@ const segment = (start: number, end: number) => {
   return clamp((stageProgress.value - start) / (end - start), 0, 1)
 }
 
-const fadeWindow = (fadeInStart: number, fadeInEnd: number, fadeOutStart: number, fadeOutEnd: number) => {
-  return segment(fadeInStart, fadeInEnd) * (1 - segment(fadeOutStart, fadeOutEnd))
-}
-
 const heroPanX = computed(() => {
-  return -56 * segment(0, 0.4)
+  return -50 * segment(0, 0.94)
 })
 
 const heroOpacity = computed(() => {
-  return 1 - segment(0.34, 0.56)
+  return 1
 })
 
 const heroScale = computed(() => {
-  return 1 - segment(0.34, 0.56) * 0.08
+  return 1
 })
 
-const headlineOpacity = computed(() => {
-  return fadeWindow(0.16, 0.33, 0.5, 0.66)
+const storyFlowLift = computed(() => {
+  if (prefersReducedMotion.value) {
+    return 0
+  }
+
+  return -128 * segment(0.94, 1)
 })
 
-const splitOpacity = computed(() => {
-  return fadeWindow(0.44, 0.61, 0.82, 0.95)
-})
+const uninsuredMetricRef = ref<HTMLElement | null>(null)
+const uninsuredPeopleCount = ref(0)
 
-const splitOffsetY = computed(() => {
-  return (1 - segment(0.44, 0.61)) * 50
-})
-
-const manifestoReveal = computed(() => {
-  return segment(0.49, 0.72)
-})
-
-const railShiftY = computed(() => {
-  return -44 * segment(0.54, 0.83)
-})
-
-const nextOpacity = computed(() => {
-  return segment(0.78, 0.93)
-})
-
-const nextOffsetY = computed(() => {
-  return (1 - segment(0.78, 0.93)) * 28
+const uninsuredPeopleFormatted = computed(() => {
+  return uninsuredPeopleCount.value.toLocaleString('en-US')
 })
 
 const previewPointerX = ref<number | null>(null)
 const previewPointerY = ref<number | null>(null)
 const previewRevealStart = 0.6
+const previewRevealEnd = 0.72
 
 const isPreviewFollowing = computed(() => {
   return previewPointerX.value !== null && previewPointerY.value !== null
 })
 
 const shouldShowPreview = computed(() => {
-  return isPreviewFollowing.value && stageProgress.value >= previewRevealStart
+  return isPreviewFollowing.value && stageProgress.value >= previewRevealStart && stageProgress.value <= previewRevealEnd
 })
 
 const previewStyle = computed(() => {
@@ -248,6 +154,9 @@ const previewStyle = computed(() => {
 })
 
 let requestId = 0
+let uninsuredObserver: IntersectionObserver | null = null
+let uninsuredAnimationId = 0
+let hasAnimatedUninsuredMetric = false
 let reduceMotionQuery: MediaQueryList | null = null
 let reduceMotionListener: (() => void) | null = null
 
@@ -268,6 +177,38 @@ const handleGlobalPointerMove = (event: PointerEvent) => {
 
   previewPointerX.value = event.clientX
   previewPointerY.value = event.clientY
+}
+
+const animateUninsuredPeople = () => {
+  if (hasAnimatedUninsuredMetric || typeof window === 'undefined') {
+    return
+  }
+
+  hasAnimatedUninsuredMetric = true
+
+  if (prefersReducedMotion.value) {
+    uninsuredPeopleCount.value = uninsuredPeopleTotal
+    return
+  }
+
+  const startTime = performance.now()
+  const duration = 1400
+
+  const step = (now: number) => {
+    const progress = clamp((now - startTime) / duration, 0, 1)
+    const eased = 1 - (1 - progress) ** 3
+    uninsuredPeopleCount.value = Math.round(uninsuredPeopleTotal * eased)
+
+    if (progress < 1) {
+      uninsuredAnimationId = window.requestAnimationFrame(step)
+      return
+    }
+
+    uninsuredPeopleCount.value = uninsuredPeopleTotal
+    uninsuredAnimationId = 0
+  }
+
+  uninsuredAnimationId = window.requestAnimationFrame(step)
 }
 
 const syncProgressFromViewport = () => {
@@ -302,6 +243,8 @@ const applyMotionPreference = () => {
 
   if (prefersReducedMotion.value) {
     resetStagePointer()
+    uninsuredPeopleCount.value = uninsuredPeopleTotal
+    hasAnimatedUninsuredMetric = true
   }
 
   scheduleProgressSync()
@@ -330,6 +273,25 @@ onMounted(() => {
   window.addEventListener('scroll', scheduleProgressSync, { passive: true })
   window.addEventListener('resize', scheduleProgressSync, { passive: true })
   scheduleProgressSync()
+
+  if (!prefersReducedMotion.value) {
+    uninsuredPeopleCount.value = 0
+    hasAnimatedUninsuredMetric = false
+  }
+
+  uninsuredObserver = new IntersectionObserver((entries) => {
+    if (entries.some(entry => entry.isIntersecting && entry.intersectionRatio > 0.42)) {
+      animateUninsuredPeople()
+      uninsuredObserver?.disconnect()
+      uninsuredObserver = null
+    }
+  }, {
+    threshold: [0.42, 0.56, 0.72]
+  })
+
+  if (uninsuredMetricRef.value) {
+    uninsuredObserver.observe(uninsuredMetricRef.value)
+  }
 })
 
 onBeforeUnmount(() => {
@@ -342,6 +304,15 @@ onBeforeUnmount(() => {
 
   if (requestId !== 0 && typeof window !== 'undefined') {
     window.cancelAnimationFrame(requestId)
+  }
+
+  if (uninsuredAnimationId !== 0 && typeof window !== 'undefined') {
+    window.cancelAnimationFrame(uninsuredAnimationId)
+  }
+
+  if (uninsuredObserver) {
+    uninsuredObserver.disconnect()
+    uninsuredObserver = null
   }
 
   if (reduceMotionQuery && reduceMotionListener) {
@@ -360,7 +331,7 @@ onBeforeUnmount(() => {
       ref="stageSection"
       class="story-stage"
     >
-      <div class="story-sticky shell">
+      <div class="story-sticky">
         <div
           class="hero-panorama"
           :style="{
@@ -372,118 +343,122 @@ onBeforeUnmount(() => {
             class="hero-track"
             :style="{ transform: `translateX(${heroPanX}%)` }"
           >
-            <article
-              v-for="figure in heroFigures"
-              :key="`${figure.name}-${figure.role}`"
-              class="hero-figure"
-              :class="`is-${figure.pose}`"
-              :style="{ '--tone': figure.tone }"
-            >
-              <div class="hero-figure-body">
-                <span class="hero-figure-role">{{ figure.role }}</span>
-                <span class="hero-figure-name">{{ figure.name }}</span>
-                <span class="hero-figure-initials">{{ figure.initials }}</span>
+            <article class="hero-mission-panel">
+              <div class="hero-mission-copy">
+                <p class="hero-mission-kicker">
+                  Why this film
+                </p>
+                <h1 class="hero-mission-title">
+                  To make health care access clearer, fairer, and more human for people across the United States.
+                </h1>
               </div>
+
+              <div class="hero-mission-image">
+                <img
+                  :src="heroMissionImageSrc"
+                  alt="Medical team collaborating in a hospital hallway"
+                  loading="eager"
+                >
+              </div>
+            </article>
+
+            <article
+              ref="uninsuredMetricRef"
+              class="hero-metric-panel"
+            >
+              <p class="hero-metric-overline">
+                Over
+              </p>
+              <p class="hero-metric-number">
+                {{ uninsuredPeopleFormatted }}
+              </p>
+              <p class="hero-metric-label">
+                people in the U.S. were uninsured in 2024
+              </p>
+              <p class="hero-metric-source">
+                CDC / NHIS, 2024
+              </p>
             </article>
           </div>
         </div>
+      </div>
+    </section>
 
-        <div
-          class="headline-layer"
-          :style="{
-            opacity: headlineOpacity.toFixed(3),
-            transform: `translateY(${(1 - headlineOpacity) * 32}px)`
-          }"
-        >
-          <h2>
-            Join our team
-            <span>See jobs</span>
-          </h2>
+    <section
+      class="story-flow shell"
+      :style="{ marginTop: `${storyFlowLift}px` }"
+    >
+      <div class="headline-layer">
+        <h2>
+          Join the conversation
+          <span>Share your story</span>
+        </h2>
+      </div>
+
+      <div class="split-layer">
+        <div class="manifesto-copy">
+          <p class="manifesto-full">
+            We work hand in hand with patients, caregivers, clinicians, and advocates to document what care access actually looks like in real life.
+          </p>
+          <p class="manifesto-short">
+            We work with patients, caregivers, and clinicians to tell this story with care.
+          </p>
+          <span class="manifesto-reveal" />
         </div>
 
-        <div
-          class="split-layer"
-          :style="{
-            opacity: splitOpacity.toFixed(3),
-            transform: `translateY(${splitOffsetY}px)`
-          }"
-        >
-          <div class="manifesto-copy">
-            <p class="manifesto-full">
-              We work hand in hand with a diverse set of professionals and standout individuals, encouraging a familial bond within our team.
-            </p>
-            <p class="manifesto-short">
-              We work hand in hand with a diverse team of standout professionals.
-            </p>
-            <span
-              class="manifesto-reveal"
-              :style="{ transform: `scaleX(${manifestoReveal})` }"
-            />
-          </div>
+        <span class="split-divider" />
 
-          <span class="split-divider" />
-
-          <div class="team-rail-wrap">
-            <div
-              class="team-rail"
-              :style="{ transform: `translateY(${railShiftY}%)` }"
+        <div class="team-rail-wrap">
+          <div class="team-rail">
+            <article
+              v-for="member in teamMembers"
+              :key="`${member.name}-${member.role}`"
+              class="team-card"
             >
-              <article
-                v-for="member in teamMembers"
-                :key="`${member.name}-${member.role}`"
-                class="team-card"
+              <div
+                class="team-avatar"
+                :style="{ '--tone': member.tone }"
               >
-                <div
-                  class="team-avatar"
-                  :style="{ '--tone': member.tone }"
-                >
-                  <span>{{ member.initials }}</span>
-                </div>
-                <div class="team-card-copy">
-                  <p class="person">
-                    {{ member.name }}
-                    <span>{{ member.badge }}</span>
-                  </p>
-                  <p class="role">
-                    {{ member.role }}
-                  </p>
-                  <p class="bio">
-                    {{ member.bio }}
-                  </p>
-                </div>
-              </article>
-            </div>
-
-            <div
-              class="floating-preview-anchor"
-              aria-hidden="true"
-            />
+                <span>{{ member.initials }}</span>
+              </div>
+              <div class="team-card-copy">
+                <p class="person">
+                  {{ member.name }}
+                  <span>{{ member.badge }}</span>
+                </p>
+                <p class="role">
+                  {{ member.role }}
+                </p>
+                <p class="bio">
+                  {{ member.bio }}
+                </p>
+              </div>
+            </article>
           </div>
+
+          <div
+            class="floating-preview-anchor"
+            aria-hidden="true"
+          />
         </div>
+      </div>
 
-        <div
-          class="next-layer"
-          :style="{
-            opacity: nextOpacity.toFixed(3),
-            transform: `translateY(${nextOffsetY}px)`
-          }"
-        >
-          <h3>
-            Next chapter
-            <span>Expertise</span>
-          </h3>
-          <div class="chapter-card">
-            <span class="scanline" />
-            <p>
-              Product strategy
-              <br>
-              Visual systems
-              <br>
-              Webflow delivery
-              <br>
-              Motion direction
-            </p>
-          </div>
+      <div class="next-layer">
+        <h3>
+          Next chapter
+          <span>Resources</span>
+        </h3>
+        <div class="chapter-card">
+          <span class="scanline" />
+          <p>
+            Emergency contacts
+            <br>
+            Coverage & billing help
+            <br>
+            Medication support
+            <br>
+            Caregiver tools
+          </p>
         </div>
       </div>
     </section>
@@ -495,14 +470,14 @@ onBeforeUnmount(() => {
       aria-hidden="true"
     >
       <div class="preview-card">
-        <p>Analogue Agency crafts meaningful digital experiences.</p>
+        <p>Every chapter centers real families navigating a difficult health care system.</p>
       </div>
     </div>
 
     <section class="after-note shell">
-      <h4>Built as interaction, not video.</h4>
+      <h4>Built to inform, not overwhelm.</h4>
       <p>
-        This version is now fully native HTML/CSS/JS, so we can tune timing, copy, and behavior directly in the site.
+        This format lets us keep guidance and resources current as policy, coverage rules, and community needs change.
       </p>
     </section>
   </div>
@@ -550,7 +525,6 @@ onBeforeUnmount(() => {
   max-width: 980px;
   font-size: clamp(1.8rem, 4.3vw, 3.75rem);
   line-height: 0.98;
-  letter-spacing: -0.03em;
   font-family: var(--theme-font-title);
 }
 
@@ -563,7 +537,7 @@ onBeforeUnmount(() => {
 }
 
 .story-stage {
-  min-height: 360vh;
+  min-height: 290vh;
 }
 
 .story-sticky {
@@ -573,6 +547,12 @@ onBeforeUnmount(() => {
   overflow: hidden;
   display: grid;
   align-items: center;
+}
+
+.story-flow {
+  display: grid;
+  gap: clamp(2rem, 4.8vh, 4.8rem);
+  padding-block: clamp(0.25rem, 1.2vh, 1.1rem) clamp(2.4rem, 6vh, 5rem);
 }
 
 .studio-nav-pill {
@@ -609,94 +589,151 @@ onBeforeUnmount(() => {
 .hero-panorama {
   position: relative;
   z-index: 2;
+  padding-block: clamp(0.35rem, 1.5vh, 0.9rem);
   transition: opacity 220ms linear;
 }
 
 .hero-track {
+  width: max-content;
+  margin-left: 0;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(180px, 220px);
-  align-items: end;
-  gap: 1.2rem;
+  grid-auto-columns: 100vw;
+  align-items: stretch;
+  justify-items: center;
+  gap: 0;
   will-change: transform;
 }
 
-.hero-figure {
-  border-radius: 24px 24px 34px 34px;
-  border: 1px solid color-mix(in oklab, #cfd0d3, transparent 25%);
-  background: color-mix(in oklab, var(--tone), white 19%);
+.hero-mission-panel {
+  width: min(90vw, 1700px);
+  height: clamp(420px, calc(100vh - 150px), 760px);
+  border: 1px solid color-mix(in oklab, #d3d4d9, transparent 24%);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #f1f2f4 0%, #ececef 100%);
+  box-shadow: 0 28px 42px rgba(35, 37, 45, 0.1);
   overflow: hidden;
-  box-shadow: 0 26px 38px rgba(42, 42, 50, 0.11);
-  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.5fr) minmax(0, 0.5fr);
 }
 
-.hero-figure-body {
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(circle at 50% 17%, color-mix(in oklab, var(--tone), white 56%) 0, color-mix(in oklab, var(--tone), white 40%) 16%, transparent 16.5%),
-    linear-gradient(180deg, color-mix(in oklab, var(--tone), black 2%) 0%, color-mix(in oklab, var(--tone), black 12%) 72%, color-mix(in oklab, #c9cace, black 15%) 100%);
+.hero-mission-copy {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 0.78rem;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: clamp(1.4rem, 3vw, 3rem);
+  background: color-mix(in oklab, #f8f8f9, #e9eaee 34%);
 }
 
-.hero-figure-role {
-  font-size: 0.62rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #30343e;
-  opacity: 0.68;
-}
-
-.hero-figure-name {
-  margin-top: 0.08rem;
-  font-size: 0.93rem;
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.hero-figure-initials {
-  position: absolute;
-  top: 0.66rem;
-  right: 0.66rem;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  background: color-mix(in oklab, #0f1219, var(--tone) 30%);
-  color: #f7f7fb;
+.hero-mission-kicker {
+  margin: 0;
   font-size: 0.68rem;
-  font-weight: 760;
-  display: inline-flex;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: color-mix(in oklab, var(--ink), #989ca6 54%);
+}
+
+.hero-mission-title {
+  margin: 0.9rem 0 0;
+  max-width: 16ch;
+  font-family: var(--theme-font-title);
+  font-size: clamp(1.9rem, 3.5vw, 3.7rem);
+  line-height: 0.98;
+}
+
+.hero-mission-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-mission-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.hero-metric-panel {
+  width: min(96vw, 1760px);
+  position: relative;
+  height: clamp(420px, calc(100vh - 150px), 760px);
+  border-radius: 8px;
+  border: 1px solid color-mix(in oklab, #d3d4d9, transparent 24%);
+  background: linear-gradient(180deg, #f7f7f8 0%, #f0f0f3 100%);
+  box-shadow: 0 28px 42px rgba(35, 37, 45, 0.09);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0.45rem;
+  text-align: center;
+  padding: clamp(1.2rem, 2.3vw, 2.1rem);
 }
 
-.hero-figure.is-stand {
-  height: min(56vh, 540px);
+.hero-metric-panel::before {
+  content: '';
+  position: absolute;
+  inset: 11% 10%;
+  background-image: radial-gradient(circle, rgba(102, 106, 117, 0.2) 1px, transparent 1.2px);
+  background-size: 12px 12px;
+  opacity: 0.4;
 }
 
-.hero-figure.is-sit {
-  height: min(46vh, 440px);
+.hero-metric-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-metric-overline {
+  margin: 0;
+  font-size: 0.9rem;
+  color: color-mix(in oklab, var(--ink), #91949d 58%);
+}
+
+.hero-metric-number {
+  margin: 0;
+  font-family: var(--theme-font-title);
+  font-size: clamp(2.6rem, 6.7vw, 6.2rem);
+  line-height: 0.9;
+  letter-spacing: -0.034em;
+}
+
+.hero-metric-label {
+  margin: 0.7rem auto 0;
+  max-width: 24ch;
+  font-size: clamp(0.78rem, 1.2vw, 1.02rem);
+  line-height: 1.35;
+  color: color-mix(in oklab, var(--ink), #8c8f99 52%);
+  text-transform: lowercase;
+}
+
+.hero-metric-source {
+  margin: 0.55rem 0 0;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--ink), #979aa4 60%);
 }
 
 .headline-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 6;
+  position: relative;
+  z-index: 1;
   display: grid;
   place-items: center;
-  pointer-events: none;
+  margin-bottom: clamp(0.8rem, 2.2vh, 2rem);
 }
 
 .headline-layer h2 {
   margin: 0;
   text-align: center;
+  max-width: 14ch;
   font-size: clamp(2.1rem, 6.4vw, 6.1rem);
   line-height: 0.93;
-  letter-spacing: -0.03em;
   font-family: var(--theme-font-title);
 }
 
@@ -707,19 +744,20 @@ onBeforeUnmount(() => {
 }
 
 .split-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 8;
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) 1px minmax(0, 0.95fr);
-  align-items: center;
+  align-items: start;
   gap: 1.4rem;
-  padding-top: 2.8rem;
+  padding-top: 0;
 }
 
 .manifesto-copy {
   padding-right: clamp(0.4rem, 2vw, 1.8rem);
-  position: relative;
+  position: sticky;
+  top: 92px;
+  align-self: start;
 }
 
 .manifesto-full {
@@ -885,16 +923,18 @@ onBeforeUnmount(() => {
 }
 
 .next-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 9;
+  position: relative;
+  z-index: 1;
   display: grid;
-  place-items: center;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: clamp(0.9rem, 2.4vw, 2.2rem);
+  margin-top: clamp(0.8rem, 2.6vh, 2.4rem);
 }
 
 .next-layer h3 {
   margin: 0;
-  text-align: center;
+  text-align: left;
   font-size: clamp(2.05rem, 5.4vw, 5rem);
   line-height: 0.93;
   letter-spacing: -0.028em;
@@ -908,9 +948,10 @@ onBeforeUnmount(() => {
 }
 
 .chapter-card {
-  position: absolute;
-  right: clamp(1rem, 4vw, 4rem);
-  top: 24%;
+  position: relative;
+  right: auto;
+  top: auto;
+  margin-left: auto;
   width: clamp(176px, 16vw, 246px);
   border-radius: 14px;
   border: 1px solid #2a2d34;
@@ -979,7 +1020,8 @@ onBeforeUnmount(() => {
 
 @media (max-width: 1240px) {
   .hero-track {
-    grid-auto-columns: minmax(168px, 206px);
+    margin-left: 0;
+    grid-auto-columns: 100vw;
   }
 
   .team-card {
@@ -989,7 +1031,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 1023px) {
   .story-stage {
-    min-height: 300vh;
+    min-height: 250vh;
   }
 
   .story-sticky {
@@ -997,20 +1039,65 @@ onBeforeUnmount(() => {
     min-height: calc(100vh - 76px);
   }
 
+  .story-flow {
+    margin-top: 0;
+  }
+
   .studio-nav-pill strong {
     font-size: 1.6rem;
   }
 
   .hero-track {
-    grid-auto-columns: minmax(146px, 168px);
-    gap: 0.9rem;
+    margin-left: 0;
+    grid-auto-columns: 100vw;
+    gap: 0;
+  }
+
+  .hero-mission-panel {
+    width: 92vw;
+    height: clamp(410px, calc(100vh - 150px), 700px);
+    grid-template-columns: 1fr;
+    border-radius: 8px;
+  }
+
+  .hero-mission-copy {
+    padding-block: 1.4rem 1.2rem;
+  }
+
+  .hero-mission-title {
+    margin-top: 0.55rem;
+    max-width: 20ch;
+    font-size: clamp(1.8rem, 5.4vw, 2.9rem);
+  }
+
+  .hero-mission-image {
+    min-height: clamp(220px, 40vw, 330px);
+  }
+
+  .hero-metric-panel {
+    width: 96vw;
+    height: clamp(410px, calc(100vh - 150px), 700px);
+    border-radius: 8px;
+  }
+
+  .hero-metric-number {
+    font-size: clamp(2.4rem, 11vw, 4.8rem);
+  }
+
+  .hero-metric-label {
+    max-width: 30ch;
+    font-size: 0.8rem;
   }
 
   .split-layer {
     grid-template-columns: 1fr;
     gap: 0.9rem;
-    padding-top: 3.2rem;
     align-content: center;
+  }
+
+  .manifesto-copy {
+    position: relative;
+    top: auto;
   }
 
   .manifesto-full {
@@ -1044,9 +1131,13 @@ onBeforeUnmount(() => {
     display: none;
   }
 
+  .next-layer {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
   .chapter-card {
-    right: 0.7rem;
-    top: 14%;
+    margin-left: 0;
     width: 162px;
   }
 }
@@ -1061,7 +1152,11 @@ onBeforeUnmount(() => {
   }
 
   .story-stage {
-    min-height: 275vh;
+    min-height: 230vh;
+  }
+
+  .story-flow {
+    margin-top: 0;
   }
 
   .studio-nav-pill {
@@ -1078,24 +1173,53 @@ onBeforeUnmount(() => {
     font-size: 1.3rem;
   }
 
-  .hero-figure {
-    border-radius: 18px 18px 24px 24px;
+  .hero-track {
+    margin-left: 0;
+    grid-auto-columns: 100vw;
   }
 
-  .hero-figure.is-stand {
-    height: min(42vh, 360px);
+  .hero-mission-panel,
+  .hero-metric-panel {
+    height: clamp(370px, calc(100vh - 145px), 560px);
+    border-radius: 8px;
   }
 
-  .hero-figure.is-sit {
-    height: min(35vh, 300px);
+  .hero-mission-panel {
+    width: 94vw;
   }
 
-  .headline-layer h2 {
-    margin-top: 0.95rem;
+  .hero-metric-panel {
+    width: 96vw;
   }
 
+  .hero-mission-copy {
+    padding-inline: 1rem;
+  }
+
+  .hero-mission-title {
+    font-size: clamp(1.48rem, 8vw, 2.15rem);
+  }
+
+  .hero-metric-overline {
+    font-size: 0.78rem;
+  }
+
+  .hero-metric-number {
+    font-size: clamp(2rem, 13vw, 3.4rem);
+  }
+
+  .hero-metric-label {
+    font-size: 0.74rem;
+    line-height: 1.34;
+  }
+
+  .hero-metric-source {
+    font-size: 0.58rem;
+  }
+
+  .headline-layer h2,
   .next-layer h3 {
-    margin-top: 1.5rem;
+    margin-top: 0;
   }
 }
 
@@ -1116,6 +1240,20 @@ onBeforeUnmount(() => {
   .hero-track,
   .team-rail {
     transform: none !important;
+  }
+
+  .hero-track {
+    width: 100%;
+    margin-left: 0;
+    grid-auto-flow: row;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .hero-mission-panel,
+  .hero-metric-panel {
+    height: auto;
+    min-height: 260px;
   }
 
   .headline-layer,

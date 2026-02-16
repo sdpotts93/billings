@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
+    '@nuxt/fonts',
     '@nuxt/ui'
   ],
 
@@ -44,5 +45,19 @@ export default defineNuxtConfig({
         braceStyle: '1tbs'
       }
     }
+  },
+
+  fonts: {
+    families: [
+      {
+        name: 'Veneer',
+        provider: 'local',
+        global: true,
+        preload: true,
+        display: 'swap',
+        styles: ['normal'],
+        weights: [400]
+      }
+    ]
   }
 })
