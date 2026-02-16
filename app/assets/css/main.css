@@ -105,3 +105,7 @@
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
 }
+
+/* html, body {
+  background-color: var(--theme-color-muted);
+} */

@@ -6,36 +6,31 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 const heroImageSrc = '/images/behind-the-scenes.jpg'
 const heroVideoHref = 'https://example.com'
 const maxPullOffset = 12
-const studioMoveDuration = 0.62
-const studioMovePauseMs = 150
+const studioMoveDuration = 0.34
+const studioMovePauseMs = 70
 const studioGridColumnCount = 4
 const studioGridRowCount = 3
+const studioCopySlotIndex = ((studioGridRowCount - 1) * studioGridColumnCount) + (studioGridColumnCount - 2)
+const studioReservedSlotOccupant = '__studio-copy__'
 const studioGridSlots = Array.from({ length: studioGridColumnCount * studioGridRowCount }, (_, index) => {
   return {
     column: (index % studioGridColumnCount) + 1,
     row: Math.floor(index / studioGridColumnCount) + 1
   }
 })
-const studioFinalSlotOrder = [0, 2, 3, 5, 7, 8, 9] as const
-const studioSlotNeighbors = studioGridSlots.map((slot, slotIndex) => {
-  return studioGridSlots
-    .map((candidate, candidateIndex) => ({ candidate, candidateIndex }))
-    .filter(({ candidate, candidateIndex }) => {
-      if (candidateIndex === slotIndex) {
-        return false
-      }
-
-      const columnDistance = Math.abs(slot.column - candidate.column)
-      const rowDistance = Math.abs(slot.row - candidate.row)
-      return columnDistance + rowDistance === 1
-    })
-    .map(({ candidateIndex }) => candidateIndex)
-})
+const studioInitialSlotOrder = [0, 2, 3, 5, 7, 8, 9] as const
+const studioTargetSlotOrder = [1, 6, 2, 9, 3, 4, 8] as const
 
 type StudioTile = {
   id: string
   src: string
   alt: string
+}
+
+type StudioMove = {
+  from: number
+  to: number
+  tileId: string
 }
 
 const studioTiles: StudioTile[] = [
@@ -75,17 +70,30 @@ const studioTiles: StudioTile[] = [
     alt: 'Behind-the-scenes portrait from production'
   }
 ]
+const studioMovePlan: StudioMove[] = [
+  { tileId: 'bts-1', from: 0, to: 1 },
+  { tileId: 'bts-2', from: 2, to: 6 },
+  { tileId: 'bts-3', from: 3, to: 2 },
+  { tileId: 'bts-5', from: 7, to: 3 },
+  { tileId: 'bts-6', from: 8, to: 4 },
+  { tileId: 'bts-7', from: 9, to: 8 },
+  { tileId: 'bts-4', from: 5, to: 9 }
+]
 
 const pointerOffsetX = ref(0)
 const pointerOffsetY = ref(0)
 const prefersReducedMotion = ref(false)
 const studioGridRef = ref<HTMLElement | null>(null)
 const hasStudioGridAnimated = ref(false)
-const studioFinalSlotsById = studioTiles.reduce<Record<string, number>>((accumulator, tile, index) => {
-  accumulator[tile.id] = studioFinalSlotOrder[index] ?? 0
+const studioInitialSlotsById = studioTiles.reduce<Record<string, number>>((accumulator, tile, index) => {
+  accumulator[tile.id] = studioInitialSlotOrder[index] ?? 0
   return accumulator
 }, {})
-const studioTileSlotsById = ref<Record<string, number>>({ ...studioFinalSlotsById })
+const studioTargetSlotsById = studioTiles.reduce<Record<string, number>>((accumulator, tile, index) => {
+  accumulator[tile.id] = studioTargetSlotOrder[index] ?? 0
+  return accumulator
+}, {})
+const studioTileSlotsById = ref<Record<string, number>>({ ...studioInitialSlotsById })
 
 let reduceMotionQuery: MediaQueryList | null = null
 let studioGridObserver: IntersectionObserver | null = null
@@ -152,7 +160,7 @@ const waitForMs = (durationMs: number) => {
 }
 
 const getStudioTileStyle = (tileId: string) => {
-  const slotIndex = studioTileSlotsById.value[tileId] ?? studioFinalSlotsById[tileId] ?? 0
+  const slotIndex = studioTileSlotsById.value[tileId] ?? studioInitialSlotsById[tileId] ?? 0
   const slot = studioGridSlots[slotIndex] ?? studioGridSlots[0]
 
   return {
@@ -161,97 +169,45 @@ const getStudioTileStyle = (tileId: string) => {
   }
 }
 
-const getRandomInteger = (maxExclusive: number) => {
-  return Math.floor(Math.random() * maxExclusive)
-}
-
-type StudioMove = {
-  from: number
-  to: number
-  tileId: string
-}
-
 const buildStudioMoveSequence = () => {
   const occupancy: Array<string | null> = Array.from({ length: studioGridSlots.length }, () => null)
+  occupancy[studioCopySlotIndex] = studioReservedSlotOccupant
 
   for (const tile of studioTiles) {
-    const slotIndex = studioFinalSlotsById[tile.id]
+    const slotIndex = studioInitialSlotsById[tile.id]
     if (slotIndex === undefined) {
-      continue
+      return []
     }
 
     occupancy[slotIndex] = tile.id
   }
 
-  const forwardMoves: StudioMove[] = []
-  const moveCount = 14
+  const builtSequence: StudioMove[] = []
+  for (const plannedMove of studioMovePlan) {
+    const sourceSlot = studioGridSlots[plannedMove.from]
+    const targetSlot = studioGridSlots[plannedMove.to]
+    const movingTileCurrentIndex = occupancy.indexOf(plannedMove.tileId)
 
-  for (let step = 0; step < moveCount; step += 1) {
-    const previousMove = forwardMoves[forwardMoves.length - 1]
-    const possibleMoves: StudioMove[] = []
-
-    for (let emptySlotIndex = 0; emptySlotIndex < occupancy.length; emptySlotIndex += 1) {
-      if (occupancy[emptySlotIndex] !== null) {
-        continue
-      }
-
-      const neighborSlots = studioSlotNeighbors[emptySlotIndex]
-      if (!neighborSlots) {
-        continue
-      }
-
-      for (const occupiedSlotIndex of neighborSlots) {
-        const tileId = occupancy[occupiedSlotIndex]
-        if (!tileId) {
-          continue
-        }
-
-        const isImmediateUndo = previousMove
-          && previousMove.tileId === tileId
-          && previousMove.from === emptySlotIndex
-          && previousMove.to === occupiedSlotIndex
-
-        if (isImmediateUndo) {
-          continue
-        }
-
-        possibleMoves.push({
-          from: occupiedSlotIndex,
-          to: emptySlotIndex,
-          tileId
-        })
-      }
+    if (!sourceSlot || !targetSlot || movingTileCurrentIndex !== plannedMove.from) {
+      return []
     }
 
-    if (possibleMoves.length === 0) {
-      break
+    if (occupancy[plannedMove.to] !== null) {
+      return []
     }
 
-    const nextMove = possibleMoves[getRandomInteger(possibleMoves.length)]
-    if (!nextMove) {
-      break
+    const columnDistance = Math.abs(sourceSlot.column - targetSlot.column)
+    const rowDistance = Math.abs(sourceSlot.row - targetSlot.row)
+    if (columnDistance + rowDistance !== 1) {
+      return []
     }
 
-    occupancy[nextMove.from] = null
-    occupancy[nextMove.to] = nextMove.tileId
-    forwardMoves.push(nextMove)
+    builtSequence.push(plannedMove)
+    occupancy[plannedMove.from] = null
+    occupancy[plannedMove.to] = plannedMove.tileId
   }
 
-  const reverseMoves: StudioMove[] = []
-  for (let index = forwardMoves.length - 1; index >= 0; index -= 1) {
-    const move = forwardMoves[index]
-    if (!move) {
-      continue
-    }
-
-    reverseMoves.push({
-      from: move.to,
-      to: move.from,
-      tileId: move.tileId
-    })
-  }
-
-  return [...forwardMoves, ...reverseMoves]
+  return builtSequence
 }
 
 const animateStudioGrid = async () => {
@@ -269,7 +225,7 @@ const animateStudioGrid = async () => {
     }
 
     if (prefersReducedMotion.value) {
-      studioTileSlotsById.value = { ...studioFinalSlotsById }
+      studioTileSlotsById.value = { ...studioTargetSlotsById }
       return
     }
 
@@ -299,6 +255,8 @@ const animateStudioGrid = async () => {
       await waitForMs(studioMovePauseMs)
     }
   }
+
+  studioTileSlotsById.value = { ...studioTargetSlotsById }
 }
 
 const startStudioGridObserver = () => {
@@ -317,6 +275,7 @@ const startStudioGridObserver = () => {
       studioGridObserver = null
 
       if (prefersReducedMotion.value) {
+        studioTileSlotsById.value = { ...studioTargetSlotsById }
         hasStudioGridAnimated.value = true
         return
       }
@@ -393,15 +352,6 @@ onBeforeUnmount(() => {
         class="studio-life"
         aria-label="Behind-the-scenes collage"
       >
-        <div class="studio-life-copy">
-          <p>
-            Billings follows one cystic fibrosis patient and her family through the daily realities of treatment schedules, insurance hurdles, and emotional strain. We filmed in homes, clinics, and community spaces to show how those pressures affect every part of life.
-          </p>
-          <p>
-            Behind each chapter is fact-checking, consent review, and careful editing so every story stays accurate, respectful, and practical. The goal is to make a hard system easier to understand and connect viewers to help they can use right now.
-          </p>
-        </div>
-
         <div
           ref="studioGridRef"
           class="studio-life-grid"
@@ -420,6 +370,15 @@ onBeforeUnmount(() => {
               decoding="async"
             >
           </figure>
+
+          <div class="studio-life-copy">
+            <p>
+              Billings follows one cystic fibrosis patient and her family through the daily realities of treatment schedules, insurance hurdles, and emotional strain. We filmed in homes, clinics, and community spaces to show how those pressures affect every part of life.
+            </p>
+            <p>
+              Behind each chapter is fact-checking, consent review, and careful editing so every story stays accurate, respectful, and practical. The goal is to make a hard system easier to understand and connect viewers to help they can use right now.
+            </p>
+          </div>
         </div>
       </section>
     </main>
@@ -462,7 +421,7 @@ onBeforeUnmount(() => {
 .intro-copy {
   margin-inline: auto;
   max-width: 860px;
-  padding: clamp(2.1rem, 6vw, 4.2rem) 0 clamp(2.6rem, 7vw, 4.8rem);
+  padding: clamp(2.1rem, 6vw, 4.2rem) 0 0;
   text-align: center;
 }
 
@@ -500,12 +459,19 @@ onBeforeUnmount(() => {
 }
 
 .studio-life-copy {
-  max-width: 34ch;
-  margin-left: calc(25% + (var(--frame-gap) * 0.5));
-  margin-right: auto;
+  grid-column: 3;
+  grid-row: 3;
+  margin: 0;
+  max-width: none;
+  min-height: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  padding: 1rem;
+  align-self: stretch;
   color: var(--muted);
   font-size: var(--fs-brand);
-  line-height: 1.45;
+  line-height: 1.25;
 }
 
 .studio-life-copy p {
@@ -513,7 +479,7 @@ onBeforeUnmount(() => {
 }
 
 .studio-life-copy p + p {
-  margin-top: 1.7rem;
+  margin-top: 0.7rem;
 }
 
 .studio-life-grid {
@@ -567,6 +533,7 @@ onBeforeUnmount(() => {
   min-height: 380px;
   background: #d5ddd6;
   box-shadow: 0 26px 56px rgba(30, 28, 31, 0.14);
+  border: 1px solid var(--muted);
 }
 
 .hero-media::after {
@@ -646,8 +613,9 @@ onBeforeUnmount(() => {
   }
 
   .studio-life-copy {
-    margin-left: 0;
-    margin-right: 0;
+    grid-column: 1 / -1;
+    grid-row: auto;
+    max-width: 100%;
   }
 
   .studio-life-grid {
@@ -680,8 +648,8 @@ onBeforeUnmount(() => {
   }
 
   .studio-life-copy {
-    font-size: 0.92rem;
     max-width: 100%;
+    line-height: 1.4;
   }
 
   .studio-life-copy p + p {
