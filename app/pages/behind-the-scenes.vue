@@ -6,6 +6,8 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 const heroImageSrc = '/images/behind-the-scenes.jpg'
 const heroVideoHref = 'https://example.com'
 const maxPullOffset = 12
+const studioMoveDuration = 0.62
+const studioMovePauseMs = 150
 const studioGridColumnCount = 4
 const studioGridRowCount = 3
 const studioGridSlots = Array.from({ length: studioGridColumnCount * studioGridRowCount }, (_, index) => {
@@ -143,6 +145,12 @@ const playButtonStyle = computed(() => {
   }
 })
 
+const waitForMs = (durationMs: number) => {
+  return new Promise<void>((resolve) => {
+    setTimeout(resolve, durationMs)
+  })
+}
+
 const getStudioTileStyle = (tileId: string) => {
   const slotIndex = studioTileSlotsById.value[tileId] ?? studioFinalSlotsById[tileId] ?? 0
   const slot = studioGridSlots[slotIndex] ?? studioGridSlots[0]
@@ -254,14 +262,23 @@ const animateStudioGrid = async () => {
   hasStudioGridAnimated.value = true
   const moveSequence = buildStudioMoveSequence()
 
-  for (const move of moveSequence) {
+  for (let moveIndex = 0; moveIndex < moveSequence.length; moveIndex += 1) {
+    const move = moveSequence[moveIndex]
+    if (!move) {
+      continue
+    }
+
     if (prefersReducedMotion.value) {
       studioTileSlotsById.value = { ...studioFinalSlotsById }
       return
     }
 
-    const tileElements = Array.from(studioGridRef.value.querySelectorAll<HTMLElement>('.studio-tile'))
-    const state = Flip.getState(tileElements)
+    const movingTileElement = studioGridRef.value.querySelector<HTMLElement>(`[data-tile-id="${move.tileId}"]`)
+    if (!movingTileElement) {
+      continue
+    }
+
+    const state = Flip.getState(movingTileElement)
 
     studioTileSlotsById.value = {
       ...studioTileSlotsById.value,
@@ -272,12 +289,15 @@ const animateStudioGrid = async () => {
     await new Promise<void>((resolve) => {
       Flip.from(state, {
         absolute: true,
-        duration: 0.34,
+        duration: studioMoveDuration,
         ease: 'power1.inOut',
-        stagger: 0,
         onComplete: resolve
       })
     })
+
+    if (moveIndex < moveSequence.length - 1) {
+      await waitForMs(studioMovePauseMs)
+    }
   }
 }
 
@@ -390,6 +410,7 @@ onBeforeUnmount(() => {
             v-for="tile in studioTiles"
             :key="tile.id"
             class="studio-tile"
+            :data-tile-id="tile.id"
             :style="getStudioTileStyle(tile.id)"
           >
             <img
