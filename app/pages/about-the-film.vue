@@ -126,58 +126,12 @@ const uninsuredPeopleFormatted = computed(() => {
   return uninsuredPeopleCount.value.toLocaleString('en-US')
 })
 
-const previewPointerX = ref<number | null>(null)
-const previewPointerY = ref<number | null>(null)
-const previewRevealStart = 0.6
-const previewRevealEnd = 0.72
-
-const isPreviewFollowing = computed(() => {
-  return previewPointerX.value !== null && previewPointerY.value !== null
-})
-
-const shouldShowPreview = computed(() => {
-  return isPreviewFollowing.value && stageProgress.value >= previewRevealStart && stageProgress.value <= previewRevealEnd
-})
-
-const previewStyle = computed(() => {
-  if (previewPointerX.value === null || previewPointerY.value === null) {
-    return {}
-  }
-
-  const offsetX = 20
-  const offsetY = -20
-
-  return {
-    left: `${previewPointerX.value + offsetX}px`,
-    top: `${previewPointerY.value + offsetY}px`
-  }
-})
-
 let requestId = 0
 let uninsuredObserver: IntersectionObserver | null = null
 let uninsuredAnimationId = 0
 let hasAnimatedUninsuredMetric = false
 let reduceMotionQuery: MediaQueryList | null = null
 let reduceMotionListener: (() => void) | null = null
-
-const resetStagePointer = () => {
-  previewPointerX.value = null
-  previewPointerY.value = null
-}
-
-const handleGlobalPointerMove = (event: PointerEvent) => {
-  if (prefersReducedMotion.value) {
-    return
-  }
-
-  if (event.pointerType === 'touch') {
-    resetStagePointer()
-    return
-  }
-
-  previewPointerX.value = event.clientX
-  previewPointerY.value = event.clientY
-}
 
 const animateUninsuredPeople = () => {
   if (hasAnimatedUninsuredMetric || typeof window === 'undefined') {
@@ -242,7 +196,6 @@ const applyMotionPreference = () => {
   prefersReducedMotion.value = Boolean(reduceMotionQuery?.matches)
 
   if (prefersReducedMotion.value) {
-    resetStagePointer()
     uninsuredPeopleCount.value = uninsuredPeopleTotal
     hasAnimatedUninsuredMetric = true
   }
@@ -268,8 +221,6 @@ onMounted(() => {
 
   applyMotionPreference()
 
-  window.addEventListener('pointermove', handleGlobalPointerMove, { passive: true })
-  window.addEventListener('pointerleave', resetStagePointer, { passive: true })
   window.addEventListener('scroll', scheduleProgressSync, { passive: true })
   window.addEventListener('resize', scheduleProgressSync, { passive: true })
   scheduleProgressSync()
@@ -296,8 +247,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (typeof window !== 'undefined') {
-    window.removeEventListener('pointermove', handleGlobalPointerMove)
-    window.removeEventListener('pointerleave', resetStagePointer)
     window.removeEventListener('scroll', scheduleProgressSync)
     window.removeEventListener('resize', scheduleProgressSync)
   }
@@ -398,10 +347,10 @@ onBeforeUnmount(() => {
       <div class="split-layer">
         <div class="manifesto-copy">
           <p class="manifesto-full">
-            We work hand in hand with patients, caregivers, clinicians, and advocates to document what care access actually looks like in real life.
+            We talked to patients, caregivers, clinicians, and advocates to document what healthcare access actually looks like.
           </p>
           <p class="manifesto-short">
-            We work with patients, caregivers, and clinicians to tell this story with care.
+            We talked to patients, caregivers, clinicians, and advocates to document what healthcare access actually looks like.
           </p>
           <span class="manifesto-reveal" />
         </div>
@@ -435,17 +384,12 @@ onBeforeUnmount(() => {
               </div>
             </article>
           </div>
-
-          <div
-            class="floating-preview-anchor"
-            aria-hidden="true"
-          />
         </div>
       </div>
 
       <div class="next-layer">
         <h3>
-          Next chapter
+          Explore Our
           <span>Resources</span>
         </h3>
         <div class="chapter-card">
@@ -463,17 +407,6 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
-    <div
-      v-show="shouldShowPreview"
-      class="floating-preview"
-      :style="previewStyle"
-      aria-hidden="true"
-    >
-      <div class="preview-card">
-        <p>Every chapter centers real families navigating a difficult health care system.</p>
-      </div>
-    </div>
-
     <section class="after-note shell">
       <h4>Built to inform, not overwhelm.</h4>
       <p>
@@ -486,7 +419,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .about-film-page {
   --page-bg: var(--theme-color-bg);
-  --ink: var(--ink);
+  --ink: var(--theme-color-text);
   --line: #111217;
   --card: #efeff1;
   --soft: #d5d6da;
@@ -550,7 +483,7 @@ onBeforeUnmount(() => {
 
 .story-flow {
   display: grid;
-  gap: clamp(2rem, 4.8vh, 4.8rem);
+  gap: 120px;
   padding-block: clamp(0.25rem, 1.2vh, 1.1rem) clamp(2.4rem, 6vh, 5rem);
 }
 
@@ -674,9 +607,13 @@ onBeforeUnmount(() => {
   content: '';
   position: absolute;
   inset: 11% 10%;
-  background-image: radial-gradient(circle, rgba(102, 106, 117, 0.2) 1px, transparent 1.2px);
+  background-image: radial-gradient(circle, rgb(243 243 243 / 20%) 1px, #ffffff00 1.2px);
   background-size: 12px 12px;
-  opacity: 0.4;
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
 
 .hero-metric-panel > * {
@@ -685,17 +622,23 @@ onBeforeUnmount(() => {
 }
 
 .hero-metric-overline {
-  margin: 0;
-  font-size: 0.9rem;
-  color: color-mix(in oklab, var(--ink), #91949d 58%);
+    margin: 0.9rem auto 0;
+    max-width: 620px;
+    color: var(--ink);
+    line-height: 1.45;
+    font-size: var(--fs-brand);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
 }
 
 .hero-metric-number {
   margin: 0;
   font-family: var(--theme-font-title);
-  font-size: clamp(2.6rem, 6.7vw, 6.2rem);
+  font-size: 10rem;
   line-height: 0.9;
   letter-spacing: -0.034em;
+  color: var(--muted);
 }
 
 .hero-metric-label {
@@ -703,7 +646,7 @@ onBeforeUnmount(() => {
   max-width: 24ch;
   font-size: clamp(0.78rem, 1.2vw, 1.02rem);
   line-height: 1.35;
-  color: color-mix(in oklab, var(--ink), #8c8f99 52%);
+  color: var(--muted);
   text-transform: lowercase;
 }
 
@@ -712,7 +655,7 @@ onBeforeUnmount(() => {
   font-size: 0.66rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--ink), #979aa4 60%);
+  color: #959595;
 }
 
 .headline-layer {
@@ -858,53 +801,6 @@ onBeforeUnmount(() => {
   line-height: 1.42;
 }
 
-.floating-preview-anchor {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 1px;
-  height: 1px;
-  pointer-events: none;
-}
-
-.floating-preview {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 9999;
-  pointer-events: none;
-  will-change: left, top;
-}
-
-.preview-card {
-  width: clamp(152px, 16vw, 228px);
-  aspect-ratio: 1 / 1;
-  border-radius: 14px;
-  background: linear-gradient(140deg, #0f1014, #181a21 55%, #0f1014);
-  border: 1px solid #2b2e38;
-  color: #f1f3f8;
-  padding: 0.7rem;
-  font-size: 0.74rem;
-  line-height: 1.35;
-  position: relative;
-  overflow: hidden;
-}
-
-.preview-card::after {
-  content: '';
-  position: absolute;
-  inset: -35%;
-  background: linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.24), transparent 58%);
-  transform: rotate(8deg);
-  animation: previewSweep 4s linear infinite;
-}
-
-.preview-card p {
-  margin: 0;
-  position: relative;
-  z-index: 1;
-}
-
 .next-layer {
   position: relative;
   z-index: 1;
@@ -926,7 +822,7 @@ onBeforeUnmount(() => {
 
 .next-layer h3 span {
   display: block;
-  color: color-mix(in oklab, #3a3b40, #9b9ea6 47%);
+  color: color-mix(in oklab, var(--ink), #90939d 55%);
   font-weight: 500;
 }
 
@@ -975,16 +871,6 @@ onBeforeUnmount(() => {
   max-width: 680px;
   color: var(--muted);
   line-height: 1.5;
-}
-
-@keyframes previewSweep {
-  from {
-    transform: translateX(-36%) rotate(8deg);
-  }
-
-  to {
-    transform: translateX(48%) rotate(8deg);
-  }
 }
 
 @keyframes scanline {
@@ -1259,7 +1145,6 @@ onBeforeUnmount(() => {
     margin: 0.8rem auto 0;
   }
 
-  .preview-card::after,
   .chapter-card .scanline {
     animation: none;
   }
