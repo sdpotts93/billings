@@ -319,8 +319,8 @@ onBeforeUnmount(() => {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: clamp(3.8rem, 11vw, 8.6rem);
-  padding-block: clamp(1.4rem, 2.3vw, 2.2rem) clamp(1.6rem, 2.4vw, 2.1rem);
+  gap: 5rem;
+  padding-block: 0 clamp(1.6rem, 2.4vw, 2.1rem) clamp(1.4rem, 2.3vw, 2.2rem);
 }
 
 .footer-shell::before {
@@ -344,7 +344,7 @@ onBeforeUnmount(() => {
 
 .footer-column h3 {
   margin: 0;
-  color: #151515;
+  color: var(--ink);
   font-size: clamp(0.95rem, 1.3vw, 1.85rem);
   font-weight: 700;
 }
@@ -358,9 +358,10 @@ onBeforeUnmount(() => {
 }
 
 .footer-column a {
-  color: #8b8b8b;
+  color: var(--accent-contrast);
   text-decoration: none;
-  font-size: clamp(1rem, 1.25vw, 1.75rem);
+  font-size: var(--theme-font-size-mobile-cta);
+  font-family: var(--font-sans);
 }
 
 .footer-column a:hover,
@@ -381,7 +382,7 @@ onBeforeUnmount(() => {
   font-family: var(--font-title);
   font-size: clamp(4.5rem, 15.4vw, 15.5rem);
   font-weight: 900;
-  line-height: 0.9;
+  line-height: 1;
   letter-spacing: 0.009em;
   text-transform: uppercase;
 }
@@ -395,16 +396,16 @@ onBeforeUnmount(() => {
 
 .footer-meta p {
   margin: 0;
-  color: #171717;
-  font-size: clamp(1rem, 1.15vw, 1.6rem);
+  color: var(--theme-color-link-soft);
+  font-size: var(--theme-font-size-mobile-cta);
 }
 
 .back-to-top {
   border: 0;
   background: transparent;
-  color: #171717;
+  color: var(--theme-color-link-soft);
   font: inherit;
-  font-size: clamp(1rem, 1.15vw, 1.6rem);
+  font-size: var(--theme-font-size-mobile-cta);
   cursor: pointer;
   padding: 0;
 }

@@ -10,7 +10,7 @@ type TeamMember = {
   tone: string
 }
 
-const heroMissionImageSrc = 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=2200&q=80'
+const heroMissionImageSrc = '/images/why.jpg'
 const uninsuredPeopleTotal = 27_200_000
 
 const teamMembers: TeamMember[] = [
@@ -607,7 +607,6 @@ onBeforeUnmount(() => {
 .hero-mission-panel {
   width: min(90vw, 1700px);
   height: clamp(420px, calc(100vh - 150px), 760px);
-  border: 1px solid color-mix(in oklab, #d3d4d9, transparent 24%);
   border-radius: 8px;
   background: linear-gradient(180deg, #f1f2f4 0%, #ececef 100%);
   box-shadow: 0 28px 42px rgba(35, 37, 45, 0.1);
@@ -631,7 +630,8 @@ onBeforeUnmount(() => {
   font-size: var(--fs-brand);
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--accent-contrast)
+  color: var(--accent-contrast);
+  letter-spacing: 0.08em;
 }
 
 .hero-mission-title {
@@ -660,9 +660,6 @@ onBeforeUnmount(() => {
   position: relative;
   height: clamp(420px, calc(100vh - 150px), 760px);
   border-radius: 8px;
-  border: 1px solid color-mix(in oklab, #d3d4d9, transparent 24%);
-  background: linear-gradient(180deg, #f7f7f8 0%, #f0f0f3 100%);
-  box-shadow: 0 28px 42px rgba(35, 37, 45, 0.09);
   overflow: hidden;
   display: flex;
   flex-direction: column;

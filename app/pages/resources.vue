@@ -2374,6 +2374,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   overflow: hidden;
   height: 100%;
   background: linear-gradient(145deg, #d5dee9 0%, #f4f8fb 100%);
+  box-shadow: 24px 24px 0px var(--muted);
 }
 
 .hero-media img {

@@ -532,8 +532,7 @@ onBeforeUnmount(() => {
   height: calc(100vh - 68px - (var(--frame-gap) * 2));
   min-height: 380px;
   background: #d5ddd6;
-  box-shadow: 0 26px 56px rgba(30, 28, 31, 0.14);
-  border: 1px solid var(--muted);
+  box-shadow: 24px 24px 0px var(--muted);
 }
 
 .hero-media::after {
