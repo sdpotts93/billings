@@ -203,8 +203,8 @@ const batchSize = 30
 const loadedCount = ref(0)
 const isLoadingMore = ref(false)
 const isMobileFormOpen = ref(false)
+const selectedPhoto = ref<File | null>(null)
 const selectedPhotoPreview = ref<string | null>(null)
-const selectedPhotoName = ref('')
 const submitNotice = ref('')
 const postedPhotoUrls = ref<string[]>([])
 
@@ -239,34 +239,19 @@ const clearSubmitNotice = () => {
   }, 2500)
 }
 
-const resetForm = (preserveCurrentPhoto = false) => {
-  formState.name = ''
-  formState.message = ''
-  selectedPhotoName.value = ''
-
-  if (selectedPhotoPreview.value) {
-    if (!preserveCurrentPhoto) {
-      URL.revokeObjectURL(selectedPhotoPreview.value)
-    }
-
-    selectedPhotoPreview.value = null
-  }
-}
-
-const handlePhotoChange = (event: Event) => {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0]
-
-  if (!file) {
+const clearSelectedPhotoPreview = () => {
+  if (!selectedPhotoPreview.value) {
     return
   }
 
-  if (selectedPhotoPreview.value) {
-    URL.revokeObjectURL(selectedPhotoPreview.value)
-  }
+  URL.revokeObjectURL(selectedPhotoPreview.value)
+  selectedPhotoPreview.value = null
+}
 
-  selectedPhotoName.value = file.name
-  selectedPhotoPreview.value = URL.createObjectURL(file)
+const resetForm = () => {
+  formState.name = ''
+  formState.message = ''
+  selectedPhoto.value = null
 }
 
 const submitStory = () => {
@@ -277,13 +262,15 @@ const submitStory = () => {
     return
   }
 
+  const selectedPhotoUrl = selectedPhoto.value ? URL.createObjectURL(selectedPhoto.value) : undefined
+
   const newStory: Story = {
     id: Date.now(),
     author: name,
     message,
     accent: accentPalette[Date.now() % accentPalette.length] ?? accentPalette[0] ?? 'var(--theme-color-accent)',
     initials: getInitials(name),
-    photoUrl: selectedPhotoPreview.value ?? undefined
+    photoUrl: selectedPhotoUrl
   }
 
   allStories.value.unshift(newStory)
@@ -292,11 +279,11 @@ const submitStory = () => {
   submitNotice.value = 'Story posted to the top of the feed.'
   clearSubmitNotice()
 
-  if (newStory.photoUrl) {
-    postedPhotoUrls.value.push(newStory.photoUrl)
+  if (selectedPhotoUrl) {
+    postedPhotoUrls.value.push(selectedPhotoUrl)
   }
 
-  resetForm(Boolean(newStory.photoUrl))
+  resetForm()
 
   if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches) {
     isMobileFormOpen.value = false
@@ -340,6 +327,16 @@ watch(isMobileFormOpen, (open) => {
   document.documentElement.style.overflow = open ? 'hidden' : ''
 })
 
+watch(selectedPhoto, (file) => {
+  clearSelectedPhotoPreview()
+
+  if (!file) {
+    return
+  }
+
+  selectedPhotoPreview.value = URL.createObjectURL(file)
+})
+
 onBeforeUnmount(() => {
   if (intersectionObserver) {
     intersectionObserver.disconnect()
@@ -349,9 +346,7 @@ onBeforeUnmount(() => {
     document.documentElement.style.overflow = ''
   }
 
-  if (selectedPhotoPreview.value) {
-    URL.revokeObjectURL(selectedPhotoPreview.value)
-  }
+  clearSelectedPhotoPreview()
 
   postedPhotoUrls.value.forEach((url) => {
     URL.revokeObjectURL(url)
@@ -474,19 +469,50 @@ onBeforeUnmount(() => {
             >
               Upload a picture (optional)
             </label>
-            <input
+            <UFileUpload
               id="story-photo"
-              type="file"
+              v-slot="{ open, removeFile }"
+              v-model="selectedPhoto"
               accept="image/*"
-              @change="handlePhotoChange"
+              class="photo-upload"
             >
+              <div class="photo-upload-row">
+                <UAvatar
+                  size="lg"
+                  :src="selectedPhotoPreview ?? undefined"
+                  icon="i-lucide-image"
+                  class="photo-upload-avatar"
+                />
 
-            <p
-              v-if="selectedPhotoName"
-              class="photo-name"
-            >
-              {{ selectedPhotoName }}
-            </p>
+                <div class="photo-upload-actions">
+                  <UButton
+                    type="button"
+                    :label="selectedPhoto ? 'Change image' : 'Upload image'"
+                    color="neutral"
+                    variant="outline"
+                    @click="open()"
+                  />
+
+                  <UButton
+                    v-if="selectedPhoto"
+                    type="button"
+                    label="Remove"
+                    color="error"
+                    variant="link"
+                    size="xs"
+                    class="photo-remove"
+                    @click="removeFile()"
+                  />
+                </div>
+              </div>
+
+              <p
+                v-if="selectedPhoto"
+                class="photo-name"
+              >
+                {{ selectedPhoto.name }}
+              </p>
+            </UFileUpload>
 
             <button
               type="submit"
@@ -749,7 +775,7 @@ onBeforeUnmount(() => {
   margin: 0;
   font-size: var(--fs-btn);
   font-weight: 740;
-  color: var(--muted);
+  color: var(--theme-color-link-soft);
   letter-spacing: 0.01em;
 }
 
@@ -819,9 +845,27 @@ onBeforeUnmount(() => {
   margin-top: 0.2rem;
 }
 
-.share-form input[type='file'] {
-  font-size: var(--fs-note-plus);
-  padding: 0.38rem;
+.photo-upload {
+  margin-top: 0.14rem;
+  --ui-error: #ee565b;
+}
+
+.photo-upload-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.photo-upload-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.photo-upload-avatar {
+  border: 1px solid var(--line-photo);
+  background: var(--paper);
 }
 
 .photo-name {
@@ -830,16 +874,24 @@ onBeforeUnmount(() => {
   font-size: var(--fs-label);
 }
 
+::v-deep(.photo-remove) {
+  padding: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  color: #ee565b !important;
+}
+
 .submit-btn {
   margin-top: 0.3rem;
   border: 0;
   border-radius: 8px;
-  background: var(--accent);
-  color: var(--accent-contrast);
-  font-size: var(--fs-md-plus);
+  background: var(--ink);
+  color: white;
+  font-size: var(--fs-body);
   font-weight: 700;
   padding: 0.7rem 0.8rem;
   cursor: pointer;
+  text-transform: uppercase;
 }
 
 .submit-notice {

@@ -1759,8 +1759,8 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             class="hero-media"
           >
             <img
-              src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80"
-              alt="People collaborating in a meeting room"
+              src="/images/form-alter.jpg"
+              alt="A man grabbing a medical device"
               loading="lazy"
             >
           </figure>
@@ -1769,13 +1769,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 
       <div class="page-shell">
         <section class="help-now content-section section-help">
-          <p class="section-label section-label--with-icon">
-            <UIcon
-              name="i-lucide-shield-check"
-              class="section-label-icon"
-            />
-            Immediate support
-          </p>
           <h2>Help now</h2>
           <p>Use one of these first if you need immediate support.</p>
           <div class="help-now-grid">
@@ -1812,26 +1805,20 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               href="https://www.cff.org/support/get-help-cf-foundation-compass"
               target="_blank"
               rel="noopener"
-            ><UIcon
-              name="i-lucide-heart-pulse"
-              class="link-icon"
-            /> CF help: CF Foundation Compass</a>
+            >
+              <span>
+                <UIcon
+                  name="i-lucide-heart-pulse"
+                  class="link-icon"
+                /> CF help: CF Foundation Compass
+              </span>
+            </a>
           </div>
         </section>
 
         <section class="cf-spotlight content-section section-cf">
-          <p class="section-label section-label--with-icon">
-            <UIcon
-              name="i-lucide-heart-pulse"
-              class="section-label-icon"
-            />
-            CF spotlight
-          </p>
           <h2 class="title-with-icon">
-            <UIcon
-              name="i-lucide-stethoscope"
-              class="title-icon"
-            /> Cystic fibrosis quick guide
+            Cystic fibrosis quick guide
           </h2>
           <p class="section-subtitle">
             Focus on support first, then download a guide for details.
@@ -1846,10 +1833,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             </figure>
             <article>
               <h3>
-                <UIcon
-                  name="i-lucide-alert-triangle"
-                  class="title-icon"
-                /> Main pressure
+                Main pressure
               </h3>
               <ul>
                 <li>Specialty meds and frequent follow-up can raise monthly costs.</li>
@@ -1859,10 +1843,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 
             <article>
               <h3>
-                <UIcon
-                  name="i-lucide-play-circle"
-                  class="title-icon"
-                /> Start now
+                Start now
               </h3>
               <ul>
                 <li>Call CF Foundation Compass for navigation support.</li>
@@ -1872,10 +1853,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 
             <article>
               <h3>
-                <UIcon
-                  name="i-lucide-file-down"
-                  class="title-icon"
-                /> Download guides
+                Download guides
               </h3>
               <p>Use these if you want the full step-by-step checklist.</p>
               <div class="inline-downloads">
@@ -1908,18 +1886,8 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           id="conditions-section"
           class="conditions-section content-section section-conditions"
         >
-          <p class="section-label section-label--with-icon">
-            <UIcon
-              name="i-lucide-activity"
-              class="section-label-icon"
-            />
-            U.S. conditions with highest financial strain
-          </p>
           <h2 class="title-with-icon">
-            <UIcon
-              name="i-lucide-heart-pulse"
-              class="title-icon"
-            /> Top conditions people struggle with financially
+            Top Conditions people struggle with financially
           </h2>
           <p class="section-subtitle">
             Keep this simple: main risk, next steps, then download a quick guide.
@@ -2296,18 +2264,13 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 
 <style scoped>
 .resources-page {
-  --ink: #1a1a20;
   --ink-soft: #4a4c5f;
-  --paper: #ffffff;
   --line: #dde3eb;
   --line-strong: #cfd6df;
-  --surface: #f4f8fb;
   --hero-a: #fdf1e5;
   --hero-b: #e6f4f4;
   --hero-c: #edf1ff;
-  --accent: #1354cf;
   --accent-soft: #ebf1ff;
-  --accent-contrast: #ffffff;
   --surface-card: #ffffff;
   --surface-card-soft: #f7f9fc;
   --surface-border: #d9e1ec;
@@ -2348,18 +2311,14 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   --section-footer-b: #f3f6fb;
   min-height: 100vh;
   color: var(--ink);
-  background:
-    radial-gradient(circle at 0% 0%, var(--hero-a) 0%, transparent 45%),
-    radial-gradient(circle at 100% 0%, var(--hero-b) 0%, transparent 48%),
-    radial-gradient(circle at 50% 100%, var(--hero-c) 0%, transparent 42%),
-    var(--surface);
+  background: var(--alt-bg);
 }
 
 .page-shell {
   width: 100%;
   max-width: 1220px;
   margin-inline: auto;
-  padding: 1.8rem 24px 4rem;
+  padding: 60px 24px 4rem;
   display: grid;
   gap: clamp(1.3rem, 2.2vw, 1.9rem);
 }
@@ -2400,7 +2359,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   overflow: hidden;
   height: 100%;
   background: linear-gradient(145deg, #d5dee9 0%, #f4f8fb 100%);
-  box-shadow: 0 22px 48px rgba(14, 30, 52, 0.18);
 }
 
 .hero-media img {
@@ -2437,21 +2395,21 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 .content-section::before {
   content: '';
   display: block;
-  width: 64px;
+  width: 240px;
   height: 4px;
   border-radius: 999px;
-  margin-bottom: 0.68rem;
+  margin-bottom: 24px;
   background: var(--section-rule, #8b97b4);
 }
 
-.section-help { --section-rule: #c5862e; }
-.section-cf { --section-rule: #2b8f90; }
-.section-conditions { --section-rule: #4e64c7; }
-.section-docs { --section-rule: #7f52ba; }
-.section-directory { --section-rule: #2f8a4a; }
-.section-script { --section-rule: #c1506a; }
-.section-faq { --section-rule: #57627a; }
-.section-footer { --section-rule: #5a6f8f; }
+.section-help { --section-rule: #c5862e; padding-top: 120px; }
+.section-cf { --section-rule: #c5862e; padding-top: 120px;}
+.section-conditions { --section-rule: #c5862e; padding-top: 120px;}
+.section-docs { --section-rule: #c5862e;padding-top: 120px; }
+.section-directory { --section-rule: #c5862e;padding-top: 120px; }
+.section-script { --section-rule: #c5862e;padding-top: 120px; }
+.section-faq { --section-rule: #c5862e;padding-top: 120px; }
+.section-footer { --section-rule: #c5862e;padding-top: 120px; }
 
 .wizard-state {
   margin-top: 0;
@@ -2522,13 +2480,13 @@ h1 {
   margin: 0.3rem 0 0;
   font-size: clamp(1.75rem, 4vw, 2.8rem);
   line-height: 1.1;
-  letter-spacing: -0.03em;
+  color: var(--ink);
 }
 
 .section-subtitle {
   margin: 0.65rem 0 0;
   max-width: 760px;
-  color: var(--ink-soft);
+  color: var(--muted);
   line-height: 1.5;
   font-size: 0.96rem;
 }
@@ -2537,10 +2495,8 @@ h1 {
   margin: 0.95rem 0 0;
   display: block;
   width: min(100%, var(--section-photo-width, 100%));
-  aspect-ratio: var(--section-photo-ratio, 16 / 9);
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid var(--surface-border);
   box-shadow: var(--surface-shadow);
   background: #ffffff;
 }
@@ -2595,7 +2551,8 @@ h1 {
 }
 
 .help-now-grid .grid-photo-item {
-  grid-column: 1 / -1;
+  grid-column: 1 / span 2;
+  grid-row: 1 / span 2;
 }
 
 .docs-grid .grid-photo-item {
@@ -2617,7 +2574,7 @@ h1 {
 .question-step {
   margin: 0;
   font-size: 0.74rem;
-  color: #5f6581;
+  color: var(--muted);
   font-weight: 700;
 }
 
@@ -2667,14 +2624,14 @@ h1 {
 .option-btn {
   text-align: left;
   border-color: var(--line-strong);
-  background: color-mix(in oklab, var(--paper), #f3f6fb 45%);
-  color: var(--ink);
+  background: var(--muted);
+  color: var(--accent-contrast);
   padding: 0.88rem 0.92rem;
   transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
 .option-btn:hover {
-  border-color: #8ea9e3;
+  border-color: var(--ink);
   background: #f7faff;
   transform: translateX(2px);
 }
@@ -2691,6 +2648,12 @@ h1 {
   padding: 0.72rem 0.75rem;
   font: inherit;
   background: #ffffff;
+  color: var(--accent-contrast);
+  font-size: var(--fs-brand);
+}
+
+.state-input-wrap input:focus {
+  outline: none;
 }
 
 .state-actions {
@@ -2707,9 +2670,8 @@ h1 {
 
 .ghost-btn,
 .back-btn {
-  border-color: var(--line);
-  background: #ffffff;
-  color: var(--ink);
+  border-color: var(--muted);
+  color: var(--muted);
   padding: 0.67rem 0.92rem;
 }
 
@@ -2738,8 +2700,8 @@ h1 {
 
 .content-section h2 {
   margin: 0.2rem 0 0;
-  font-size: clamp(1.2rem, 2.1vw, 1.62rem);
-  line-height: 1.26;
+  font-size: var(--theme-font-size-heading-md);
+  line-height: 1.03;
 }
 
 .results-state {
@@ -2798,8 +2760,8 @@ h1 {
 
 .result-simple-card h2 {
   margin: 0.56rem 0 0;
-  font-size: clamp(1.1rem, 2.1vw, 1.42rem);
-  line-height: 1.32;
+  font-size: var(--theme-font-size-heading-md);
+  line-height: 1.03;
   color: var(--result-text);
 }
 
@@ -2955,14 +2917,22 @@ h1 {
 .directory-group a,
 .cf-spotlight a,
 .condition-links a {
-  display: inline-flex;
+  display: flex;
   margin-top: 0.45rem;
   font-size: 0.84rem;
   font-weight: 700;
   color: var(--accent);
   text-decoration: none;
+  align-items: anchor-center;
+  column-gap: 0.5rem;
+  row-gap: 0.5rem;
+  text-decoration: underline;
+  text-underline-offset: 0.5em;
 }
 
+.cf-spotlight a {
+  margin-top: 1rem;
+}
 .result-controls {
   margin-top: 1rem;
   display: flex;
@@ -3028,7 +2998,8 @@ h1 {
 .doc-meta,
 .doc-tags {
   margin: 0.6rem 0 0;
-  color: var(--ink-soft);
+  color: var(--muted);
+  font-size: var(--fs-brand);
 }
 
 .help-now-grid {
@@ -3040,14 +3011,20 @@ h1 {
 
 .help-now-grid a {
   text-decoration: none;
-  border: 1px solid color-mix(in oklab, var(--surface-border), #e8c88f 18%);
-  border-radius: 14px;
+  /* border: 1px solid
+  color-mix(in oklab, var(--surface-border), #e8c88f 18%); */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
   padding: 0.9rem;
-  background: linear-gradient(145deg, var(--section-help-a), var(--section-help-b));
-  color: #223152;
+  background: #b84a4a;
+  color: #ffffff;
   font-weight: 700;
   line-height: 1.35;
   min-height: 92px;
+  text-align: center;
+  font-size: 1.1rem;
   box-shadow: var(--surface-shadow);
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
@@ -3060,16 +3037,20 @@ h1 {
 .spotlight-grid {
   margin-top: 0.95rem;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 0.72rem;
 }
 
 .spotlight-grid article {
-  border: 1px solid color-mix(in oklab, var(--surface-border), #9bd3d0 20%);
-  border-radius: 14px;
-  background: linear-gradient(145deg, var(--section-cf-a), var(--section-cf-b));
-  padding: 0.9rem;
-  box-shadow: var(--surface-shadow);
+    border-radius: 14px;
+    background: #3c2851;
+    padding: 1.5rem;
+    grid-column: 1 / span 4;
+}
+
+.spotlight-grid .grid-photo-item {
+    grid-column: 5 / span 4;
+    grid-row: 1 / span 3;
 }
 
 .spotlight-grid h3,
@@ -3077,28 +3058,27 @@ h1 {
 .doc-card h3,
 .directory-group h3 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 2rem;
   line-height: 1.28;
 }
 
 .spotlight-grid ul,
 .spotlight-grid p {
   margin: 0.64rem 0 0;
-  color: var(--ink-soft);
+  color: var(--muted);
   line-height: 1.5;
 }
 
 .inline-downloads {
   margin-top: 0.62rem;
   display: grid;
-  gap: 0.46rem;
+  gap: 0.75rem;
 }
 
 .inline-downloads a {
   margin-top: 0;
   font-size: 0.84rem;
   text-decoration: underline;
-  text-underline-offset: 2px;
 }
 
 .conditions-grid {
@@ -3124,7 +3104,7 @@ h1 {
 
 .condition-card p {
   margin: 0.52rem 0 0;
-  color: var(--ink-soft);
+  color: var(--muted);
   line-height: 1.5;
 }
 
@@ -3218,7 +3198,7 @@ h1 {
 .doc-card p,
 .directory-group p {
   margin: 0.5rem 0 0;
-  color: var(--ink-soft);
+  color: var(--muted);
   line-height: 1.42;
 }
 
@@ -3284,7 +3264,7 @@ h1 {
 
 .faq-list p {
   margin: 0.62rem 0 0;
-  color: var(--ink-soft);
+  color: var(--muted);
   line-height: 1.5;
 }
 
@@ -3320,6 +3300,17 @@ h1 {
 
   .conditions-grid {
     grid-template-columns: 1fr;
+  }
+
+  .help-now-grid .grid-photo-item {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .spotlight-grid article,
+  .spotlight-grid .grid-photo-item {
+    grid-column: 1 / -1;
+    grid-row: auto;
   }
 
   .footer-lines {
@@ -3424,6 +3415,7 @@ h1 {
   .help-now-grid .grid-photo-item,
   .docs-grid .grid-photo-item {
     grid-column: auto;
+    grid-row: auto;
   }
 
   .help-now-grid a {

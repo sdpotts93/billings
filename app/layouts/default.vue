@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const navLinks = [
   { label: 'Home', to: '/' },
@@ -19,6 +19,7 @@ const footerLinks = [
 const headerEl = ref<HTMLElement | null>(null)
 const headerHeight = ref(69)
 const route = useRoute()
+const isResourcesRoute = computed(() => route.path === '/resources' || route.path.startsWith('/resources/'))
 
 const isCurrentRoute = (to: string) => {
   if (to === '/') {
@@ -54,6 +55,7 @@ onBeforeUnmount(() => {
     <header
       ref="headerEl"
       class="top-nav"
+      :class="{ 'top-nav--resources': isResourcesRoute }"
     >
       <div class="layout-shell nav-shell">
         <NuxtLink
@@ -152,6 +154,10 @@ onBeforeUnmount(() => {
   position: sticky;
   top: 0;
   z-index: 70;
+}
+
+.top-nav--resources {
+  background: var(--alt-bg);
 }
 
 .nav-shell {

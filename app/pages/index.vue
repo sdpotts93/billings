@@ -421,7 +421,7 @@ const goToResourcesWithNeed = (need: string) => {
   gap: 0.75rem;
 }
 
-.start-btn {
+:deep(.start-btn) {
   border-radius: 999px;
   background: #7d5d4a;
   color: white;
@@ -598,7 +598,7 @@ const goToResourcesWithNeed = (need: string) => {
   border-radius: 14px;
   border: 1px solid var(--line);
   background: var(--surface);
-  padding: 2.5rem;
+  padding: 1.5rem;
   display: flex;
 }
 
@@ -614,7 +614,7 @@ const goToResourcesWithNeed = (need: string) => {
 .quote {
   margin: 0.65rem 0;
   max-width: 760px;
-  font-size: var(--fs-quote);
+  font-size: 2rem;
   line-height: 1.3;
   letter-spacing: -0.008em;
   font-weight: 600;
@@ -702,7 +702,7 @@ const goToResourcesWithNeed = (need: string) => {
   line-height: 1.03;
 }
 
-.stories-btn {
+:deep(.stories-btn) {
   margin-top: 0.75rem;
   border-radius: 999px;
   background: #7d5d4a;
@@ -809,7 +809,7 @@ const goToResourcesWithNeed = (need: string) => {
   gap: 0.5rem;
 }
 
-.cta-outline {
+:deep(.cta-outline) {
   border-radius: 999px;
   border: 0;
   border-radius: 999px;

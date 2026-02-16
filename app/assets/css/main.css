@@ -83,6 +83,7 @@
   --theme-story-accent-3: #0b9965;
   --theme-story-accent-4: #f08a00;
   --theme-story-accent-5: #6a56d9;
+  --alt-bg: var(--theme-color-bg);
 }
 
 :where(h1, h2, h3, h4, h5, h6) {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
-const heroImageSrc = 'https://www.figma.com/api/mcp/asset/69508a6c-3ed3-44c7-aeee-35ddc2cb3af0'
+const heroImageSrc = '/images/behind-the-scenes.jpg'
 const heroVideoHref = 'https://example.com'
 const maxPullOffset = 12
 const studioImages = {
@@ -213,7 +213,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .behind-scenes-page {
-  --frame-gap: clamp(8px, 1.15vw, 14px);
+  --frame-gap: 2.5rem;
   --ink: var(--theme-color-text);
   --line: var(--theme-color-line);
   --surface: var(--theme-color-bg);
@@ -224,10 +224,7 @@ onBeforeUnmount(() => {
   min-height: 100vh;
   color: var(--ink);
   font-family: var(--font-text);
-  background:
-    radial-gradient(circle at 10% 0%, var(--bg-glow-1) 0%, transparent 46%),
-    radial-gradient(circle at 96% 0%, var(--bg-glow-2) 0%, transparent 48%),
-    var(--surface);
+  background: var(--theme-color-bg);
 }
 
 .page-shell {
@@ -275,7 +272,7 @@ onBeforeUnmount(() => {
 }
 
 .studio-life {
-  background: #efefed;
+  background: var(--theme-color-bg);
   margin-inline: calc(var(--frame-gap) * -1);
   padding: clamp(0.5rem, 1.4vw, 0.95rem) var(--frame-gap) var(--frame-gap);
 }
@@ -302,7 +299,7 @@ onBeforeUnmount(() => {
   margin-top: clamp(1.35rem, 2.4vw, 1.95rem);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--frame-gap);
+  gap: clamp(8px, 1.15vw, 14px);
 }
 
 .studio-tile {
@@ -356,26 +353,23 @@ onBeforeUnmount(() => {
 
 .hero-title {
   position: absolute;
-  top: clamp(0.8rem, 2.4vw, 1.7rem);
-  left: clamp(0.8rem, 2.6vw, 1.9rem);
+  bottom: clamp(0.8rem, 2.4vw, 1.7rem);
+  right: clamp(0.8rem, 2.6vw, 1.9rem);
   z-index: 3;
   margin: 0;
   max-width: min(78%, 10ch);
   font-family: var(--font-title);
   font-size: clamp(2.1rem, 8.8vw, 7.2rem);
   line-height: 0.9;
-  letter-spacing: -0.05em;
   text-transform: lowercase;
   text-wrap: balance;
-  color: #ffffff;
-  text-shadow: 0 5px 22px rgba(4, 8, 12, 0.44);
+  color: var(--ink);
 }
 
 .hero-media {
   position: relative;
   border-radius: 24px;
   overflow: hidden;
-  border: 1px solid var(--line);
   width: 100%;
   height: calc(100vh - 68px - (var(--frame-gap) * 2));
   min-height: 380px;
