@@ -1,24 +1,94 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { Flip } from 'gsap/Flip'
+import { gsap } from 'gsap'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const heroImageSrc = '/images/behind-the-scenes.jpg'
 const heroVideoHref = 'https://example.com'
 const maxPullOffset = 12
-const studioImages = {
-  recordPlayer: 'https://aino.agency/_next/image?q=75&url=%2F_next%2Fstatic%2Fmedia%2Fi_6.32600a9a.jpg&w=3840',
-  officeLeft: 'https://aino.agency/_next/image?q=75&url=%2F_next%2Fstatic%2Fmedia%2Fi_3.6aa8d03d.jpg&w=3840',
-  officeRight: 'https://aino.agency/_next/image?q=75&url=%2F_next%2Fstatic%2Fmedia%2Fi14.2d8c9216.jpg&w=3840',
-  phones: 'https://aino.agency/_next/image?q=75&url=%2F_next%2Fstatic%2Fmedia%2Fi_1.b380596a.jpg&w=3840',
-  whiteShirt: 'https://aino.agency/_next/image?q=75&url=%2F_next%2Fstatic%2Fmedia%2Fi9.b42a996b.jpg&w=3840',
-  couchLaptop: 'https://aino.agency/_next/image?q=75&url=%2F_next%2Fstatic%2Fmedia%2Fi23.850dbc72.jpg&w=3840',
-  couchPortrait: 'https://aino.agency/_next/image?q=75&url=%2F_next%2Fstatic%2Fmedia%2Fi10.4d7eed27.jpg&w=3840'
+const studioGridColumnCount = 4
+const studioGridRowCount = 3
+const studioGridSlots = Array.from({ length: studioGridColumnCount * studioGridRowCount }, (_, index) => {
+  return {
+    column: (index % studioGridColumnCount) + 1,
+    row: Math.floor(index / studioGridColumnCount) + 1
+  }
+})
+const studioFinalSlotOrder = [0, 2, 3, 5, 7, 8, 9] as const
+const studioSlotNeighbors = studioGridSlots.map((slot, slotIndex) => {
+  return studioGridSlots
+    .map((candidate, candidateIndex) => ({ candidate, candidateIndex }))
+    .filter(({ candidate, candidateIndex }) => {
+      if (candidateIndex === slotIndex) {
+        return false
+      }
+
+      const columnDistance = Math.abs(slot.column - candidate.column)
+      const rowDistance = Math.abs(slot.row - candidate.row)
+      return columnDistance + rowDistance === 1
+    })
+    .map(({ candidateIndex }) => candidateIndex)
+})
+
+type StudioTile = {
+  id: string
+  src: string
+  alt: string
 }
+
+const studioTiles: StudioTile[] = [
+  {
+    id: 'bts-1',
+    src: '/images/bts_1.jpg',
+    alt: 'Behind-the-scenes moment from the Billings production'
+  },
+  {
+    id: 'bts-2',
+    src: '/images/bts_2.jpg',
+    alt: 'Crew coordinating on set during filming'
+  },
+  {
+    id: 'bts-3',
+    src: '/images/bts_3.jpg',
+    alt: 'Cast and crew preparing a scene'
+  },
+  {
+    id: 'bts-4',
+    src: '/images/bts_4.jpg',
+    alt: 'Production team reviewing footage'
+  },
+  {
+    id: 'bts-5',
+    src: '/images/bts_5.jpg',
+    alt: 'On-set collaboration during the Billings shoot'
+  },
+  {
+    id: 'bts-6',
+    src: '/images/bts_6.jpg',
+    alt: 'Filmmakers working through a setup between takes'
+  },
+  {
+    id: 'bts-7',
+    src: '/images/bts_7.jpg',
+    alt: 'Behind-the-scenes portrait from production'
+  }
+]
 
 const pointerOffsetX = ref(0)
 const pointerOffsetY = ref(0)
 const prefersReducedMotion = ref(false)
+const studioGridRef = ref<HTMLElement | null>(null)
+const hasStudioGridAnimated = ref(false)
+const studioFinalSlotsById = studioTiles.reduce<Record<string, number>>((accumulator, tile, index) => {
+  accumulator[tile.id] = studioFinalSlotOrder[index] ?? 0
+  return accumulator
+}, {})
+const studioTileSlotsById = ref<Record<string, number>>({ ...studioFinalSlotsById })
 
 let reduceMotionQuery: MediaQueryList | null = null
+let studioGridObserver: IntersectionObserver | null = null
+
+gsap.registerPlugin(Flip)
 
 useSeoMeta({
   title: 'Behind the Scenes | Billings',
@@ -73,6 +143,174 @@ const playButtonStyle = computed(() => {
   }
 })
 
+const getStudioTileStyle = (tileId: string) => {
+  const slotIndex = studioTileSlotsById.value[tileId] ?? studioFinalSlotsById[tileId] ?? 0
+  const slot = studioGridSlots[slotIndex] ?? studioGridSlots[0]
+
+  return {
+    gridColumn: String(slot?.column ?? 1),
+    gridRow: String(slot?.row ?? 1)
+  }
+}
+
+const getRandomInteger = (maxExclusive: number) => {
+  return Math.floor(Math.random() * maxExclusive)
+}
+
+type StudioMove = {
+  from: number
+  to: number
+  tileId: string
+}
+
+const buildStudioMoveSequence = () => {
+  const occupancy: Array<string | null> = Array.from({ length: studioGridSlots.length }, () => null)
+
+  for (const tile of studioTiles) {
+    const slotIndex = studioFinalSlotsById[tile.id]
+    if (slotIndex === undefined) {
+      continue
+    }
+
+    occupancy[slotIndex] = tile.id
+  }
+
+  const forwardMoves: StudioMove[] = []
+  const moveCount = 14
+
+  for (let step = 0; step < moveCount; step += 1) {
+    const previousMove = forwardMoves[forwardMoves.length - 1]
+    const possibleMoves: StudioMove[] = []
+
+    for (let emptySlotIndex = 0; emptySlotIndex < occupancy.length; emptySlotIndex += 1) {
+      if (occupancy[emptySlotIndex] !== null) {
+        continue
+      }
+
+      const neighborSlots = studioSlotNeighbors[emptySlotIndex]
+      if (!neighborSlots) {
+        continue
+      }
+
+      for (const occupiedSlotIndex of neighborSlots) {
+        const tileId = occupancy[occupiedSlotIndex]
+        if (!tileId) {
+          continue
+        }
+
+        const isImmediateUndo = previousMove
+          && previousMove.tileId === tileId
+          && previousMove.from === emptySlotIndex
+          && previousMove.to === occupiedSlotIndex
+
+        if (isImmediateUndo) {
+          continue
+        }
+
+        possibleMoves.push({
+          from: occupiedSlotIndex,
+          to: emptySlotIndex,
+          tileId
+        })
+      }
+    }
+
+    if (possibleMoves.length === 0) {
+      break
+    }
+
+    const nextMove = possibleMoves[getRandomInteger(possibleMoves.length)]
+    if (!nextMove) {
+      break
+    }
+
+    occupancy[nextMove.from] = null
+    occupancy[nextMove.to] = nextMove.tileId
+    forwardMoves.push(nextMove)
+  }
+
+  const reverseMoves: StudioMove[] = []
+  for (let index = forwardMoves.length - 1; index >= 0; index -= 1) {
+    const move = forwardMoves[index]
+    if (!move) {
+      continue
+    }
+
+    reverseMoves.push({
+      from: move.to,
+      to: move.from,
+      tileId: move.tileId
+    })
+  }
+
+  return [...forwardMoves, ...reverseMoves]
+}
+
+const animateStudioGrid = async () => {
+  if (hasStudioGridAnimated.value || !studioGridRef.value || prefersReducedMotion.value) {
+    return
+  }
+
+  hasStudioGridAnimated.value = true
+  const moveSequence = buildStudioMoveSequence()
+
+  for (const move of moveSequence) {
+    if (prefersReducedMotion.value) {
+      studioTileSlotsById.value = { ...studioFinalSlotsById }
+      return
+    }
+
+    const tileElements = Array.from(studioGridRef.value.querySelectorAll<HTMLElement>('.studio-tile'))
+    const state = Flip.getState(tileElements)
+
+    studioTileSlotsById.value = {
+      ...studioTileSlotsById.value,
+      [move.tileId]: move.to
+    }
+    await nextTick()
+
+    await new Promise<void>((resolve) => {
+      Flip.from(state, {
+        absolute: true,
+        duration: 0.34,
+        ease: 'power1.inOut',
+        stagger: 0,
+        onComplete: resolve
+      })
+    })
+  }
+}
+
+const startStudioGridObserver = () => {
+  if (typeof window === 'undefined' || !studioGridRef.value || hasStudioGridAnimated.value) {
+    return
+  }
+
+  studioGridObserver = new IntersectionObserver(
+    (entries) => {
+      const isVisible = entries.some(entry => entry.isIntersecting)
+      if (!isVisible) {
+        return
+      }
+
+      studioGridObserver?.disconnect()
+      studioGridObserver = null
+
+      if (prefersReducedMotion.value) {
+        hasStudioGridAnimated.value = true
+        return
+      }
+
+      void animateStudioGrid()
+    },
+    {
+      threshold: 0.35
+    }
+  )
+
+  studioGridObserver.observe(studioGridRef.value)
+}
+
 onMounted(() => {
   if (typeof window === 'undefined') {
     return
@@ -81,10 +319,12 @@ onMounted(() => {
   reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
   updateReducedMotionPreference()
   reduceMotionQuery.addEventListener('change', updateReducedMotionPreference)
+  startStudioGridObserver()
 })
 
 onBeforeUnmount(() => {
   reduceMotionQuery?.removeEventListener('change', updateReducedMotionPreference)
+  studioGridObserver?.disconnect()
 })
 </script>
 
@@ -142,65 +382,19 @@ onBeforeUnmount(() => {
           </p>
         </div>
 
-        <div class="studio-life-grid">
-          <figure class="studio-tile tile-record-player">
+        <div
+          ref="studioGridRef"
+          class="studio-life-grid"
+        >
+          <figure
+            v-for="tile in studioTiles"
+            :key="tile.id"
+            class="studio-tile"
+            :style="getStudioTileStyle(tile.id)"
+          >
             <img
-              :src="studioImages.recordPlayer"
-              alt="Record player and vinyl records"
-              loading="lazy"
-              decoding="async"
-            >
-          </figure>
-
-          <figure class="studio-tile tile-office-left">
-            <img
-              :src="studioImages.officeLeft"
-              alt="People in a studio workspace"
-              loading="lazy"
-              decoding="async"
-            >
-          </figure>
-
-          <figure class="studio-tile tile-office-right">
-            <img
-              :src="studioImages.officeRight"
-              alt="Team member working at a laptop"
-              loading="lazy"
-              decoding="async"
-            >
-          </figure>
-
-          <figure class="studio-tile tile-phones">
-            <img
-              :src="studioImages.phones"
-              alt="Two coworkers looking at phones"
-              loading="lazy"
-              decoding="async"
-            >
-          </figure>
-
-          <figure class="studio-tile tile-white-shirt">
-            <img
-              :src="studioImages.whiteShirt"
-              alt="Team member in a meeting room"
-              loading="lazy"
-              decoding="async"
-            >
-          </figure>
-
-          <figure class="studio-tile tile-couch-laptop">
-            <img
-              :src="studioImages.couchLaptop"
-              alt="Team member typing on a laptop on a couch"
-              loading="lazy"
-              decoding="async"
-            >
-          </figure>
-
-          <figure class="studio-tile tile-couch-portrait">
-            <img
-              :src="studioImages.couchPortrait"
-              alt="Coworkers sitting on a couch"
+              :src="tile.src"
+              :alt="tile.alt"
               loading="lazy"
               decoding="async"
             >
@@ -302,17 +496,23 @@ onBeforeUnmount(() => {
 }
 
 .studio-life-grid {
+  --studio-grid-gap: clamp(8px, 1.15vw, 14px);
   margin-top: clamp(1.35rem, 2.4vw, 1.95rem);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(8px, 1.15vw, 14px);
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: var(--studio-grid-gap);
+  position: relative;
+  height: clamp(420px, 70vw, 980px);
 }
 
 .studio-tile {
   margin: 0;
-  aspect-ratio: 1;
+  aspect-ratio: auto;
   overflow: hidden;
   background: #e8e8e4;
+  will-change: transform;
+  min-height: 0;
 }
 
 .studio-tile img {
@@ -320,41 +520,6 @@ onBeforeUnmount(() => {
   height: 100%;
   display: block;
   object-fit: cover;
-}
-
-.tile-record-player {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.tile-office-left {
-  grid-column: 3;
-  grid-row: 1;
-}
-
-.tile-office-right {
-  grid-column: 4;
-  grid-row: 1;
-}
-
-.tile-phones {
-  grid-column: 2;
-  grid-row: 2;
-}
-
-.tile-white-shirt {
-  grid-column: 4;
-  grid-row: 2;
-}
-
-.tile-couch-laptop {
-  grid-column: 1;
-  grid-row: 3;
-}
-
-.tile-couch-portrait {
-  grid-column: 2;
-  grid-row: 3;
 }
 
 .hero-title {
@@ -465,10 +630,13 @@ onBeforeUnmount(() => {
   }
 
   .studio-life-grid {
+    height: auto;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
   }
 
   .studio-tile {
+    aspect-ratio: 1;
     grid-column: auto !important;
     grid-row: auto !important;
   }

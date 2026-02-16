@@ -312,7 +312,7 @@ onBeforeUnmount(() => {
 }
 
 .site-footer {
-  background: #ececec;
+  background: var(--muted);
 }
 
 .footer-shell {
@@ -376,13 +376,13 @@ onBeforeUnmount(() => {
 }
 
 .footer-logo {
-  color: #090909;
+  color: var(--ink);
   text-decoration: none;
-  font-family: var(--font-text);
+  font-family: var(--font-title);
   font-size: clamp(4.5rem, 15.4vw, 15.5rem);
   font-weight: 900;
   line-height: 0.9;
-  letter-spacing: -0.045em;
+  letter-spacing: 0.009em;
   text-transform: uppercase;
 }
 

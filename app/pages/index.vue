@@ -848,7 +848,7 @@ const goToResourcesWithNeed = (need: string) => {
 .site-footer {
   position: relative;
   border-top: 1px solid var(--line);
-  background: var(--surface);
+  background: var(--muted);
 }
 
 .footer-glow {
