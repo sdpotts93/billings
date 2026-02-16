@@ -4,10 +4,8 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 type TeamMember = {
   name: string
   role: string
-  badge: string
-  bio: string
-  initials: string
-  tone: string
+  imageSrc: string
+  imageAlt: string
 }
 
 const heroMissionImageSrc = '/images/why.jpg'
@@ -15,68 +13,40 @@ const uninsuredPeopleTotal = 27_200_000
 
 const teamMembers: TeamMember[] = [
   {
-    name: 'Ralph',
-    role: 'Director / Producer',
-    badge: 'NL/SR',
-    bio: 'Leads story direction, interviews, and production decisions across the documentary.',
-    initials: 'RA',
-    tone: '#d2bca8'
+    name: 'Alexander Ludwig',
+    role: 'Writer, Director, "Easton"',
+    imageSrc: '/images/alexander.jpg',
+    imageAlt: 'Portrait of Alexander Ludwig'
   },
   {
-    name: 'Julian',
-    role: 'Creative Director',
-    badge: 'NL',
-    bio: 'Shapes the visual language and keeps the emotional arc consistent from start to finish.',
-    initials: 'JU',
-    tone: '#aec2d1'
+    name: 'Rick Dougdale',
+    role: 'Producer',
+    imageSrc: '/images/rick.jpg',
+    imageAlt: 'Portrait of Rick Dougdale'
   },
   {
-    name: 'Johann',
-    role: 'Editor',
-    badge: 'DE',
-    bio: 'Builds narrative pacing and cuts interviews into clear, human-centered sequences.',
-    initials: 'JO',
-    tone: '#c9c8ac'
+    name: 'Sharlene Ludwig',
+    role: 'Producer',
+    imageSrc: '/images/sharlene.jpg',
+    imageAlt: 'Portrait of Sharlene Ludwig'
   },
   {
-    name: 'Senna',
-    role: 'Production Manager',
-    badge: 'NL/SR',
-    bio: 'Coordinates shoots, schedules, and logistics with patients, caregivers, and clinicians.',
-    initials: 'SE',
-    tone: '#d3bca8'
+    name: 'Grace Beedie',
+    role: '"Doc"',
+    imageSrc: '/images/grace.jpg',
+    imageAlt: 'Portrait of Grace Beedie'
   },
   {
-    name: 'Nina',
-    role: 'Community Outreach',
-    badge: 'NL/SR',
-    bio: 'Works with advocacy groups and families so lived experiences are represented with care.',
-    initials: 'NI',
-    tone: '#c7cad9'
+    name: 'James Jordan',
+    role: '"Deputy Chief"',
+    imageSrc: '/images/james.jpg',
+    imageAlt: 'Portrait of James Jordan'
   },
   {
-    name: 'Sophie',
-    role: 'Story Producer',
-    badge: 'NL/PT',
-    bio: 'Translates research and interviews into grounded story threads for each chapter.',
-    initials: 'SO',
-    tone: '#d3c7a8'
-  },
-  {
-    name: 'Faye',
-    role: 'Research Lead',
-    badge: 'NL/GR',
-    bio: 'Validates policy and care-access facts so the film reflects what people face right now.',
-    initials: 'FA',
-    tone: '#c6a7c5'
-  },
-  {
-    name: 'Pablo',
-    role: 'Motion & Sound',
-    badge: 'ES',
-    bio: 'Builds motion and sound design that support difficult topics without overwhelming viewers.',
-    initials: 'PA',
-    tone: '#d7b2b1'
+    name: 'Carla Gugino',
+    role: '"Sheriff Gaby"',
+    imageSrc: '/images/carla.jpg',
+    imageAlt: 'Portrait of Carla Gugino'
   }
 ]
 
@@ -364,22 +334,19 @@ onBeforeUnmount(() => {
               :key="`${member.name}-${member.role}`"
               class="team-card"
             >
-              <div
-                class="team-avatar"
-                :style="{ '--tone': member.tone }"
-              >
-                <span>{{ member.initials }}</span>
+              <div class="team-avatar">
+                <img
+                  :src="member.imageSrc"
+                  :alt="member.imageAlt"
+                  loading="lazy"
+                >
               </div>
               <div class="team-card-copy">
                 <p class="person">
                   {{ member.name }}
-                  <span>{{ member.badge }}</span>
                 </p>
                 <p class="role">
                   {{ member.role }}
-                </p>
-                <p class="bio">
-                  {{ member.bio }}
                 </p>
               </div>
             </article>
@@ -741,27 +708,16 @@ onBeforeUnmount(() => {
   aspect-ratio: 4 / 3;
   border-radius: 16px;
   border: 1px solid color-mix(in oklab, #d8d9de, transparent 15%);
-  background:
-    radial-gradient(circle at 50% 18%, color-mix(in oklab, var(--tone), white 58%) 0, color-mix(in oklab, var(--tone), white 39%) 16%, transparent 16.5%),
-    linear-gradient(180deg, color-mix(in oklab, var(--tone), white 12%) 0%, color-mix(in oklab, var(--tone), black 8%) 64%, color-mix(in oklab, #d8d9de, black 10%) 100%);
-  position: relative;
+  overflow: hidden;
+  background: #d6d9de;
 }
 
-.team-avatar span {
-  position: absolute;
-  right: 0.56rem;
-  bottom: 0.56rem;
-  min-width: 34px;
-  min-height: 34px;
-  padding: 0 0.45rem;
-  border-radius: 999px;
-  background: color-mix(in oklab, #0f1117, var(--tone) 20%);
-  color: #f7f8fb;
-  font-size: 0.68rem;
-  font-weight: 740;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.team-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  object-position: top;
 }
 
 .team-card-copy .person {
@@ -771,34 +727,11 @@ onBeforeUnmount(() => {
   font-weight: 730;
 }
 
-.team-card-copy .person span {
-  margin-left: 0.36rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 1.1rem;
-  padding: 0 0.42rem;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 0.56rem;
-  letter-spacing: 0.05em;
-  font-weight: 700;
-  transform: translateY(-0.2em);
-}
-
 .team-card-copy .role {
   margin: 0.22rem 0 0;
   font-size: clamp(0.95rem, 1.35vw, 1.45rem);
   color: color-mix(in oklab, #3c3d42, #90939d 35%);
   line-height: 1.1;
-}
-
-.team-card-copy .bio {
-  margin: 0.43rem 0 0;
-  color: color-mix(in oklab, var(--muted), #9da0a9 30%);
-  font-size: 0.83rem;
-  line-height: 1.42;
 }
 
 .next-layer {
@@ -994,10 +927,6 @@ onBeforeUnmount(() => {
   .team-card {
     grid-template-columns: 108px minmax(0, 1fr);
     gap: 0.58rem;
-  }
-
-  .team-card-copy .bio {
-    display: none;
   }
 
   .next-layer {
