@@ -92,6 +92,9 @@ onBeforeUnmount(() => {
       <slot />
     </main>
 
+    <MountainIcon />
+
+
     <footer class="site-footer">
       <div class="layout-shell footer-shell">
         <NuxtLink

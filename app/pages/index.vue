@@ -619,6 +619,7 @@ const goToResourcesWithNeed = (need: string) => {
   letter-spacing: -0.008em;
   font-weight: 600;
   margin-bottom: 80px;
+  color:  #7d5e4a;;
 }
 
 .meta {
@@ -743,6 +744,12 @@ const goToResourcesWithNeed = (need: string) => {
   outline-offset: 2px;
 }
 
+.impact-card:first-child {
+  background-color: #b84a4a;
+  color: white;
+  border: none;
+}
+
 .card-label {
   margin: 0;
   color: var(--muted-8);
@@ -750,6 +757,10 @@ const goToResourcesWithNeed = (need: string) => {
   letter-spacing: 0.085em;
   font-size: var(--fs-caption);
   font-weight: 720;
+}
+
+.impact-card:first-child .card-label{
+  color: white;
 }
 
 .impact-card h3 {
@@ -763,6 +774,10 @@ const goToResourcesWithNeed = (need: string) => {
   color: var(--accent-contrast);
   font-size: var(--theme-font-size-brand);
   line-height: 1.33;
+}
+
+.impact-card:first-child .card-copy{
+  color: white;
 }
 
 .emergency-links {
@@ -782,6 +797,10 @@ const goToResourcesWithNeed = (need: string) => {
   text-underline-offset: 0.3em;
 }
 
+.impact-card:first-child .emergency-link {
+  color: white;
+}
+
 .emergency-link:hover,
 .emergency-link:focus-visible {
   color: var(--ink);
@@ -790,6 +809,10 @@ const goToResourcesWithNeed = (need: string) => {
 .card-link {
   margin-top: auto;
   color: var(--muted-10);
+}
+
+.impact-card:first-child .card-link {
+  color: white;
 }
 
 .cta {

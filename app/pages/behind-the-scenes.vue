@@ -23,8 +23,8 @@ let reduceMotionQuery: MediaQueryList | null = null
 useSeoMeta({
   title: 'Behind the Scenes | Billings',
   ogTitle: 'Behind the Scenes | Billings',
-  description: 'Behind-the-scenes moments from the Billings documentary journey.',
-  ogDescription: 'Behind-the-scenes moments from the Billings documentary journey.'
+  description: 'Behind-the-scenes moments from the Billings movie about a cystic fibrosis patient and her family.',
+  ogDescription: 'Behind-the-scenes moments from the Billings movie about a cystic fibrosis patient and her family.'
 })
 
 const clamp = (value: number, min: number, max: number) => {
@@ -121,11 +121,11 @@ onBeforeUnmount(() => {
 
       <section class="intro-copy">
         <p class="eyebrow">
-          Behind the scenes
+          Behind the movie
         </p>
-        <h2>How this documentary was made</h2>
+        <h2>How this movie was made</h2>
         <p>
-          From early research through final edit, this page shows how we documented real care-access barriers and built Billings for people navigating the U.S. health system.
+          Here are some behind-the-scenes moments from Billings, a movie about a cystic fibrosis patient and her family as they navigate the strain, uncertainty, and care barriers built into the U.S. health system.
         </p>
       </section>
 
@@ -135,7 +135,7 @@ onBeforeUnmount(() => {
       >
         <div class="studio-life-copy">
           <p>
-            Billings was built through interviews with patients, caregivers, clinicians, and advocates who live the reality of health care access every day. We filmed in homes, clinics, and community spaces to capture what happens when coverage, medication costs, and care coordination break down.
+            Billings follows one cystic fibrosis patient and her family through the daily realities of treatment schedules, insurance hurdles, and emotional strain. We filmed in homes, clinics, and community spaces to show how those pressures affect every part of life.
           </p>
           <p>
             Behind each chapter is fact-checking, consent review, and careful editing so every story stays accurate, respectful, and practical. The goal is to make a hard system easier to understand and connect viewers to help they can use right now.
@@ -215,12 +215,18 @@ onBeforeUnmount(() => {
 .behind-scenes-page {
   --frame-gap: 2.5rem;
   --ink: var(--theme-color-text);
+  --muted: var(--theme-color-muted);
+  --muted-13: var(--theme-color-muted-13);
   --line: var(--theme-color-line);
   --surface: var(--theme-color-bg);
   --bg-glow-1: var(--theme-color-bg-glow-1);
   --bg-glow-2: var(--theme-color-bg-glow-2);
   --font-title: var(--theme-font-title);
   --font-text: var(--theme-font-text);
+  --fs-sm-plus: var(--theme-font-size-sm-plus);
+  --fs-brand: var(--theme-font-size-brand);
+  --fs-hero-lg: var(--theme-font-size-hero-lg);
+  --fs-hero-mobile: var(--theme-font-size-hero-mobile);
   min-height: 100vh;
   color: var(--ink);
   font-family: var(--font-text);
@@ -246,29 +252,30 @@ onBeforeUnmount(() => {
 }
 
 .eyebrow {
-  margin: 0;
-  font-size: 0.72rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--ink), white 48%);
-  font-weight: 700;
+    margin: 0.9rem auto 0;
+    max-width: 620px;
+    color: var(--muted);
+    line-height: 1.45;
+    font-size: var(--fs-brand);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
 }
 
 .intro-copy h2 {
-  margin: 0.58rem auto 0;
-  max-width: 20ch;
+  margin: 0.45rem auto 0;
+  max-width: 720px;
   font-family: var(--font-title);
-  font-size: clamp(1.65rem, 4.4vw, 3.1rem);
-  line-height: 1.01;
-  letter-spacing: -0.03em;
+  font-size: var(--fs-hero-lg);
+  line-height: 1.02;
 }
 
 .intro-copy > p:not(.eyebrow) {
-  margin: 0.85rem auto 0;
-  max-width: 62ch;
-  font-size: clamp(0.9rem, 1.25vw, 1.02rem);
-  line-height: 1.55;
-  color: color-mix(in oklab, var(--ink), white 38%);
+  margin: 0.9rem auto 0;
+  max-width: 620px;
+  color: var(--muted);
+  line-height: 1.45;
+  font-size: var(--fs-brand);
 }
 
 .studio-life {
@@ -282,9 +289,8 @@ onBeforeUnmount(() => {
   margin-left: calc(25% + (var(--frame-gap) * 0.5));
   margin-right: auto;
   color: var(--muted);
-  font-size: clamp(0.95rem, 1vw, 1.03rem);
+  font-size: var(--fs-brand);
   line-height: 1.45;
-  letter-spacing: -0.005em;
 }
 
 .studio-life-copy p {
@@ -437,6 +443,10 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 1023px) {
+  .intro-copy h2 {
+    font-size: var(--fs-hero-mobile);
+  }
+
   .hero-title {
     top: 0.75rem;
     left: 0.75rem;
@@ -474,14 +484,6 @@ onBeforeUnmount(() => {
     max-width: 100%;
     padding-top: 1.7rem;
     padding-bottom: 2.6rem;
-  }
-
-  .intro-copy h2 {
-    max-width: 17ch;
-  }
-
-  .intro-copy > p:not(.eyebrow) {
-    font-size: 0.92rem;
   }
 
   .studio-life {

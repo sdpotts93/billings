@@ -485,9 +485,8 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .about-film-page {
-  --page-bg: #e7e7e9;
-  --ink: #101015;
-  --muted: #5f6068;
+  --page-bg: var(--theme-color-bg);
+  --ink: var(--ink);
   --line: #111217;
   --card: #efeff1;
   --soft: #d5d6da;
@@ -624,16 +623,15 @@ onBeforeUnmount(() => {
   align-items: center;
   text-align: center;
   padding: clamp(1.4rem, 3vw, 3rem);
-  background: color-mix(in oklab, #f8f8f9, #e9eaee 34%);
+  background:var(--muted);
 }
 
 .hero-mission-kicker {
   margin: 0;
-  font-size: 0.68rem;
-  letter-spacing: 0.09em;
+  font-size: var(--fs-brand);
   text-transform: uppercase;
   font-weight: 700;
-  color: color-mix(in oklab, var(--ink), #989ca6 54%);
+  color: var(--accent-contrast)
 }
 
 .hero-mission-title {
