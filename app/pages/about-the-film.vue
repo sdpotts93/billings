@@ -6,6 +6,7 @@ type TeamMember = {
   role: string
   imageSrc: string
   imageAlt: string
+  imagePosition?: 'top' | 'center'
 }
 
 const heroMissionImageSrc = '/images/why.jpg'
@@ -28,7 +29,8 @@ const teamMembers: TeamMember[] = [
     name: 'Sharlene Ludwig',
     role: 'Producer',
     imageSrc: '/images/sharlene.jpg',
-    imageAlt: 'Portrait of Sharlene Ludwig'
+    imageAlt: 'Portrait of Sharlene Ludwig',
+    imagePosition: 'center'
   },
   {
     name: 'Grace Beedie',
@@ -46,7 +48,8 @@ const teamMembers: TeamMember[] = [
     name: 'Carla Gugino',
     role: '"Sheriff Gaby"',
     imageSrc: '/images/carla.jpg',
-    imageAlt: 'Portrait of Carla Gugino'
+    imageAlt: 'Portrait of Carla Gugino',
+    imagePosition: 'center'
   }
 ]
 
@@ -338,6 +341,7 @@ onBeforeUnmount(() => {
                 <img
                   :src="member.imageSrc"
                   :alt="member.imageAlt"
+                  :style="{ objectPosition: member.imagePosition ?? 'top' }"
                   loading="lazy"
                 >
               </div>
@@ -692,22 +696,21 @@ onBeforeUnmount(() => {
 
 .team-rail {
   display: grid;
-  gap: 0.8rem;
+  gap: 3rem;
   will-change: transform;
 }
 
 .team-card {
   display: grid;
   grid-template-columns: 160px minmax(0, 1fr);
-  gap: 0.65rem;
-  align-items: center;
+  gap: 2rem;
+  align-items: flex-start;
 }
 
 .team-avatar {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1;
   border-radius: 16px;
-  border: 1px solid color-mix(in oklab, #d8d9de, transparent 15%);
   overflow: hidden;
   background: #d6d9de;
 }
@@ -722,16 +725,18 @@ onBeforeUnmount(() => {
 
 .team-card-copy .person {
   margin: 0;
-  font-size: clamp(1.08rem, 1.6vw, 1.6rem);
+  font-size: 2rem;
   line-height: 1.08;
-  font-weight: 730;
+  font-weight: 700;
+  font-family: var(--theme-font-title);
+  color: var(--muted);
 }
 
 .team-card-copy .role {
   margin: 0.22rem 0 0;
-  font-size: clamp(0.95rem, 1.35vw, 1.45rem);
-  color: color-mix(in oklab, #3c3d42, #90939d 35%);
+  font-size: 1rem;
   line-height: 1.1;
+  color: #959595;;
 }
 
 .next-layer {
@@ -766,24 +771,17 @@ onBeforeUnmount(() => {
   margin-left: auto;
   width: clamp(176px, 16vw, 246px);
   border-radius: 14px;
-  border: 1px solid #2a2d34;
-  background: #101218;
-  color: #f0f2f6;
+  background: var(--muted);
+  color: var(--accent-contrast);
   padding: 0.9rem 0.85rem;
   overflow: hidden;
 }
 
-.chapter-card .scanline {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent, rgba(64, 97, 255, 0.15), transparent);
-  animation: scanline 2.7s ease-in-out infinite;
-}
 
 .chapter-card p {
   margin: 0;
   font-size: 0.74rem;
-  line-height: 1.45;
+  line-height: 2;
   position: relative;
   z-index: 1;
 }
