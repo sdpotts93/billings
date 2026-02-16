@@ -771,18 +771,6 @@ onBeforeUnmount(() => {
   display: none;
 }
 
-.manifesto-reveal {
-  position: absolute;
-  left: 0;
-  right: 18%;
-  top: 0;
-  height: 100%;
-  transform-origin: left center;
-  background: linear-gradient(180deg, rgba(210, 211, 217, 0.46), rgba(210, 211, 217, 0));
-  pointer-events: none;
-  mix-blend-mode: multiply;
-}
-
 .split-divider {
   width: 1px;
   height: 94%;

@@ -92,8 +92,9 @@ onBeforeUnmount(() => {
       <slot />
     </main>
 
-    <MountainIcon />
-
+    <section class="pre-footer">
+      <MountainIcon />
+    </section>
 
     <footer class="site-footer">
       <div class="layout-shell footer-shell">
@@ -141,6 +142,10 @@ onBeforeUnmount(() => {
 
 .layout-main {
   flex: 1;
+}
+
+.pre-footer {
+  background-color: var(--theme-color-bg);
 }
 
 .layout-shell {
