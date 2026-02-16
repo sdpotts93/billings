@@ -366,13 +366,7 @@ onBeforeUnmount(() => {
         <div class="chapter-card">
           <span class="scanline" />
           <p>
-            Emergency contacts
-            <br>
-            Coverage & billing help
-            <br>
-            Medication support
-            <br>
-            Caregiver tools
+            Billings exists to humanize the health care access crisis and turn awareness into action by connecting real stories to practical support.
           </p>
         </div>
       </div>
@@ -713,6 +707,7 @@ onBeforeUnmount(() => {
   border-radius: 16px;
   overflow: hidden;
   background: #d6d9de;
+  box-shadow: 10px 10px 0 var(--muted);
 }
 
 .team-avatar img {
@@ -780,7 +775,7 @@ onBeforeUnmount(() => {
 
 .chapter-card p {
   margin: 0;
-  font-size: 0.74rem;
+  font-size: 0.85rem;
   line-height: 2;
   position: relative;
   z-index: 1;
