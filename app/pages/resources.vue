@@ -1924,30 +1924,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                 <strong>Main cost trigger:</strong> {{ compactCopy(condition.triggers, 96) }}
               </p>
 
-              <ul class="condition-action-list">
-                <li>
-                  <UIcon
-                    name="i-lucide-zap"
-                    class="inline-icon"
-                  />
-                  <strong>Now:</strong> {{ compactCopy(condition.actions.today, 88) }}
-                </li>
-                <li>
-                  <UIcon
-                    name="i-lucide-calendar-days"
-                    class="inline-icon"
-                  />
-                  <strong>Week:</strong> {{ compactCopy(condition.actions.week, 88) }}
-                </li>
-                <li>
-                  <UIcon
-                    name="i-lucide-refresh-cw"
-                    class="inline-icon"
-                  />
-                  <strong>Later:</strong> {{ compactCopy(condition.actions.ongoing, 88) }}
-                </li>
-              </ul>
-
               <p class="condition-stat">
                 <UIcon
                   name="i-lucide-bar-chart-3"
@@ -3105,11 +3081,9 @@ h1 {
 }
 
 .condition-card {
-  border: 1px solid color-mix(in oklab, var(--surface-border), #a9b8ff 22%);
   border-radius: 14px;
   padding: 0.95rem;
-  background: linear-gradient(145deg, var(--section-conditions-a), var(--section-conditions-b));
-  box-shadow: var(--surface-shadow);
+  background: #366199;
 }
 
 .card-summary {
