@@ -6,6 +6,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 const heroImageSrc = '/images/behind-the-scenes.jpg'
 const heroVideoHref = 'https://example.com'
 const maxPullOffset = 12
+const enableStudioGridAnimation = false
 const studioMoveDuration = 0.34
 const studioMovePauseMs = 70
 const studioGridColumnCount = 4
@@ -93,7 +94,9 @@ const studioTargetSlotsById = studioTiles.reduce<Record<string, number>>((accumu
   accumulator[tile.id] = studioTargetSlotOrder[index] ?? 0
   return accumulator
 }, {})
-const studioTileSlotsById = ref<Record<string, number>>({ ...studioInitialSlotsById })
+const studioTileSlotsById = ref<Record<string, number>>(
+  enableStudioGridAnimation ? { ...studioInitialSlotsById } : { ...studioTargetSlotsById }
+)
 
 let reduceMotionQuery: MediaQueryList | null = null
 let studioGridObserver: IntersectionObserver | null = null
@@ -211,7 +214,7 @@ const buildStudioMoveSequence = () => {
 }
 
 const animateStudioGrid = async () => {
-  if (hasStudioGridAnimated.value || !studioGridRef.value || prefersReducedMotion.value) {
+  if (!enableStudioGridAnimation || hasStudioGridAnimated.value || !studioGridRef.value || prefersReducedMotion.value) {
     return
   }
 
@@ -260,7 +263,12 @@ const animateStudioGrid = async () => {
 }
 
 const startStudioGridObserver = () => {
-  if (typeof window === 'undefined' || !studioGridRef.value || hasStudioGridAnimated.value) {
+  if (
+    typeof window === 'undefined'
+    || !enableStudioGridAnimation
+    || !studioGridRef.value
+    || hasStudioGridAnimated.value
+  ) {
     return
   }
 
@@ -298,6 +306,13 @@ onMounted(() => {
   reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
   updateReducedMotionPreference()
   reduceMotionQuery.addEventListener('change', updateReducedMotionPreference)
+
+  if (!enableStudioGridAnimation) {
+    studioTileSlotsById.value = { ...studioTargetSlotsById }
+    hasStudioGridAnimated.value = true
+    return
+  }
+
   startStudioGridObserver()
 })
 

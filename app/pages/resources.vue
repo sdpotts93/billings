@@ -2050,6 +2050,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               v-for="group in groupedHelpResources"
               :key="group.group"
               class="directory-group"
+              :style="{ '--directory-row-span': String(Math.max(group.items.length, 1)) }"
             >
               <h3>
                 <UIcon
@@ -2644,6 +2645,10 @@ h1 {
   color: var(--ink-soft);
 }
 
+.directory-group li:last-child {
+  margin-bottom: 0;
+}
+
 .content-section h2 {
   margin: 0.2rem 0 0;
   font-size: var(--theme-font-size-heading-md);
@@ -2911,7 +2916,7 @@ h1 {
   margin-top: 0.75rem;
   font-size: 0.84rem;
   font-weight: 700;
-  color: #304063;
+  color: var(--muted);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -3226,14 +3231,15 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.82rem;
+  grid-auto-flow: dense;
 }
 
 .directory-group {
-  border: 1px solid color-mix(in oklab, var(--surface-border), #9fddb2 20%);
-  border-radius: 14px;
-  padding: 0.9rem;
-  background: linear-gradient(145deg, var(--section-directory-a), var(--section-directory-b));
-  box-shadow: var(--surface-shadow);
+    /* border: 1px solid var(--muted); */
+    border-radius: 14px;
+    padding: 1rem;
+    background: #333949;
+    grid-row: span var(--directory-row-span, 1);
 }
 
 .directory-group ul {
@@ -3250,11 +3256,10 @@ h1 {
 }
 
 .directory-group li {
-  border: 1px solid color-mix(in oklab, var(--surface-border), #9fddb2 10%);
   border-radius: 12px;
-  padding: 0.72rem;
+  padding: 1.5rem;
   margin-bottom: 0.62rem;
-  background: rgba(255, 255, 255, 0.64);
+  background: #c2a154;
 }
 
 .faq-list {
@@ -3298,6 +3303,10 @@ h1 {
   color: #2b3447;
   line-height: 1.45;
   font-size: 0.9rem;
+}
+
+.directory-group .group-count {
+  color: var(--muted);
 }
 
 @media (max-width: 1100px) {
