@@ -774,19 +774,6 @@ const topicFilters = [
   { value: 'cf', label: 'CF' }
 ]
 
-const conditionFilters = [
-  { value: 'all', label: 'All conditions' },
-  { value: 'cf', label: 'CF' },
-  { value: 'heart-stroke', label: 'Heart/stroke' },
-  { value: 'cancer', label: 'Cancer' },
-  { value: 'diabetes', label: 'Diabetes' },
-  { value: 'mental-health', label: 'Mental health' },
-  { value: 'kidney', label: 'Kidney' },
-  { value: 'copd-asthma', label: 'COPD/asthma' },
-  { value: 'arthritis', label: 'Arthritis' },
-  { value: 'dementia', label: 'Dementia' }
-]
-
 const conditionCards: ConditionCard[] = [
   {
     id: 'heart-stroke',
@@ -1030,7 +1017,6 @@ const answers = reactive<Record<QuestionId, string>>({
 const questionIndex = ref(0)
 const result = ref<GeneratedResult | null>(null)
 const activeTopicFilter = ref('all')
-const activeConditionFilter = ref('all')
 const route = useRoute()
 
 const needQuestion = wizardQuestions.find(question => question.id === 'need')
@@ -1059,11 +1045,8 @@ const currentQuestionOptions = computed<Option[]>(() => {
 const filteredDocuments = computed(() => {
   return documentLibrary.filter((document) => {
     const topicMatch = activeTopicFilter.value === 'all' || document.topicTags.includes(activeTopicFilter.value)
-    const conditionMatch = activeConditionFilter.value === 'all'
-      || document.conditionTags.includes('any')
-      || document.conditionTags.includes(activeConditionFilter.value)
 
-    return topicMatch && conditionMatch
+    return topicMatch
   })
 })
 
@@ -1989,31 +1972,13 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                 </button>
               </div>
             </div>
-
-            <div>
-              <p class="filter-label">
-                <UIcon
-                  name="i-lucide-heart-pulse"
-                  class="inline-icon"
-                /> Condition tags
-              </p>
-              <div class="filter-chip-row">
-                <button
-                  v-for="filter in conditionFilters"
-                  :key="filter.value"
-                  type="button"
-                  class="filter-chip"
-                  :class="{ 'is-active': activeConditionFilter === filter.value }"
-                  @click="activeConditionFilter = filter.value"
-                >
-                  {{ filter.label }}
-                </button>
-              </div>
-            </div>
           </div>
 
           <div class="docs-grid">
-            <figure class="section-photo section-photo--docs section-photo--landscape grid-photo-item">
+            <figure
+              v-if="activeTopicFilter === 'all'"
+              class="section-photo section-photo--docs section-photo--landscape grid-photo-item"
+            >
               <img
                 src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1800&q=80"
                 alt="Checklist documents and pen ready for planning"
@@ -2060,13 +2025,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           id="help-directory"
           class="help-directory content-section section-directory"
         >
-          <p class="section-label section-label--with-icon">
-            <UIcon
-              name="i-lucide-link-2"
-              class="section-label-icon"
-            />
-            Free help links directory
-          </p>
           <h2 class="title-with-icon">
             <UIcon
               name="i-lucide-layers-3"
@@ -2455,7 +2413,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 
 .link-icon {
   font-size: 0.9rem;
-  margin-right: 0.18rem;
+  margin-right: 0;
 }
 
 h1 {
@@ -3181,7 +3139,7 @@ h1 {
 .filter-row {
   margin-top: 0.95rem;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 0.82rem;
 }
 
@@ -3195,7 +3153,7 @@ h1 {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #5b6483;
+  color: var(--muted);
 }
 
 .filter-chip-row {
