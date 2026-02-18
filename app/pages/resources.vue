@@ -1921,7 +1921,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   name="i-lucide-alert-circle"
                   class="inline-icon"
                 />
-                <strong>Main cost trigger:</strong> {{ compactCopy(condition.triggers, 96) }}
+                <span class="condition-impact-copy"><strong>Main cost trigger:</strong> {{ compactCopy(condition.triggers, 96) }}</span>
               </p>
 
               <p class="condition-stat">
@@ -1929,7 +1929,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   name="i-lucide-bar-chart-3"
                   class="inline-icon"
                 />
-                <strong>Key stat:</strong> {{ compactCopy(condition.stats[0] ?? '', 98) }}
+                <span class="condition-stat-copy"><strong>Key stat:</strong> {{ compactCopy(condition.stats[0] ?? '', 98) }}</span>
               </p>
 
               <div class="condition-links">
@@ -1962,18 +1962,8 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           id="docs-library"
           class="docs-library content-section section-docs"
         >
-          <p class="section-label section-label--with-icon">
-            <UIcon
-              name="i-lucide-book-open"
-              class="section-label-icon"
-            />
-            Document library
-          </p>
           <h2 class="title-with-icon">
-            <UIcon
-              name="i-lucide-files"
-              class="title-icon"
-            /> Downloadable templates
+            Downloadable templates
           </h2>
           <p class="section-subtitle">
             Filter quickly, then download only what you need.
@@ -2041,17 +2031,17 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   class="title-icon"
                 /> {{ document.title }}
               </h3>
-              <p class="doc-meta">
+              <p class="doc-meta doc-row">
                 <UIcon
                   name="i-lucide-users"
                   class="inline-icon"
-                /> {{ compactCopy(document.whoItHelps, 86) }}
+                /> <span class="doc-row-copy">{{ compactCopy(document.whoItHelps, 86) }}</span>
               </p>
-              <p>
+              <p class="doc-row">
                 <UIcon
                   name="i-lucide-info"
                   class="inline-icon"
-                /> {{ compactCopy(document.summary, 92) }}
+                /> <span class="doc-row-copy">{{ compactCopy(document.summary, 92) }}</span>
               </p>
               <a
                 :href="documentDownloadHref(document)"
@@ -2460,7 +2450,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 .inline-icon {
   font-size: 0.9rem;
   margin-right: 0.22rem;
-  vertical-align: -1px;
+  vertical-align: -3px;
 }
 
 .link-icon {
@@ -2905,7 +2895,6 @@ h1 {
 }
 
 .resource-list a,
-.doc-card a,
 .directory-group a,
 .cf-spotlight a,
 .condition-links a {
@@ -2920,6 +2909,19 @@ h1 {
   row-gap: 0.5rem;
   text-decoration: underline;
   text-underline-offset: 0.5em;
+}
+.doc-card a {
+  display: flex;
+  margin-top: 0.45rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none;
+  align-items: anchor-center;
+  column-gap: 0.5rem;
+  row-gap: 0.5rem;
+  text-decoration: underline;
+  text-underline-offset: 0.5em;
+  color: var(--accent-contrast);
 }
 
 .cf-spotlight a {
@@ -3078,11 +3080,27 @@ h1 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.82rem;
+  grid-auto-flow: row;
+}
+
+.conditions-grid .grid-photo-item {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+.conditions-grid .condition-card:nth-of-type(1) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.conditions-grid .condition-card:nth-of-type(2) {
+  grid-column: 2;
+  grid-row: 2;
 }
 
 .condition-card {
   border-radius: 14px;
-  padding: 0.95rem;
+  padding: 1.5rem;
   background: #366199;
 }
 
@@ -3100,6 +3118,20 @@ h1 {
 
 .condition-impact {
   font-size: 0.9rem;
+  display: flex;
+  align-items: start;
+  gap: 0.42rem;
+}
+
+.condition-impact .inline-icon {
+  margin-right: 0;
+  margin-top: 0.28em;
+  vertical-align: baseline;
+}
+
+.condition-impact-copy {
+  display: block;
+  flex: 1;
 }
 
 .condition-action-list {
@@ -3117,6 +3149,20 @@ h1 {
 .condition-stat {
   margin-top: 0.62rem;
   font-size: 0.86rem;
+  display: flex;
+  align-items: start;
+  gap: 0.42rem;
+}
+
+.condition-stat .inline-icon {
+  margin-right: 0;
+  margin-top: 0.14rem;
+  vertical-align: baseline;
+}
+
+.condition-stat-copy {
+  display: block;
+  flex: 1;
 }
 
 .condition-links {
@@ -3178,22 +3224,37 @@ h1 {
 }
 
 .doc-card {
-  border: 1px solid color-mix(in oklab, var(--surface-border), #c9aaf6 16%);
   border-radius: 14px;
-  padding: 0.9rem;
-  background: linear-gradient(145deg, var(--section-docs-a), var(--section-docs-b));
-  box-shadow: var(--surface-shadow);
+  padding: 1.5rem;
+  background: white;
 }
 
 .doc-card p,
 .directory-group p {
   margin: 0.5rem 0 0;
-  color: var(--muted);
+  color: var(--accent-contrast);
   line-height: 1.42;
 }
 
 .doc-card p {
   font-size: 0.9rem;
+}
+
+.doc-card .doc-row {
+  display: flex;
+  align-items: start;
+  gap: 0.42rem;
+}
+
+.doc-card .doc-row .inline-icon {
+  margin-right: 0;
+  margin-top: 0.14rem;
+  vertical-align: baseline;
+}
+
+.doc-card .doc-row-copy {
+  display: block;
+  flex: 1;
 }
 
 .directory-grid {
@@ -3290,6 +3351,13 @@ h1 {
 
   .conditions-grid {
     grid-template-columns: 1fr;
+  }
+
+  .conditions-grid .grid-photo-item,
+  .conditions-grid .condition-card:nth-of-type(1),
+  .conditions-grid .condition-card:nth-of-type(2) {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .help-now-grid .grid-photo-item {
