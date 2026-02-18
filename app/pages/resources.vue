@@ -2538,7 +2538,13 @@ h1 {
 }
 
 .docs-grid .grid-photo-item {
-  grid-column: span 2;
+  grid-column: 2;
+  grid-row: 2;
+  align-self: stretch;
+}
+
+.docs-grid .grid-photo-item img {
+  height: 100%;
 }
 
 .question-card {
@@ -3200,10 +3206,10 @@ h1 {
 }
 
 .filter-chip {
-  border: 1px solid var(--line);
+  border: 1px solid var(--muted);
   border-radius: 999px;
-  background: #ffffff;
-  color: #4d5573;
+  background: transparent;
+  color: var(--muted);
   font-size: 0.8rem;
   font-weight: 650;
   padding: 0.34rem 0.58rem;
@@ -3212,8 +3218,8 @@ h1 {
 
 .filter-chip.is-active {
   border-color: var(--accent);
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--muted);
+  color: var(--theme-color-bg);
 }
 
 .docs-grid {
