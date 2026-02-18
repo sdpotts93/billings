@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 type QuestionId = 'need' | 'stage' | 'condition' | 'insurance' | 'barrier' | 'age' | 'state' | 'email' | 'format'
 type RouteKey = 'emergency' | 'uninsured' | 'meds' | 'bills' | 'care' | 'caregiver'
@@ -565,7 +565,7 @@ const helpResources: ResourceItem[] = [
     phone: '800-272-3900',
     url: 'https://www.alz.org/help-support/resources/helpline',
     urlLabel: 'Alzheimer’s Helpline',
-    group: 'Dementia and caregiver support',
+    group: 'Dementia support',
     needRoutes: ['caregiver', 'care'],
     conditionTags: ['dementia']
   },
@@ -575,7 +575,7 @@ const helpResources: ResourceItem[] = [
     whoItHelps: 'Caregivers needing practical planning and peer support resources.',
     url: 'https://www.caregiveraction.org',
     urlLabel: 'Caregiver Action Network',
-    group: 'Dementia and caregiver support',
+    group: 'Caregiver support',
     needRoutes: ['caregiver'],
     conditionTags: ['dementia', 'any']
   },
@@ -1059,9 +1059,246 @@ const groupedHelpResources = computed(() => {
     return {
       group,
       total: groupedItems.length,
-      items: groupedItems.slice(0, 4)
+      items: groupedItems
     }
   })
+})
+
+const directoryCardSpans = reactive<Record<string, number>>({})
+const expandedDirectoryGroups = reactive<Record<string, boolean>>({})
+const directoryCardElements = new Map<string, HTMLElement>()
+const directoryGroupByElement = new WeakMap<HTMLElement, string>()
+let directoryCardResizeObserver: ResizeObserver | null = null
+const directoryGridColumns = ref(3)
+const directoryPreviewLimit = 3
+
+const updateDirectoryGridColumns = () => {
+  if (typeof window === 'undefined') {
+    directoryGridColumns.value = 3
+    return
+  }
+
+  if (window.innerWidth <= 768) {
+    directoryGridColumns.value = 1
+    return
+  }
+
+  if (window.innerWidth <= 1100) {
+    directoryGridColumns.value = 2
+    return
+  }
+
+  directoryGridColumns.value = 3
+}
+
+const directoryFallbackSpan = (itemCount: number) => {
+  return Math.max(8, 7 + (itemCount * 5))
+}
+
+const calculateDirectoryCardSpan = (element: HTMLElement) => {
+  if (typeof window === 'undefined') {
+    return 1
+  }
+
+  const grid = element.closest('.directory-grid')
+
+  if (!grid) {
+    return 1
+  }
+
+  const gridStyles = window.getComputedStyle(grid)
+  const rowHeight = Number.parseFloat(gridStyles.gridAutoRows)
+  const rowGap = Number.parseFloat(gridStyles.rowGap)
+
+  if (!Number.isFinite(rowHeight) || rowHeight <= 0) {
+    return 1
+  }
+
+  const totalHeight = element.getBoundingClientRect().height + rowGap
+
+  return Math.max(1, Math.ceil(totalHeight / (rowHeight + rowGap)))
+}
+
+const updateDirectoryCardSpan = (group: string) => {
+  const element = directoryCardElements.get(group)
+
+  if (!element) {
+    return
+  }
+
+  directoryCardSpans[group] = calculateDirectoryCardSpan(element)
+}
+
+const refreshDirectoryCardSpans = async () => {
+  await nextTick()
+
+  groupedHelpResources.value.forEach((group) => {
+    updateDirectoryCardSpan(group.group)
+  })
+}
+
+const setDirectoryCardRef = (group: string, element: Element | null) => {
+  const previousElement = directoryCardElements.get(group)
+
+  if (previousElement && directoryCardResizeObserver) {
+    directoryCardResizeObserver.unobserve(previousElement)
+  }
+
+  if (element instanceof HTMLElement) {
+    directoryCardElements.set(group, element)
+    directoryGroupByElement.set(element, group)
+
+    if (directoryCardResizeObserver) {
+      directoryCardResizeObserver.observe(element)
+      updateDirectoryCardSpan(group)
+    }
+
+    return
+  }
+
+  directoryCardElements.delete(group)
+  delete directoryCardSpans[group]
+}
+
+const directoryCardStyle = (group: string, itemCount: number) => {
+  return {
+    '--directory-row-span': String(directoryCardSpans[group] ?? directoryFallbackSpan(itemCount))
+  }
+}
+
+const isDirectoryGroupExpanded = (group: string) => {
+  return Boolean(expandedDirectoryGroups[group])
+}
+
+const visibleDirectoryResources = (group: { group: string, items: ResourceItem[] }) => {
+  if (isDirectoryGroupExpanded(group.group)) {
+    return group.items
+  }
+
+  return group.items.slice(0, directoryPreviewLimit)
+}
+
+const directoryHiddenCount = (group: { items: ResourceItem[] }) => {
+  return Math.max(group.items.length - directoryPreviewLimit, 0)
+}
+
+const directoryExpandLabel = (group: { group: string, items: ResourceItem[] }) => {
+  if (isDirectoryGroupExpanded(group.group)) {
+    return 'Show less'
+  }
+
+  const hiddenCount = directoryHiddenCount(group)
+  const suffix = hiddenCount === 1 ? 'link' : 'links'
+  return `Show ${hiddenCount} more ${suffix}`
+}
+
+const toggleDirectoryGroup = async (group: string) => {
+  expandedDirectoryGroups[group] = !isDirectoryGroupExpanded(group)
+  await refreshDirectoryCardSpans()
+}
+
+const directorySpanForGroup = (group: { group: string, items: ResourceItem[] }) => {
+  return directoryCardSpans[group.group] ?? directoryFallbackSpan(group.items.length)
+}
+
+const orderedGroupedHelpResources = computed(() => {
+  const groups = groupedHelpResources.value.slice()
+  const columnCount = Math.max(1, directoryGridColumns.value)
+
+  if (columnCount === 1 || groups.length <= columnCount) {
+    return groups
+  }
+
+  const sortedGroups = groups.sort((leftGroup, rightGroup) => {
+    const spanDiff = directorySpanForGroup(rightGroup) - directorySpanForGroup(leftGroup)
+
+    if (spanDiff !== 0) {
+      return spanDiff
+    }
+
+    const itemDiff = rightGroup.items.length - leftGroup.items.length
+
+    if (itemDiff !== 0) {
+      return itemDiff
+    }
+
+    return leftGroup.group.localeCompare(rightGroup.group)
+  })
+
+  const columns = Array.from({ length: columnCount }, () => ({ totalSpan: 0, groups: [] as typeof sortedGroups }))
+
+  sortedGroups.forEach((group) => {
+    const targetColumn = columns.reduce((bestColumn, currentColumn) => {
+      return currentColumn.totalSpan < bestColumn.totalSpan ? currentColumn : bestColumn
+    }, columns[0])
+
+    targetColumn.groups.push(group)
+    targetColumn.totalSpan += directorySpanForGroup(group)
+  })
+
+  const maxDepth = Math.max(...columns.map(column => column.groups.length))
+  const interleaved: typeof sortedGroups = []
+
+  for (let depth = 0; depth < maxDepth; depth += 1) {
+    for (let column = 0; column < columns.length; column += 1) {
+      const group = columns[column].groups[depth]
+
+      if (group) {
+        interleaved.push(group)
+      }
+    }
+  }
+
+  return interleaved
+})
+
+onMounted(async () => {
+  updateDirectoryGridColumns()
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', updateDirectoryGridColumns)
+  }
+
+  if (typeof ResizeObserver !== 'undefined') {
+    directoryCardResizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!(entry.target instanceof HTMLElement)) {
+          return
+        }
+
+        const group = directoryGroupByElement.get(entry.target)
+
+        if (!group) {
+          return
+        }
+
+        directoryCardSpans[group] = calculateDirectoryCardSpan(entry.target)
+      })
+    })
+
+    directoryCardElements.forEach((element) => {
+      directoryCardResizeObserver?.observe(element)
+    })
+  }
+
+  await refreshDirectoryCardSpans()
+})
+
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('resize', updateDirectoryGridColumns)
+  }
+
+  directoryCardResizeObserver?.disconnect()
+  directoryCardResizeObserver = null
+})
+
+watch(groupedHelpResources, () => {
+  void refreshDirectoryCardSpans()
+})
+
+watch(directoryGridColumns, () => {
+  void refreshDirectoryCardSpans()
 })
 
 const resultResources = computed(() => {
@@ -2032,7 +2269,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             /> Grouped by need
           </h2>
           <p class="section-subtitle">
-            Showing top links in each group. Download the full directory if needed.
+            Showing all links in each group.
           </p>
           <a
             class="section-download-link"
@@ -2047,10 +2284,11 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 
           <div class="directory-grid">
             <article
-              v-for="group in groupedHelpResources"
+              v-for="group in orderedGroupedHelpResources"
               :key="group.group"
               class="directory-group"
-              :style="{ '--directory-row-span': String(Math.max(group.items.length, 1)) }"
+              :style="directoryCardStyle(group.group, group.items.length)"
+              :ref="(element) => setDirectoryCardRef(group.group, element as Element | null)"
             >
               <h3>
                 <UIcon
@@ -2058,15 +2296,21 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   class="title-icon"
                 /> {{ group.group }}
               </h3>
-              <p class="group-count">
+              <!-- <p class="group-count">
                 <UIcon
                   name="i-lucide-list"
                   class="inline-icon"
-                /> Top {{ group.items.length }} of {{ group.total }} links
+                /> {{ group.items.length }} links
               </p>
+              <p
+                v-if="group.items.length > directoryPreviewLimit"
+                class="group-more-hint"
+              >
+                Showing {{ directoryPreviewLimit }} of {{ group.items.length }} links.
+              </p> -->
               <ul>
                 <li
-                  v-for="resource in group.items"
+                  v-for="resource in visibleDirectoryResources(group)"
                   :key="resource.id"
                 >
                   <p class="resource-title">
@@ -2099,6 +2343,14 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   </a>
                 </li>
               </ul>
+              <button
+                v-if="group.items.length > directoryPreviewLimit"
+                type="button"
+                class="group-expand-btn"
+                @click="toggleDirectoryGroup(group.group)"
+              >
+                {{ directoryExpandLabel(group) }}
+              </button>
             </article>
           </div>
         </section>
@@ -3230,7 +3482,9 @@ h1 {
   margin-top: 0.95rem;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.82rem;
+  column-gap: 0.82rem;
+  row-gap: 0.82rem;
+  grid-auto-rows: 2px;
   grid-auto-flow: dense;
 }
 
@@ -3240,6 +3494,7 @@ h1 {
     padding: 1rem;
     background: #333949;
     grid-row: span var(--directory-row-span, 1);
+    align-self: start;
 }
 
 .directory-group ul {
@@ -3253,6 +3508,25 @@ h1 {
   font-size: 0.78rem;
   color: #4b5f4b;
   font-weight: 700;
+}
+
+.group-more-hint {
+  margin: 0.36rem 0 0;
+  font-size: 0.76rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.group-expand-btn {
+  margin-top: 0.62rem;
+  border: 1px solid color-mix(in oklab, var(--muted), #ffffff 26%);
+  border-radius: 999px;
+  padding: 0.34rem 0.7rem;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .directory-group li {
