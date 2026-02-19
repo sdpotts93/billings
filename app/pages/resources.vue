@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 type QuestionId = 'need' | 'stage' | 'condition' | 'insurance' | 'barrier' | 'age' | 'state' | 'email' | 'format'
 type RouteKey = 'emergency' | 'uninsured' | 'meds' | 'bills' | 'care' | 'caregiver'
@@ -480,7 +480,7 @@ const helpResources: ResourceItem[] = [
   {
     id: 'cf-compass',
     title: 'CF Foundation Compass',
-    whoItHelps: 'People with cystic fibrosis and caregivers navigating insurance, financial, legal, and life issues.',
+    whoItHelps: 'People with cystic fibrosis and caregivers who need support with coverage and daily care logistics.',
     phone: '844-266-7277',
     url: 'https://www.cff.org/support/get-help-cf-foundation-compass',
     urlLabel: 'CF Foundation Compass',
@@ -491,7 +491,7 @@ const helpResources: ResourceItem[] = [
   {
     id: 'healthcare-gov',
     title: 'HealthCare.gov',
-    whoItHelps: 'People exploring Marketplace plans, enrollment windows, and subsidy eligibility.',
+    whoItHelps: 'People comparing Marketplace plans, deadlines, and subsidy options.',
     url: 'https://www.healthcare.gov',
     urlLabel: 'HealthCare.gov',
     group: 'Insurance and coverage',
@@ -510,7 +510,7 @@ const helpResources: ResourceItem[] = [
   },
   {
     id: 'medicare-rights',
-    title: 'Medicare rights and savings programs',
+    title: 'Medicare rights and savings',
     whoItHelps: 'Older adults and disabled beneficiaries facing Medicare cost barriers.',
     url: 'https://www.medicare.gov/basics/costs/help',
     urlLabel: 'Medicare cost help',
@@ -560,7 +560,7 @@ const helpResources: ResourceItem[] = [
   },
   {
     id: 'alz-helpline',
-    title: 'Alzheimer’s Association 24/7 Helpline',
+    title: 'Alzheimer’s Association 24/7',
     whoItHelps: 'Families and caregivers supporting people with dementia.',
     phone: '800-272-3900',
     url: 'https://www.alz.org/help-support/resources/helpline',
@@ -602,7 +602,7 @@ const helpResources: ResourceItem[] = [
   {
     id: 'diabetes-assoc',
     title: 'American Diabetes Association',
-    whoItHelps: 'People with diabetes managing medication, supplies, and long-term care planning.',
+    whoItHelps: 'People with diabetes managing meds, supplies, and long-term care costs.',
     url: 'https://diabetes.org',
     urlLabel: 'American Diabetes Association',
     group: 'Condition foundations',
@@ -996,12 +996,6 @@ const faqItems: FaqItem[] = [
   }
 ]
 
-const supportCallScript = [
-  'Hi, I need help with coverage and costs for my care right now.',
-  'Please tell me the most important next step for today and the deadline I need to track.',
-  'Before we end this call, please share the reference number and required documents.'
-]
-
 const answers = reactive<Record<QuestionId, string>>({
   need: '',
   stage: '',
@@ -1064,107 +1058,8 @@ const groupedHelpResources = computed(() => {
   })
 })
 
-const directoryCardSpans = reactive<Record<string, number>>({})
 const expandedDirectoryGroups = reactive<Record<string, boolean>>({})
-const directoryCardElements = new Map<string, HTMLElement>()
-const directoryGroupByElement = new WeakMap<HTMLElement, string>()
-let directoryCardResizeObserver: ResizeObserver | null = null
-const directoryGridColumns = ref(3)
 const directoryPreviewLimit = 3
-
-const updateDirectoryGridColumns = () => {
-  if (typeof window === 'undefined') {
-    directoryGridColumns.value = 3
-    return
-  }
-
-  if (window.innerWidth <= 768) {
-    directoryGridColumns.value = 1
-    return
-  }
-
-  if (window.innerWidth <= 1100) {
-    directoryGridColumns.value = 2
-    return
-  }
-
-  directoryGridColumns.value = 3
-}
-
-const directoryFallbackSpan = (itemCount: number) => {
-  return Math.max(8, 7 + (itemCount * 5))
-}
-
-const calculateDirectoryCardSpan = (element: HTMLElement) => {
-  if (typeof window === 'undefined') {
-    return 1
-  }
-
-  const grid = element.closest('.directory-grid')
-
-  if (!grid) {
-    return 1
-  }
-
-  const gridStyles = window.getComputedStyle(grid)
-  const rowHeight = Number.parseFloat(gridStyles.gridAutoRows)
-  const rowGap = Number.parseFloat(gridStyles.rowGap)
-
-  if (!Number.isFinite(rowHeight) || rowHeight <= 0) {
-    return 1
-  }
-
-  const totalHeight = element.getBoundingClientRect().height + rowGap
-
-  return Math.max(1, Math.ceil(totalHeight / (rowHeight + rowGap)))
-}
-
-const updateDirectoryCardSpan = (group: string) => {
-  const element = directoryCardElements.get(group)
-
-  if (!element) {
-    return
-  }
-
-  directoryCardSpans[group] = calculateDirectoryCardSpan(element)
-}
-
-const refreshDirectoryCardSpans = async () => {
-  await nextTick()
-
-  groupedHelpResources.value.forEach((group) => {
-    updateDirectoryCardSpan(group.group)
-  })
-}
-
-const setDirectoryCardRef = (group: string, element: Element | null) => {
-  const previousElement = directoryCardElements.get(group)
-
-  if (previousElement && directoryCardResizeObserver) {
-    directoryCardResizeObserver.unobserve(previousElement)
-  }
-
-  if (element instanceof HTMLElement) {
-    directoryCardElements.set(group, element)
-    directoryGroupByElement.set(element, group)
-
-    if (directoryCardResizeObserver) {
-      directoryCardResizeObserver.observe(element)
-      updateDirectoryCardSpan(group)
-    }
-
-    return
-  }
-
-  directoryCardElements.delete(group)
-  delete directoryCardSpans[group]
-}
-
-const directoryCardStyle = (group: string, itemCount: number) => {
-  return {
-    '--directory-row-span': String(directoryCardSpans[group] ?? directoryFallbackSpan(itemCount))
-  }
-}
 
 const isDirectoryGroupExpanded = (group: string) => {
   return Boolean(expandedDirectoryGroups[group])
@@ -1192,113 +1087,35 @@ const directoryExpandLabel = (group: { group: string, items: ResourceItem[] }) =
   return `Show ${hiddenCount} more ${suffix}`
 }
 
-const toggleDirectoryGroup = async (group: string) => {
+const toggleDirectoryGroup = (group: string) => {
   expandedDirectoryGroups[group] = !isDirectoryGroupExpanded(group)
-  await refreshDirectoryCardSpans()
 }
 
-const directorySpanForGroup = (group: { group: string, items: ResourceItem[] }) => {
-  return directoryCardSpans[group.group] ?? directoryFallbackSpan(group.items.length)
-}
+const directoryLayoutOrder = [
+  'Condition foundations',
+  'Insurance and coverage',
+  'Urgent and crisis',
+  'CF-specific support',
+  'Bills and debt',
+  'Care and specialists',
+  'Medication affordability',
+  'Caregiver support',
+  'Dementia support'
+]
+
+const directoryOrderByGroup = new Map(directoryLayoutOrder.map((group, index) => [group, index]))
 
 const orderedGroupedHelpResources = computed(() => {
-  const groups = groupedHelpResources.value.slice()
-  const columnCount = Math.max(1, directoryGridColumns.value)
+  return groupedHelpResources.value.slice().sort((leftGroup, rightGroup) => {
+    const leftOrder = directoryOrderByGroup.get(leftGroup.group) ?? Number.MAX_SAFE_INTEGER
+    const rightOrder = directoryOrderByGroup.get(rightGroup.group) ?? Number.MAX_SAFE_INTEGER
 
-  if (columnCount === 1 || groups.length <= columnCount) {
-    return groups
-  }
-
-  const sortedGroups = groups.sort((leftGroup, rightGroup) => {
-    const spanDiff = directorySpanForGroup(rightGroup) - directorySpanForGroup(leftGroup)
-
-    if (spanDiff !== 0) {
-      return spanDiff
-    }
-
-    const itemDiff = rightGroup.items.length - leftGroup.items.length
-
-    if (itemDiff !== 0) {
-      return itemDiff
+    if (leftOrder !== rightOrder) {
+      return leftOrder - rightOrder
     }
 
     return leftGroup.group.localeCompare(rightGroup.group)
   })
-
-  const columns = Array.from({ length: columnCount }, () => ({ totalSpan: 0, groups: [] as typeof sortedGroups }))
-
-  sortedGroups.forEach((group) => {
-    const targetColumn = columns.reduce((bestColumn, currentColumn) => {
-      return currentColumn.totalSpan < bestColumn.totalSpan ? currentColumn : bestColumn
-    }, columns[0])
-
-    targetColumn.groups.push(group)
-    targetColumn.totalSpan += directorySpanForGroup(group)
-  })
-
-  const maxDepth = Math.max(...columns.map(column => column.groups.length))
-  const interleaved: typeof sortedGroups = []
-
-  for (let depth = 0; depth < maxDepth; depth += 1) {
-    for (let column = 0; column < columns.length; column += 1) {
-      const group = columns[column].groups[depth]
-
-      if (group) {
-        interleaved.push(group)
-      }
-    }
-  }
-
-  return interleaved
-})
-
-onMounted(async () => {
-  updateDirectoryGridColumns()
-
-  if (typeof window !== 'undefined') {
-    window.addEventListener('resize', updateDirectoryGridColumns)
-  }
-
-  if (typeof ResizeObserver !== 'undefined') {
-    directoryCardResizeObserver = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!(entry.target instanceof HTMLElement)) {
-          return
-        }
-
-        const group = directoryGroupByElement.get(entry.target)
-
-        if (!group) {
-          return
-        }
-
-        directoryCardSpans[group] = calculateDirectoryCardSpan(entry.target)
-      })
-    })
-
-    directoryCardElements.forEach((element) => {
-      directoryCardResizeObserver?.observe(element)
-    })
-  }
-
-  await refreshDirectoryCardSpans()
-})
-
-onBeforeUnmount(() => {
-  if (typeof window !== 'undefined') {
-    window.removeEventListener('resize', updateDirectoryGridColumns)
-  }
-
-  directoryCardResizeObserver?.disconnect()
-  directoryCardResizeObserver = null
-})
-
-watch(groupedHelpResources, () => {
-  void refreshDirectoryCardSpans()
-})
-
-watch(directoryGridColumns, () => {
-  void refreshDirectoryCardSpans()
 })
 
 const resultResources = computed(() => {
@@ -1387,6 +1204,31 @@ const compactCopy = (text: string, max = 120) => {
   }
 
   return `${text.slice(0, max).trimEnd()}...`
+}
+
+const digitsOnly = (value: string) => {
+  return value.replace(/\D+/g, '')
+}
+
+const shouldShowDirectoryPhone = (resource: ResourceItem) => {
+  if (!resource.phone) {
+    return false
+  }
+
+  const phoneDigits = digitsOnly(resource.phone)
+
+  if (!phoneDigits) {
+    return true
+  }
+
+  const linkDigits = digitsOnly(resource.urlLabel)
+
+  return !linkDigits.includes(phoneDigits)
+}
+
+const toTelHref = (phone: string) => {
+  const normalized = digitsOnly(phone)
+  return normalized ? `tel:${normalized}` : `tel:${phone}`
 }
 
 const toSlug = (text: string) => {
@@ -1653,18 +1495,6 @@ const buildDirectoryDownloadContent = () => {
 
 const helpDirectoryDownloadHref = computed(() => {
   return `data:text/plain;charset=utf-8,${encodeURIComponent(buildDirectoryDownloadContent())}`
-})
-
-const buildCallScriptDownloadContent = () => {
-  return [
-    'Call script',
-    '',
-    ...supportCallScript.map(line => `- ${line}`)
-  ].join('\n')
-}
-
-const callScriptDownloadHref = computed(() => {
-  return `data:text/plain;charset=utf-8,${encodeURIComponent(buildCallScriptDownloadContent())}`
 })
 
 const cfQuickDocuments = computed(() => {
@@ -2287,8 +2117,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               v-for="group in orderedGroupedHelpResources"
               :key="group.group"
               class="directory-group"
-              :style="directoryCardStyle(group.group, group.items.length)"
-              :ref="(element) => setDirectoryCardRef(group.group, element as Element | null)"
             >
               <h3>
                 <UIcon
@@ -2322,25 +2150,32 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   <p class="resource-meta">
                     {{ compactCopy(resource.whoItHelps, 78) }}
                   </p>
-                  <p
-                    v-if="resource.phone"
-                    class="resource-meta"
+                  <div
+                    class="directory-link-row"
+                    :class="{ 'has-phone-link': shouldShowDirectoryPhone(resource) }"
                   >
-                    <UIcon
-                      name="i-lucide-phone"
-                      class="inline-icon"
-                    /> Phone: {{ resource.phone }}
-                  </p>
-                  <a
-                    :href="resource.url"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    {{ resource.urlLabel }} <UIcon
-                      name="i-lucide-arrow-up-right"
-                      class="link-icon"
-                    />
-                  </a>
+                    <a
+                      :href="resource.url"
+                      target="_blank"
+                      rel="noopener"
+                      class="directory-link directory-link--external"
+                    >
+                      {{ resource.urlLabel }} <UIcon
+                        name="i-lucide-arrow-up-right"
+                        class="link-icon"
+                      />
+                    </a>
+                    <a
+                      v-if="shouldShowDirectoryPhone(resource)"
+                      :href="toTelHref(resource.phone ?? '')"
+                      class="directory-link directory-link--phone"
+                    >
+                      <UIcon
+                        name="i-lucide-phone"
+                        class="link-icon"
+                      /> Call
+                    </a>
+                  </div>
                 </li>
               </ul>
               <button
@@ -2353,57 +2188,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               </button>
             </article>
           </div>
-        </section>
-
-        <section
-          id="call-script"
-          class="call-script-section content-section section-script"
-        >
-          <p class="section-label section-label--with-icon">
-            <UIcon
-              name="i-lucide-phone-call"
-              class="section-label-icon"
-            />
-            Call support
-          </p>
-          <h2 class="title-with-icon">
-            <UIcon
-              name="i-lucide-messages-square"
-              class="title-icon"
-            /> Call script
-          </h2>
-          <p class="section-subtitle">
-            Keep your call short and focused.
-          </p>
-          <article class="call-script-card">
-            <p class="call-script-title">
-              <UIcon
-                name="i-lucide-clipboard-list"
-                class="title-icon"
-              /> Suggested script
-            </p>
-            <ol class="call-script-lines">
-              <li
-                v-for="line in supportCallScript"
-                :key="line"
-              >
-                <UIcon
-                  name="i-lucide-check-circle-2"
-                  class="inline-icon"
-                /> {{ line }}
-              </li>
-            </ol>
-            <a
-              class="section-download-link"
-              :href="callScriptDownloadHref"
-              download="call-script.txt"
-            >
-              <UIcon
-                name="i-lucide-download"
-                class="link-icon"
-              /> Download call script
-            </a>
-          </article>
         </section>
 
         <section
@@ -2495,8 +2279,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   --section-docs-b: #faf4ff;
   --section-directory-a: #e4f9ed;
   --section-directory-b: #f0fdf5;
-  --section-script-a: #ffe6eb;
-  --section-script-b: #fff1f4;
   --section-faq-a: #f2f4f8;
   --section-faq-b: #f8f9fc;
   --section-footer-a: #e9eef6;
@@ -2600,7 +2382,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 .section-conditions { --section-rule: #c5862e; padding-top: 120px;}
 .section-docs { --section-rule: #c5862e;padding-top: 120px; }
 .section-directory { --section-rule: #c5862e;padding-top: 120px; }
-.section-script { --section-rule: #c5862e;padding-top: 120px; }
 .section-faq { --section-rule: #c5862e;padding-top: 120px; }
 .section-footer { --section-rule: #c5862e;padding-top: 120px; }
 
@@ -2867,6 +2648,11 @@ h1 {
   padding: 0.67rem 0.92rem;
 }
 
+.directory-group .resource-title {
+  margin-top: 0;
+  font-family: var(--theme-font-title);
+  font-size: 1.3rem;
+}
 .ghost-btn,
 .back-btn {
   border-color: var(--muted);
@@ -2973,6 +2759,13 @@ h1 {
   color: var(--result-muted);
   font-size: 0.84rem;
   line-height: 1.4;
+}
+
+.resource-meta {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .result-simple-card a {
@@ -3171,42 +2964,6 @@ h1 {
   color: var(--muted);
   text-decoration: underline;
   text-underline-offset: 2px;
-}
-
-.call-script-card {
-  margin-top: 0.95rem;
-  border: 1px solid color-mix(in oklab, var(--surface-border), #f0a6b4 18%);
-  border-radius: 14px;
-  background: linear-gradient(145deg, var(--section-script-a), var(--section-script-b));
-  padding: 0.96rem;
-  box-shadow: var(--surface-shadow);
-}
-
-.call-script-title {
-  margin: 0;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #5b6483;
-}
-
-.call-script-lines {
-  margin: 0.62rem 0 0;
-  padding-left: 1.1rem;
-}
-
-.call-script-lines li {
-  margin-bottom: 0.48rem;
-  line-height: 1.42;
-  color: var(--ink-soft);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.26rem;
-}
-
-.call-script-card .section-download-link {
-  margin-top: 0.35rem;
 }
 
 .help-now > p,
@@ -3484,8 +3241,7 @@ h1 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   column-gap: 0.82rem;
   row-gap: 0.82rem;
-  grid-auto-rows: 2px;
-  grid-auto-flow: dense;
+  grid-auto-flow: row;
 }
 
 .directory-group {
@@ -3493,8 +3249,6 @@ h1 {
     border-radius: 14px;
     padding: 1rem;
     background: #333949;
-    grid-row: span var(--directory-row-span, 1);
-    align-self: start;
 }
 
 .directory-group ul {
@@ -3534,6 +3288,23 @@ h1 {
   padding: 1.5rem;
   margin-bottom: 0.62rem;
   background: #c2a154;
+}
+
+.directory-link-row {
+  margin-top: 0.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.directory-link-row .directory-link {
+  margin-top: 0;
+  color: var(--accent-contrast);
+}
+
+.directory-link-row.has-phone-link .directory-link--phone {
+  margin-left: auto;
 }
 
 .faq-list {
