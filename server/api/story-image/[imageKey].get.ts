@@ -1,4 +1,4 @@
-import { createError, getRouterParam, setHeader } from 'h3'
+import { createError, getRouterParam } from 'h3'
 import { getStoryImagesBucket } from '../../utils/storyImages'
 
 const VALID_IMAGE_KEY = /^[0-9a-f-]+\.(webp|jpg|jpeg|png)$/i
@@ -24,10 +24,13 @@ export default defineEventHandler(async (event) => {
   }
 
   const contentType = imageObject.httpMetadata?.contentType || 'image/webp'
+  const imageBytes = await imageObject.arrayBuffer()
 
-  setHeader(event, 'Cache-Control', 'public, max-age=31536000, immutable')
-  setHeader(event, 'Content-Type', contentType)
-  setHeader(event, 'X-Robots-Tag', 'noindex, nofollow, noarchive')
-
-  return imageObject.arrayBuffer()
+  return new Response(imageBytes, {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Content-Type': contentType,
+      'X-Robots-Tag': 'noindex, nofollow, noarchive'
+    }
+  })
 })
