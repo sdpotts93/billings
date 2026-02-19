@@ -994,8 +994,8 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     position: fixed;
-    left: 1rem;
-    right: 1rem;
+    left: 2rem;
+    right: 2rem;
     bottom: 1rem;
     z-index: 40;
     border: 0;
