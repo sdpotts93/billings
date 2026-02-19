@@ -489,6 +489,16 @@ const helpResources: ResourceItem[] = [
     conditionTags: ['cf']
   },
   {
+    id: 'cflf',
+    title: 'CF Lifestyle Foundation',
+    whoItHelps: 'People with CF looking for practical support and community resources.',
+    url: 'https://www.cflf.org',
+    urlLabel: 'CF Lifestyle Foundation',
+    group: 'CF-specific support',
+    needRoutes: ['care', 'caregiver', 'meds'],
+    conditionTags: ['cf']
+  },
+  {
     id: 'healthcare-gov',
     title: 'HealthCare.gov',
     whoItHelps: 'People comparing Marketplace plans, deadlines, and subsidy options.',
@@ -549,13 +559,33 @@ const helpResources: ResourceItem[] = [
     conditionTags: ['any']
   },
   {
+    id: 'rxassist',
+    title: 'RxAssist',
+    whoItHelps: 'People finding patient assistance programs for medications.',
+    url: 'https://www.rxassist.org',
+    urlLabel: 'RxAssist',
+    group: 'Medication affordability',
+    needRoutes: ['meds'],
+    conditionTags: ['any']
+  },
+  {
     id: 'findcare',
-    title: 'Find a federally funded health center',
+    title: 'Find a federally center',
     whoItHelps: 'People seeking lower-cost primary or specialty referral access.',
     url: 'https://findahealthcenter.hrsa.gov',
     urlLabel: 'HRSA clinic finder',
     group: 'Care and specialists',
     needRoutes: ['care', 'uninsured', 'bills', 'emergency'],
+    conditionTags: ['any']
+  },
+  {
+    id: 'nafc-clinics',
+    title: 'Find a free or charitable clinic',
+    whoItHelps: 'People seeking local low-cost clinics and specialty referrals.',
+    url: 'https://nafcclinics.org/find-clinic',
+    urlLabel: 'NAFC clinic finder',
+    group: 'Care and specialists',
+    needRoutes: ['care', 'uninsured', 'bills'],
     conditionTags: ['any']
   },
   {
@@ -570,6 +600,16 @@ const helpResources: ResourceItem[] = [
     conditionTags: ['dementia']
   },
   {
+    id: 'nia-dementia-caregiving',
+    title: 'NIA Alzheimer’s caregiving resources',
+    whoItHelps: 'Families caring for someone with dementia who need practical guidance.',
+    url: 'https://www.nia.nih.gov/health/alzheimers/caregiving',
+    urlLabel: 'NIA caregiving resources',
+    group: 'Dementia support',
+    needRoutes: ['caregiver', 'care'],
+    conditionTags: ['dementia']
+  },
+  {
     id: 'caregiver-action',
     title: 'Caregiver Action Network',
     whoItHelps: 'Caregivers needing practical planning and peer support resources.',
@@ -577,6 +617,16 @@ const helpResources: ResourceItem[] = [
     urlLabel: 'Caregiver Action Network',
     group: 'Caregiver support',
     needRoutes: ['caregiver'],
+    conditionTags: ['dementia', 'any']
+  },
+  {
+    id: 'family-caregiver-alliance',
+    title: 'Family Caregiver Alliance',
+    whoItHelps: 'Family caregivers needing planning tools, education, and support.',
+    url: 'https://www.caregiver.org',
+    urlLabel: 'Family Caregiver Alliance',
+    group: 'Caregiver support',
+    needRoutes: ['caregiver', 'care'],
     conditionTags: ['dementia', 'any']
   },
   {
@@ -1059,7 +1109,7 @@ const groupedHelpResources = computed(() => {
 })
 
 const expandedDirectoryGroups = reactive<Record<string, boolean>>({})
-const directoryPreviewLimit = 3
+const directoryPreviewLimit = 1
 
 const isDirectoryGroupExpanded = (group: string) => {
   return Boolean(expandedDirectoryGroups[group])
@@ -1808,6 +1858,9 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             v-if="!result"
             class="hero-media"
           >
+            <p class="hero-media-title">
+              Explore our<br>resources
+            </p>
             <img
               src="/images/form-alter.jpg"
               alt="A man grabbing a medical device"
@@ -2194,13 +2247,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           id="faq"
           class="faq-section content-section section-faq"
         >
-          <p class="section-label section-label--with-icon">
-            <UIcon
-              name="i-lucide-circle-help"
-              class="section-label-icon"
-            />
-            FAQ + disclaimers
-          </p>
           <h2 class="title-with-icon">
             <UIcon
               name="i-lucide-help-circle"
@@ -2328,12 +2374,32 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 }
 
 .hero-media {
+  position: relative;
   margin: 0;
   border-radius: 20px;
   overflow: hidden;
   height: 100%;
   background: linear-gradient(145deg, #d5dee9 0%, #f4f8fb 100%);
   box-shadow: 24px 24px 0px var(--muted);
+}
+
+.hero-media-title {
+  position: absolute;
+  bottom: clamp(0.9rem, 2.6vw, 1.7rem);
+  right: clamp(0.9rem, 2.8vw, 2rem);
+  z-index: 2;
+  margin: 0;
+  max-width: min(82%, 12ch);
+  font-family: var(--theme-font-title);
+  font-size: clamp(1.7rem, 5vw, 4rem);
+  line-height: 0.9;
+  text-transform: lowercase;
+  text-wrap: balance;
+  line-height: 1.1;
+  text-align: right;
+  color: var(--muted);
+  text-shadow: 0 2px 18px rgba(18, 25, 34, 0.45);
+  pointer-events: none;
 }
 
 .hero-media img {
@@ -3317,25 +3383,27 @@ h1 {
   border: 1px solid color-mix(in oklab, var(--surface-border), #bcc4d4 18%);
   border-radius: 12px;
   padding: 0.75rem 0.86rem;
-  background: linear-gradient(145deg, var(--section-faq-a), var(--section-faq-b));
+  background: var(--muted);
   box-shadow: 0 8px 16px rgba(15, 28, 44, 0.06);
 }
 
 .faq-list summary {
   cursor: pointer;
   font-weight: 700;
-  color: #263246;
+  color: var(--accent-contrast);
 }
 
 .faq-list p {
   margin: 0.62rem 0 0;
-  color: var(--muted);
+  color: var(--accent-contrast);
   line-height: 1.5;
 }
 
 .footer-lines {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .footer-lines a {
@@ -3345,7 +3413,7 @@ h1 {
   margin: 0;
   text-decoration: none;
   font-weight: 700;
-  color: #2b3447;
+  color: var(--muted);
   line-height: 1.45;
   font-size: 0.9rem;
 }
@@ -3424,6 +3492,11 @@ h1 {
     max-width: 780px;
     margin-inline: auto;
   }
+
+  .hero-media-title {
+    font-size: clamp(1.8rem, 10vw, 3rem);
+    max-width: min(86%, 14ch);
+  }
 }
 
 @media (max-width: 768px) {
@@ -3434,6 +3507,11 @@ h1 {
   .hero-media {
     min-height: 300px;
     border-radius: 14px;
+  }
+
+  .hero-media-title {
+    top: 0.7rem;
+    right: 0.7rem;
   }
 
   .page-shell {

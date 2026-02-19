@@ -116,7 +116,7 @@ onBeforeUnmount(() => {
         </nav>
 
         <NuxtLink
-          to="/share-your-story#share-story-form"
+          to="/share-your-story"
           class="nav-cta"
         >
           Share your story
