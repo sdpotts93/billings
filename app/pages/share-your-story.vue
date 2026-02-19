@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 type Story = {
-  id: number
+  id: string
   author: string
   message: string
   accent: string
@@ -10,7 +10,13 @@ type Story = {
   photoUrl?: string
 }
 
-type StoryTemplate = Pick<Story, 'author' | 'message'>
+type ApiStory = {
+  id: string
+  author: string
+  message: string
+  createdAt: string
+  imageUrl?: string
+}
 
 const accentPalette = [
   'var(--theme-story-accent-1)',
@@ -19,95 +25,6 @@ const accentPalette = [
   'var(--theme-story-accent-4)',
   'var(--theme-story-accent-5)'
 ]
-
-const messageAdditions = {
-  micro: [
-    'We are exhausted.',
-    'I still do not have answers.',
-    'This should not take months.',
-    'No one could explain the bill.',
-    'Care was delayed again.'
-  ],
-  short: [
-    'This keeps happening and it should not be normal.',
-    'I am sharing this because families deserve clearer answers.',
-    'The stress from this process was worse than expected.'
-  ],
-  medium: [
-    'Every call gave me a different explanation, and none of the timelines were accurate.',
-    'When we finally reached the right department, they said this issue was common and advised us to keep escalating.',
-    'I documented every interaction because verbal promises did not match what later appeared in writing.'
-  ],
-  long: [
-    'The most frustrating part was that each handoff reset the process.',
-    'By the time this was resolved, we had already changed treatment timing and schedules around administrative delays rather than medical guidance.',
-    'If the system had a single accountable owner per case, people would not lose weeks navigating disconnected portals, phone trees and contradictory letters.'
-  ]
-}
-
-const storyTemplates: StoryTemplate[] = [
-  {
-    author: 'Ariana M.',
-    message: 'Our pediatric specialist referral was denied twice before finally being approved after eight weeks.'
-  },
-  {
-    author: 'Terrance W.',
-    message: ''
-  },
-  {
-    author: 'Nina K.',
-    message: 'The same blood panel cost me three different prices at three different clinics in the same city.'
-  },
-  {
-    author: 'Sofia R.',
-    message: 'Families I support spend hours every week on hold trying to fix basic billing coding errors.'
-  },
-  {
-    author: 'Derek L.',
-    message: 'My employee could not schedule in-network physical therapy for over a month due to limited provider capacity.'
-  },
-  {
-    author: 'Hana P.',
-    message: 'I see patients skip follow-up care because they are still waiting on itemized explanations from prior visits.'
-  },
-  {
-    author: 'Carlos E.',
-    message: 'Urgent care sent my claim to the wrong insurer and collections started before the correction was processed.'
-  },
-  {
-    author: 'Maya J.',
-    message: 'I found a therapist who was listed as in-network, but every invoice came through as out-of-network.'
-  },
-  {
-    author: 'Liam C.',
-    message: 'Transferring records between systems delayed my specialist intake by nearly two months.'
-  },
-  {
-    author: 'Priya S.',
-    message: 'Prior authorization loops force patients to make multiple trips before they can start treatment.'
-  },
-  {
-    author: 'Monica T.',
-    message: 'My claim was approved in writing and still denied at checkout because the system had not synced.'
-  },
-  {
-    author: 'Evan D.',
-    message: 'Telehealth availability helped, but follow-up lab scheduling still required faxing forms back and forth.'
-  },
-  {
-    author: 'Rosa V.',
-    message: 'Patients in rural areas are traveling over an hour for appointments that could be regionalized better.'
-  },
-  {
-    author: 'Ty M.',
-    message: 'A short emergency visit still resulted in six separate paper bills with conflicting totals.'
-  }
-]
-
-const defaultStoryTemplate: StoryTemplate = {
-  author: 'Community Member',
-  message: 'Sharing a healthcare experience from the community.'
-}
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -123,72 +40,6 @@ const getInitials = (name: string) => {
     .join('')
 }
 
-const buildVariableMessage = (index: number, baseMessage: string) => {
-  const micro = messageAdditions.micro[index % messageAdditions.micro.length] ?? baseMessage
-  const short = messageAdditions.short[index % messageAdditions.short.length] ?? ''
-  const medium = messageAdditions.medium[index % messageAdditions.medium.length] ?? ''
-  const long = messageAdditions.long[index % messageAdditions.long.length] ?? ''
-  const longAlt = messageAdditions.long[(index + 1) % messageAdditions.long.length] ?? long
-
-  const earlyPattern = [
-    'xlong', 'micro', 'long', 'xlong', 'short', 'xxlong', 'medium', 'micro',
-    'long', 'xlong', 'short', 'xxlong', 'medium', 'micro', 'long', 'xlong',
-    'short', 'xxlong', 'medium', 'micro', 'long', 'xlong', 'short', 'xxlong'
-  ] as const
-
-  if (index < earlyPattern.length) {
-    switch (earlyPattern[index]) {
-      case 'micro':
-        return micro
-      case 'short':
-        return baseMessage
-      case 'medium':
-        return `${baseMessage} ${medium}`
-      case 'long':
-        return `${baseMessage} ${long}`
-      case 'xlong':
-        return `${baseMessage} ${long} ${medium} ${short}`
-      default:
-        return `${baseMessage} ${long} ${medium} ${longAlt} ${short}`
-    }
-  }
-
-  switch (index % 8) {
-    case 0:
-      return baseMessage
-    case 1:
-      return micro
-    case 2:
-      return `${baseMessage} ${medium}`
-    case 3:
-      return `${baseMessage} ${long}`
-    case 4:
-      return `${baseMessage} ${medium} ${short}`
-    case 5:
-      return `${baseMessage} ${long} ${medium}`
-    case 6:
-      return `${baseMessage} ${long} ${longAlt} ${medium}`
-    default:
-      return `${baseMessage} ${short}`
-  }
-}
-
-const buildPlaceholderStories = (count: number): Story[] => {
-  return Array.from({ length: count }, (_, index) => {
-    const template = storyTemplates[index % storyTemplates.length] ?? defaultStoryTemplate
-    const accent = accentPalette[index % accentPalette.length] ?? accentPalette[0] ?? 'var(--theme-color-accent)'
-
-    return {
-      ...template,
-      id: index + 1,
-      message: buildVariableMessage(index, template.message),
-      accent,
-      initials: getInitials(template.author),
-      photoUrl: `https://i.pravatar.cc/96?img=${(index % 70) + 1}`
-    }
-  })
-}
-
 useSeoMeta({
   title: 'Share Your Story | Billings',
   ogTitle: 'Share Your Story | Billings',
@@ -196,17 +47,17 @@ useSeoMeta({
   ogDescription: 'Community stories about healthcare experiences in the United States.'
 })
 
-const allStories = ref<Story[]>(buildPlaceholderStories(180))
+const allStories = ref<Story[]>([])
 const visibleStories = ref<Story[]>([])
 const loadSentinel = ref<HTMLElement | null>(null)
 const batchSize = 30
 const loadedCount = ref(0)
 const isLoadingMore = ref(false)
+const isSubmitting = ref(false)
 const isMobileFormOpen = ref(false)
 const selectedPhoto = ref<File | null>(null)
 const selectedPhotoPreview = ref<string | null>(null)
 const submitNotice = ref('')
-const postedPhotoUrls = ref<string[]>([])
 
 const formState = reactive({
   name: '',
@@ -214,6 +65,96 @@ const formState = reactive({
 })
 
 const hasMoreStories = computed(() => loadedCount.value < allStories.value.length)
+
+const hashString = (value: string) => {
+  let hash = 0
+
+  for (let i = 0; i < value.length; i += 1) {
+    hash = ((hash << 5) - hash + value.charCodeAt(i)) >>> 0
+  }
+
+  return hash
+}
+
+const getAccentFromSeed = (seed: string) => {
+  if (accentPalette.length === 0) {
+    return 'var(--theme-color-accent)'
+  }
+
+  const index = hashString(seed) % accentPalette.length
+  return accentPalette[index] ?? accentPalette[0] ?? 'var(--theme-color-accent)'
+}
+
+const toClientStory = (story: ApiStory): Story => {
+  return {
+    id: story.id,
+    author: story.author,
+    message: story.message,
+    initials: getInitials(story.author),
+    accent: getAccentFromSeed(story.id),
+    photoUrl: story.imageUrl
+  }
+}
+
+const hydrateStories = async (stories: ApiStory[]) => {
+  allStories.value = stories.map(story => toClientStory(story))
+  visibleStories.value = []
+  loadedCount.value = 0
+  await loadMoreStories()
+}
+
+const loadStoriesFromFeed = async () => {
+  try {
+    const response = await $fetch<{ stories: ApiStory[] }>('/api/approved-stories')
+    await hydrateStories(response.stories ?? [])
+  } catch {
+    allStories.value = []
+    visibleStories.value = []
+    loadedCount.value = 0
+    submitNotice.value = 'Could not load the live feed. Please try again.'
+    clearSubmitNotice()
+  }
+}
+
+const buildCenteredImageDataUrl = async (file: File): Promise<string> => {
+  const objectUrl = URL.createObjectURL(file)
+
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image()
+
+      img.onload = () => resolve(img)
+      img.onerror = () => reject(new Error('Could not read image file.'))
+      img.src = objectUrl
+    })
+
+    const size = 200
+    const canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+
+    const context = canvas.getContext('2d')
+
+    if (!context) {
+      throw new Error('Could not initialize image processing context.')
+    }
+
+    const scale = Math.max(size / image.naturalWidth, size / image.naturalHeight)
+    const drawWidth = image.naturalWidth * scale
+    const drawHeight = image.naturalHeight * scale
+    const offsetX = (size - drawWidth) / 2
+    const offsetY = (size - drawHeight) / 2
+
+    context.imageSmoothingEnabled = true
+    context.imageSmoothingQuality = 'high'
+    context.clearRect(0, 0, size, size)
+    context.drawImage(image, offsetX, offsetY, drawWidth, drawHeight)
+
+    return canvas.toDataURL('image/webp', 0.9)
+  } finally {
+    URL.revokeObjectURL(objectUrl)
+  }
+}
 
 const loadMoreStories = async () => {
   if (isLoadingMore.value || !hasMoreStories.value) {
@@ -254,7 +195,11 @@ const resetForm = () => {
   selectedPhoto.value = null
 }
 
-const submitStory = () => {
+const submitStory = async () => {
+  if (isSubmitting.value) {
+    return
+  }
+
   const name = formState.name.trim()
   const message = formState.message.trim()
 
@@ -262,31 +207,41 @@ const submitStory = () => {
     return
   }
 
-  const selectedPhotoUrl = selectedPhoto.value ? URL.createObjectURL(selectedPhoto.value) : undefined
+  isSubmitting.value = true
 
-  const newStory: Story = {
-    id: Date.now(),
-    author: name,
-    message,
-    accent: accentPalette[Date.now() % accentPalette.length] ?? accentPalette[0] ?? 'var(--theme-color-accent)',
-    initials: getInitials(name),
-    photoUrl: selectedPhotoUrl
-  }
+  try {
+    let imageDataUrl: string | undefined
 
-  allStories.value.unshift(newStory)
-  visibleStories.value.unshift(newStory)
-  loadedCount.value += 1
-  submitNotice.value = 'Story posted to the top of the feed.'
-  clearSubmitNotice()
+    if (selectedPhoto.value) {
+      imageDataUrl = await buildCenteredImageDataUrl(selectedPhoto.value)
+    }
 
-  if (selectedPhotoUrl) {
-    postedPhotoUrls.value.push(selectedPhotoUrl)
-  }
+    const response = await $fetch<{ story: ApiStory }>('/api/share-story', {
+      method: 'POST',
+      body: {
+        name,
+        message,
+        imageDataUrl
+      }
+    })
 
-  resetForm()
+    const createdStory = toClientStory(response.story)
+    allStories.value.unshift(createdStory)
+    visibleStories.value.unshift(createdStory)
+    loadedCount.value += 1
 
-  if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches) {
-    isMobileFormOpen.value = false
+    submitNotice.value = 'Story posted to the top of the feed.'
+
+    resetForm()
+
+    if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches) {
+      isMobileFormOpen.value = false
+    }
+  } catch {
+    submitNotice.value = 'Could not post your story. Please try again.'
+  } finally {
+    isSubmitting.value = false
+    clearSubmitNotice()
   }
 }
 
@@ -301,7 +256,7 @@ const closeMobileForm = () => {
 let intersectionObserver: IntersectionObserver | null = null
 
 onMounted(async () => {
-  await loadMoreStories()
+  await loadStoriesFromFeed()
 
   intersectionObserver = new IntersectionObserver((entries) => {
     const isNearBottom = entries.some(entry => entry.isIntersecting)
@@ -347,10 +302,6 @@ onBeforeUnmount(() => {
   }
 
   clearSelectedPhotoPreview()
-
-  postedPhotoUrls.value.forEach((url) => {
-    URL.revokeObjectURL(url)
-  })
 })
 </script>
 
@@ -410,10 +361,16 @@ onBeforeUnmount(() => {
             Loading more stories...
           </p>
           <p
+            v-else-if="!hasMoreStories && allStories.length > 0"
+            class="feed-status"
+          >
+            You reached the end of submitted stories.
+          </p>
+          <p
             v-else-if="!hasMoreStories"
             class="feed-status"
           >
-            You reached the end of placeholder stories.
+            No stories yet. Be the first to share yours.
           </p>
           <div
             ref="loadSentinel"
@@ -517,8 +474,9 @@ onBeforeUnmount(() => {
             <button
               type="submit"
               class="submit-btn"
+              :disabled="isSubmitting"
             >
-              Post story
+              {{ isSubmitting ? 'Posting...' : 'Post story' }}
             </button>
           </form>
 
@@ -892,6 +850,11 @@ onBeforeUnmount(() => {
   padding: 0.7rem 0.8rem;
   cursor: pointer;
   text-transform: uppercase;
+}
+
+.submit-btn:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
 }
 
 .submit-notice {
