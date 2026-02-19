@@ -219,7 +219,8 @@ const initScrollListener = () => {
     return () => {}
   }
 
-  scrollSource = stageSection.value?.closest('.scrollable') ?? window
+  const scrollableContainer = stageSection.value?.closest('.scrollable')
+  scrollSource = scrollableContainer instanceof HTMLElement ? scrollableContainer : window
 
   const scrollHandler = () => {
     lastKnownScrollPosition = readScrollTop()
