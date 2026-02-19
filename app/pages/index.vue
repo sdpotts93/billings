@@ -242,7 +242,7 @@ const goToResourcesWithNeed = (need: string) => {
       </section>
 
       <section class="impact shell">
-        <h2>Where do you need help first?</h2>
+        <h2>Where do you need help?</h2>
         <UButton
           label="Browse Resources"
           size="xs"
@@ -764,7 +764,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .impact-card h3 {
-  margin: 0.4rem 0 0.6rem;
+  margin: 0.75rem 0 1rem;
   font-size: var(--fs-display-md);
   line-height: 0.98;
 }
@@ -966,12 +966,25 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 @media (max-width: 768px) {
+
+  .quote-title {
+    margin-inline: 0;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    text-align: left;
+    width: 100%;
+  }
+  .hero-carousel::before,
+  .hero-carousel::after {
+    content: none;
+  }
+
   .shell {
     padding-inline: 16px;
   }
 
   .hero {
-    padding-top: 1.8rem;
+    padding-top: 4rem;
   }
 
   .hero-header h1 {
@@ -984,6 +997,14 @@ const goToResourcesWithNeed = (need: string) => {
     padding: 10px;
     grid-template-columns: 108px minmax(0, 1fr);
     gap: 10px;
+  }
+
+  .impact-card {
+    min-height: 210px;
+  }
+
+  .stats article {
+    min-height: 90px;
   }
 
   .card-media {
@@ -1001,8 +1022,19 @@ const goToResourcesWithNeed = (need: string) => {
 
   .social-proof {
     margin-top: 18px;
+    font-size: 12px;
   }
 
+  .social-proof p {
+    font-size: 12px;
+  }
+  .impact h2 {
+    font-size: var(--fs-display-xl);
+  }
+
+  .stats h3 {
+    font-size: var(--fs-heading-md);;
+  }
   .stats,
   .impact-grid,
   .footer-columns {
@@ -1011,20 +1043,61 @@ const goToResourcesWithNeed = (need: string) => {
 
   .quote-card {
     padding: 1.15rem;
+    flex-direction: column;
+    row-gap: 2rem;
   }
 
+  .quote-left {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--muted-4);
+    margin-inline: 0;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    text-align: left;
+    width: 100%;
+  }
+
+  .quote {
+    width: 100%;
+    margin-inline: 0;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    text-align: left;
+    width: 100%;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .meta {
+    margin-bottom: 1rem;
+  }
+
+  .stats p {
+    max-width: unset;
+  }
   .quote-foot {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
   }
 
-  .cta {
-    padding: 3.4rem 0 3.8rem;
+  .testimonial {
+    padding-top: 80px;
   }
 
-  .cta-actions {
-    flex-direction: column;
+  .impact {
+    margin-top: 0;
+    padding-top: 80px;
+  }
+
+  .cta {
+    padding: 3.4rem 16px 3.8rem;
+  }
+
+  :where(.i-lucide\:arrow-right-circle) {
+    width: 2em;
+    height: 2em;
   }
 }
 
