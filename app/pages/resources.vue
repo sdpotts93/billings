@@ -2503,7 +2503,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 .inline-icon {
   font-size: 0.9rem;
   margin-right: 0.22rem;
-  vertical-align: -3px;
 }
 
 .link-icon {
@@ -3493,7 +3492,11 @@ h1 {
     grid-template-columns: 1fr;
   }
 
+  .question-card {
+    margin-bottom: 3rem;
+  }
   .hero-copy {
+    order: 1;
     height: auto;
     min-height: auto;
     overflow: visible;
@@ -3504,10 +3507,21 @@ h1 {
     max-height: none;
   }
 
+  .section-cf,
+  .section-conditions,
+  .section-conditions,
+  .section-directory,
+  .section-faq,
+  .section-footer {
+    padding-top: 80px;
+  }
   .hero-media {
+    order: 2;
     min-height: clamp(320px, 58vh, 480px);
     max-width: 780px;
     margin-inline: auto;
+    width: 90%;
+    left: -3%;
   }
 
   .hero-media-title {
@@ -3518,7 +3532,21 @@ h1 {
 
 @media (max-width: 768px) {
   .hero-transform {
-    padding: 0.9rem 16px;
+    padding: 2rem 16px 0;
+  }
+  .spotlight-grid h3,
+  .condition-card h3,
+  .doc-card h3,
+  .directory-group h3 {
+    font-size: 1.5rem;
+  }
+
+  .directory-group .resource-title {
+    font-size: 1.25rem;
+  }
+
+  .back-btn {
+    margin-top: 2rem;
   }
 
   .hero-media {
@@ -3549,9 +3577,8 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .result-simple-card,
-  .result-panel {
-    padding: 0.82rem;
+  .plan-block ul {
+    padding-left: 0;
   }
 
   h1 {
@@ -3560,7 +3587,8 @@ h1 {
   }
 
   .content-section h2 {
-    font-size: 1.22rem;
+    font-size: 2rem;
+    align-items: baseline;
   }
 
   .section-subtitle {
@@ -3591,6 +3619,7 @@ h1 {
 
   .help-now-grid a {
     min-height: auto;
+    font-size: 1rem;
   }
 
   .condition-action-list li,

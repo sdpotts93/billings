@@ -772,7 +772,6 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 
-
 .chapter-card p {
   margin: 0;
   font-size: 0.85rem;
