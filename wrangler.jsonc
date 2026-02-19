@@ -1,0 +1,17 @@
+{
+  "name": "billings",
+  "compatibility_date": "2025-01-15",
+  "kv_namespaces": [
+    {
+      "binding": "APPROVED_STORIES",
+      "id": "6b11f9dcfbb3495482faf8faaf4c0461",
+      "preview_id": "6b11f9dcfbb3495482faf8faaf4c0461"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "STORY_IMAGES",
+      "bucket_name": "billings-story-images"
+    }
+  ]
+}
