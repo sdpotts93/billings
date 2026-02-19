@@ -2,6 +2,8 @@ import { createError } from 'h3'
 import type { H3Event } from 'h3'
 
 type R2Object = {
+  body?: ReadableStream<Uint8Array> | null
+  size?: number
   arrayBuffer: () => Promise<ArrayBuffer>
   httpMetadata?: {
     contentType?: string

@@ -23,14 +23,28 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const contentType = imageObject.httpMetadata?.contentType || 'image/webp'
-  const imageBytes = await imageObject.arrayBuffer()
+  const body = imageObject.body
 
-  return new Response(imageBytes, {
-    headers: {
-      'Cache-Control': 'public, max-age=31536000, immutable',
-      'Content-Type': contentType,
-      'X-Robots-Tag': 'noindex, nofollow, noarchive'
-    }
+  if (!body) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Image body is empty.'
+    })
+  }
+
+  const contentType = imageObject.httpMetadata?.contentType || 'image/webp'
+  const size = imageObject.size
+  const headers = new Headers({
+    'Cache-Control': 'public, max-age=31536000, immutable',
+    'Content-Type': contentType,
+    'X-Robots-Tag': 'noindex, nofollow, noarchive'
+  })
+
+  if (typeof size === 'number' && size >= 0) {
+    headers.set('Content-Length', String(size))
+  }
+
+  return new Response(body, {
+    headers
   })
 })
