@@ -462,8 +462,20 @@ onBeforeUnmount(() => {
     inset-inline: 16px;
   }
 
+  .footer-bottom {
+    gap: 0.5rem;
+  }
+
+  .back-to-top {
+    font-size: 12px;
+  }
+  .footer-meta p {
+    font-size: 12px;
+  }
+
   .footer-top {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2.2rem;
     padding-top: 2rem;
   }
@@ -473,8 +485,8 @@ onBeforeUnmount(() => {
   }
 
   .footer-meta {
-    flex-direction: column;
-    align-items: flex-start;
+    justify-content: flex-start;
+    padding-bottom: 2rem;
   }
 }
 </style>
