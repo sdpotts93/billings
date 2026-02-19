@@ -615,15 +615,17 @@ onBeforeUnmount(() => {
   }
 
   .hero-title {
-    top: 0.75rem;
-    left: 0.75rem;
+    /* top: 0.75rem; */
+    right: 0.75rem;
     max-width: min(84%, 12ch);
-    font-size: clamp(1.7rem, 9.8vw, 3.7rem);
+    font-size: 4rem;
     line-height: 0.92;
+    text-align: right;
   }
 
   .hero-media {
     border-radius: 18px;
+    box-shadow: 12px 12px 0px var(--muted);
   }
 
   .studio-life-copy {
@@ -651,19 +653,31 @@ onBeforeUnmount(() => {
     height: clamp(72px, 22vw, 92px);
   }
 
+  .page-shell {
+    padding-inline: 16px;
+  }
+
+  .hero-media {
+    width: 95%;
+    left: 2%;
+  }
+
   .intro-copy {
     max-width: 100%;
     padding-top: 1.7rem;
-    padding-bottom: 2.6rem;
+    padding-bottom: 0.5rem;
   }
 
   .studio-life {
+    padding-inline: 0;
+    margin-inline: 0;
     padding-top: 0.2rem;
   }
 
   .studio-life-copy {
     max-width: 100%;
     line-height: 1.4;
+    padding-inline: 0;
   }
 
   .studio-life-copy p + p {
