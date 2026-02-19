@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 
-type QuestionId = 'need' | 'stage' | 'condition' | 'insurance' | 'barrier' | 'age' | 'state' | 'email' | 'format'
+type QuestionId = 'need' | 'stage' | 'condition' | 'insurance' | 'barrier' | 'age' | 'format' | 'email'
 type RouteKey = 'emergency' | 'uninsured' | 'meds' | 'bills' | 'care' | 'caregiver'
 
 type Option = {
@@ -13,7 +13,7 @@ type WizardQuestion = {
   id: QuestionId
   prompt: string
   optional?: boolean
-  input?: 'state' | 'email'
+  input?: 'email'
   options?: Option[]
 }
 
@@ -166,18 +166,6 @@ const wizardQuestions: WizardQuestion[] = [
     ]
   },
   {
-    id: 'state',
-    prompt: 'State (optional)',
-    optional: true,
-    input: 'state'
-  },
-  {
-    id: 'email',
-    prompt: 'Email for movie news updates? (optional)',
-    optional: true,
-    input: 'email'
-  },
-  {
     id: 'format',
     prompt: 'Preferred help format',
     options: [
@@ -186,6 +174,12 @@ const wizardQuestions: WizardQuestion[] = [
       { label: 'Download documents', value: 'download' },
       { label: 'Find clinics', value: 'find-clinics' }
     ]
+  },
+  {
+    id: 'email',
+    prompt: 'Email for movie news updates? (optional)',
+    optional: true,
+    input: 'email'
   }
 ]
 
@@ -1053,9 +1047,8 @@ const answers = reactive<Record<QuestionId, string>>({
   insurance: '',
   barrier: '',
   age: '',
-  state: '',
-  email: '',
-  format: ''
+  format: '',
+  email: ''
 })
 
 const questionIndex = ref(0)
@@ -1196,7 +1189,7 @@ useSeoMeta({
 })
 
 const findOptionLabel = (questionId: QuestionId, value: string) => {
-  if (questionId === 'state' || questionId === 'email') {
+  if (questionId === 'email') {
     return value
   }
 
@@ -1214,12 +1207,10 @@ const resultHeading = computed(() => {
     return 'Find your next step'
   }
 
-  const stateValue = answers.state.trim()
-  const stateFragment = stateValue ? ` in ${stateValue}` : ''
   const formatLabel = findOptionLabel('format', answers.format)
   const formatFragment = formatLabel ? ` - ${formatLabel} support` : ''
 
-  return `${result.value.routeTitle}${stateFragment}${formatFragment}`
+  return `${result.value.routeTitle}${formatFragment}`
 })
 
 const orderedResultResources = computed(() => {
@@ -1281,6 +1272,10 @@ const toTelHref = (phone: string) => {
   return normalized ? `tel:${normalized}` : `tel:${phone}`
 }
 
+const isCallLink = (url: string) => {
+  return url.trim().toLowerCase().startsWith('tel:')
+}
+
 const toSlug = (text: string) => {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 }
@@ -1298,13 +1293,12 @@ const formatSummary = () => {
   const formatLabel = findOptionLabel('format', answers.format).toLowerCase()
   const conditionLabel = findOptionLabel('condition', answers.condition)
   const stageLabel = findOptionLabel('stage', answers.stage).toLowerCase()
-  const stateFragment = answers.state.trim() ? ` in ${answers.state.trim()}` : ''
 
   const conditionFragment = answers.condition && answers.condition !== 'not-sure'
     ? ` with focus on ${conditionLabel}`
     : ''
 
-  return `You asked for ${formatLabel} help${stateFragment}. This plan prioritizes ${needLabel} during ${stageLabel}, with ${insuranceLabel} coverage and the main barrier of ${barrierLabel}${conditionFragment}.`
+  return `You asked for ${formatLabel} help. This plan prioritizes ${needLabel} during ${stageLabel}, with ${insuranceLabel} coverage and the main barrier of ${barrierLabel}${conditionFragment}.`
 }
 
 const buildResultPlan = () => {
@@ -1379,21 +1373,12 @@ const answerWithOption = (value: string) => {
 }
 
 const setOptionalInputValue = (value: string) => {
-  if (currentQuestion.value.input === 'state') {
-    answers.state = value
-    return
-  }
-
   if (currentQuestion.value.input === 'email') {
     answers.email = value
   }
 }
 
 const submitOptionalInputAndContinue = () => {
-  if (currentQuestion.value.input === 'state') {
-    answers.state = answers.state.trim()
-  }
-
   if (currentQuestion.value.input === 'email') {
     answers.email = answers.email.trim()
   }
@@ -1407,10 +1392,6 @@ const submitOptionalInputAndContinue = () => {
 }
 
 const skipOptionalInput = () => {
-  if (currentQuestion.value.input === 'state') {
-    answers.state = ''
-  }
-
   if (currentQuestion.value.input === 'email') {
     answers.email = ''
   }
@@ -1440,9 +1421,8 @@ const restartWizard = () => {
   answers.insurance = ''
   answers.barrier = ''
   answers.age = ''
-  answers.state = ''
-  answers.email = ''
   answers.format = ''
+  answers.email = ''
   questionIndex.value = 0
   result.value = null
 }
@@ -1593,16 +1573,14 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                     </header>
 
                     <div
-                      v-if="currentQuestion.input === 'state' || currentQuestion.input === 'email'"
+                      v-if="currentQuestion.input === 'email'"
                       class="state-input-wrap"
                     >
                       <input
-                        :value="currentQuestion.input === 'email' ? answers.email : answers.state"
-                        :type="currentQuestion.input === 'email' ? 'email' : 'text'"
-                        :placeholder="currentQuestion.input === 'email'
-                          ? 'Enter email (optional)'
-                          : 'Enter state (for example: California)'"
-                        :autocomplete="currentQuestion.input === 'email' ? 'email' : 'address-level1'"
+                        :value="answers.email"
+                        type="email"
+                        placeholder="Enter email (optional)"
+                        autocomplete="email"
                         @input="setOptionalInputValue(($event.target as HTMLInputElement).value)"
                       >
 
@@ -1656,13 +1634,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               v-else
               class="results-state"
             >
-              <p class="section-label section-label--with-icon">
-                <UIcon
-                  name="i-lucide-sparkles"
-                  class="section-label-icon"
-                />
-                Personalized plan
-              </p>
               <h1>{{ resultHeading }}</h1>
 
               <section class="result-simple-grid">
@@ -1732,6 +1703,9 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   />
                   <span>Action plan</span>
                 </p>
+                <h2 class="result-plan-title">
+                  Suggested action plan
+                </h2>
                 <div class="plan-columns">
                   <article class="plan-block">
                     <h4 class="mini-heading">
@@ -1799,12 +1773,15 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   />
                   <span>All free resources</span>
                 </p>
+                <h2 class="result-resource-list-title">
+                  All free resources
+                </h2>
                 <ul class="resource-list result-resource-list">
                   <li
                     v-for="resource in orderedResultResources"
                     :key="resource.id"
                   >
-                    <div>
+                    <div class="result-resource-copy">
                       <p class="resource-title">
                         <UIcon
                           name="i-lucide-life-buoy"
@@ -1814,23 +1791,25 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                       <p class="resource-meta">
                         {{ compactCopy(resource.whoItHelps, 92) }}
                       </p>
-                      <p
-                        v-if="resource.phone"
-                        class="resource-meta"
-                      >
-                        <UIcon
-                          name="i-lucide-phone"
-                          class="result-inline-icon"
-                        /> {{ resource.phone }}
-                      </p>
+                      <div class="result-resource-links">
+                        <a
+                          :href="resource.url"
+                          target="_blank"
+                          rel="noopener"
+                        >
+                          {{ resource.urlLabel }} <UIcon name="i-lucide-arrow-up-right" />
+                        </a>
+                        <a
+                          v-if="resource.phone && !isCallLink(resource.url)"
+                          :href="toTelHref(resource.phone)"
+                        >
+                          <UIcon
+                            name="i-lucide-phone"
+                            class="result-inline-icon"
+                          /> {{ resource.phone }}
+                        </a>
+                      </div>
                     </div>
-                    <a
-                      :href="resource.url"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      {{ resource.urlLabel }} <UIcon name="i-lucide-arrow-up-right" />
-                    </a>
                   </li>
                 </ul>
               </section>
@@ -2627,7 +2606,7 @@ h1 {
 .optional-badge {
   margin: 0.45rem 0 0;
   font-size: 0.75rem;
-  color: #66708d;
+  color: var(--theme-color-muted-4);
 }
 
 .question-stage {
@@ -2679,7 +2658,6 @@ h1 {
 .option-btn:hover {
   border-color: var(--ink);
   background: #f7faff;
-  transform: translateX(2px);
 }
 
 .state-input-wrap {
@@ -2718,6 +2696,7 @@ h1 {
   margin-top: 0;
   font-family: var(--theme-font-title);
   font-size: 1.3rem;
+  color: var(--muted);
 }
 .ghost-btn,
 .back-btn {
@@ -2793,29 +2772,24 @@ h1 {
 .result-panel {
   border: 1px solid var(--result-line);
   border-radius: 18px;
-  padding: 1.05rem;
+  padding: 1.5rem;
   box-shadow: var(--surface-shadow);
 }
 
 .result-simple-card {
-  background: linear-gradient(
-    145deg,
-    var(--result-tone-highlight-a),
-    var(--result-tone-highlight-b)
-  );
+  background: var(--muted);
 }
 
 .result-simple-card--document {
-  background: linear-gradient(
-    145deg,
-    var(--result-tone-doc-a),
-    var(--result-tone-doc-b)
-  );
+  background: var(--muted);
 }
 
-.result-simple-card h2 {
+.result-simple-card h2,
+.result-plan-title,
+.result-resource-list-title {
   margin: 0.56rem 0 0;
   font-size: var(--theme-font-size-heading-md);
+  font-family: var(--theme-font-title);
   line-height: 1.03;
   color: var(--result-text);
 }
@@ -2852,8 +2826,7 @@ h1 {
 }
 
 .result-panel--plan {
-  border-color: color-mix(in oklab, var(--result-line), #bdd8f7 22%);
-  background: linear-gradient(140deg, var(--result-tone-plan-a), var(--result-tone-plan-b));
+  background: var(--muted);
 }
 
 .plan-columns {
@@ -2866,28 +2839,28 @@ h1 {
 .plan-block {
   border: 1px solid color-mix(in oklab, var(--result-line), #ffffff 26%);
   border-radius: 14px;
-  padding: 0.78rem;
+  padding: 1.5rem;
   box-shadow: 0 6px 14px rgba(15, 28, 44, 0.05);
 }
 
 .plan-block:nth-child(1) {
-  background: linear-gradient(145deg, var(--result-tone-today-a), var(--result-tone-today-b));
+  background: #93b89f;
 }
 
 .plan-block:nth-child(2) {
-  background: linear-gradient(145deg, var(--result-tone-week-a), var(--result-tone-week-b));
+  background: #93a8b8;
 }
 
 .plan-block:nth-child(3) {
-  background: linear-gradient(145deg, var(--result-tone-ongoing-a), var(--result-tone-ongoing-b));
+  background: #b89393;
 }
 
 .plan-block h4 {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #374360;
+  color: var(--accent-contrast);
 }
 
 .mini-heading {
@@ -2907,7 +2880,7 @@ h1 {
 
 .plan-block li {
   margin-bottom: 0.56rem;
-  color: #2b3342;
+  color: var(--accent-contrast);
   line-height: 1.4;
 }
 
@@ -2934,17 +2907,37 @@ h1 {
   margin: 0.74rem 0 0;
 }
 
+.results-state .result-resource-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
 .results-state .resource-list li {
-  border: 1px solid var(--result-line);
   border-radius: 12px;
-  background: var(--result-surface-soft);
-  padding: 0.8rem;
+  background: #ededed;
+  padding: 1.5rem;
   margin-bottom: 0.58rem;
   display: flex;
   gap: 0.72rem;
   justify-content: space-between;
   align-items: flex-start;
-  box-shadow: 0 6px 14px rgba(15, 28, 44, 0.05);
+}
+
+.results-state .result-resource-list li {
+  margin-bottom: 0;
+  justify-content: flex-start;
+}
+
+.result-resource-copy {
+  width: 100%;
+}
+
+.result-resource-links {
+  margin-top: 0.58rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.42rem 1rem;
 }
 
 .results-state .resource-title {
@@ -2992,7 +2985,7 @@ h1 {
 }
 .doc-card a {
   display: flex;
-  margin-top: 0.45rem;
+  margin-top: 1rem;
   font-size: 0.84rem;
   font-weight: 700;
   text-decoration: none;
@@ -3065,6 +3058,7 @@ h1 {
   font-size: 1.1rem;
   box-shadow: var(--surface-shadow);
   transition: transform 160ms ease, box-shadow 160ms ease;
+  column-gap: 0.3rem;
 }
 
 .help-now-grid a:hover {
@@ -3145,7 +3139,7 @@ h1 {
 .condition-card {
   border-radius: 14px;
   padding: 1.5rem;
-  background: #366199;
+  background: #273b54;
 }
 
 .card-summary {
@@ -3275,9 +3269,13 @@ h1 {
 
 .doc-card p,
 .directory-group p {
-  margin: 0.5rem 0 0;
+  margin: 1rem 0 0;
   color: var(--accent-contrast);
   line-height: 1.42;
+}
+
+.directory-group p {
+  color: var(--muted);
 }
 
 .doc-card p {
@@ -3313,13 +3311,13 @@ h1 {
 .directory-group {
     /* border: 1px solid var(--muted); */
     border-radius: 14px;
-    padding: 1rem;
+    padding: 1.5rem;
     background: #333949;
 }
 
 .directory-group ul {
   list-style: none;
-  margin: 0.72rem 0 0;
+  margin: 1rem 0 0;
   padding: 0;
 }
 
@@ -3338,39 +3336,38 @@ h1 {
 }
 
 .group-expand-btn {
-  margin-top: 0.62rem;
-  border: 1px solid color-mix(in oklab, var(--muted), #ffffff 26%);
-  border-radius: 999px;
-  padding: 0.34rem 0.7rem;
-  background: transparent;
-  color: var(--muted);
-  font-size: 0.76rem;
-  font-weight: 700;
-  cursor: pointer;
+    margin-top: 1.5rem;
+    border-radius: 999px;
+    padding: 0.34rem 0.7rem;
+    background: var(--muted);
+    color: var(--accent-contrast);
+    font-size: 0.76rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 21px;
 }
 
 .directory-group li {
   border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 0.62rem;
-  background: #c2a154;
+  padding: 0rem;
+  margin-bottom: 2.5rem;
 }
 
 .directory-link-row {
   margin-top: 0.45rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 0.75rem;
 }
 
-.directory-link-row .directory-link {
-  margin-top: 0;
-  color: var(--accent-contrast);
+.directory-group .resource-meta {
+  padding-inline: 24px;
 }
 
-.directory-link-row.has-phone-link .directory-link--phone {
-  margin-left: auto;
+.directory-link-row .directory-link:first-child {
+  margin-top: 0;
+  color: var(--muted);
+  padding-left: 24px;
 }
 
 .faq-list {
@@ -3423,6 +3420,10 @@ h1 {
 }
 
 @media (max-width: 1100px) {
+  .results-state .result-resource-list {
+    grid-template-columns: 1fr;
+  }
+
   .results-state .resource-list li {
     flex-direction: column;
     align-items: flex-start;
