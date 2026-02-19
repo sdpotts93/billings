@@ -1854,7 +1854,12 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           id="help-now"
           class="help-now content-section section-help"
         >
-          <h2>Help now</h2>
+          <h2 class="title-with-icon">
+            <UIcon
+              name="i-lucide-siren"
+              class="title-icon"
+            /> Help now
+          </h2>
           <p>Use one of these first if you need immediate support.</p>
           <div class="help-now-grid">
             <figure class="section-photo section-photo--help section-photo--wide grid-photo-item">
@@ -1906,7 +1911,10 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           class="cf-spotlight content-section section-cf"
         >
           <h2 class="title-with-icon">
-            Cystic fibrosis quick guide
+            <UIcon
+              name="i-lucide-heart-pulse"
+              class="title-icon"
+            /> Cystic fibrosis quick guide
           </h2>
           <p class="section-subtitle">
             Focus on support first, then download a guide for details.
@@ -1975,7 +1983,10 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           class="conditions-section content-section section-conditions"
         >
           <h2 class="title-with-icon">
-            Top Conditions people struggle with financially
+            <UIcon
+              name="i-lucide-bar-chart-3"
+              class="title-icon"
+            /> Top Conditions people struggle with financially
           </h2>
           <p class="section-subtitle">
             Keep this simple: main risk, next steps, then download a quick guide.
@@ -2045,7 +2056,10 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           class="docs-library content-section section-docs"
         >
           <h2 class="title-with-icon">
-            Downloadable templates
+            <UIcon
+              name="i-lucide-file-down"
+              class="title-icon"
+            /> Downloadable templates
           </h2>
           <p class="section-subtitle">
             Filter quickly, then download only what you need.
@@ -2477,6 +2491,8 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   display: inline-flex;
   align-items: center;
   gap: 0.44rem;
+  line-height: 1 !important;
+  margin-top: -0.5rem;
 }
 
 .title-icon {
