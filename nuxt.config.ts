@@ -10,6 +10,15 @@ export default defineNuxtConfig({
     enabled: true
   },
 
+  app: {
+    head: {
+      meta: [
+        { name: 'robots', content: 'noindex,nofollow,noarchive' },
+        { name: 'googlebot', content: 'noindex,nofollow,noarchive' }
+      ]
+    }
+  },
+
   css: ['~/assets/css/main.css'],
 
   ui: {
