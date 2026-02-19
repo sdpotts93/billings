@@ -63,36 +63,16 @@ useSeoMeta({
 
 const stageSection = ref<HTMLElement | null>(null)
 const heroTrackRef = ref<HTMLElement | null>(null)
-const stageProgress = ref(0)
+const storyFlowRef = ref<HTMLElement | null>(null)
 const prefersReducedMotion = ref(false)
 
 const clamp = (value: number, min: number, max: number) => {
   return Math.min(max, Math.max(min, value))
 }
 
-const segment = (start: number, end: number) => {
-  return clamp((stageProgress.value - start) / (end - start), 0, 1)
+const segment = (value: number, start: number, end: number) => {
+  return clamp((value - start) / (end - start), 0, 1)
 }
-
-const heroPanX = computed(() => {
-  return -50 * segment(0, 0.94)
-})
-
-const heroOpacity = computed(() => {
-  return 1
-})
-
-const heroScale = computed(() => {
-  return 1
-})
-
-const storyFlowLift = computed(() => {
-  if (prefersReducedMotion.value) {
-    return 0
-  }
-
-  return -128 * segment(0.94, 1)
-})
 
 const uninsuredMetricRef = ref<HTMLElement | null>(null)
 const uninsuredPeopleCount = ref(0)
@@ -107,9 +87,18 @@ let uninsuredAnimationId = 0
 let hasAnimatedUninsuredMetric = false
 let reduceMotionQuery: MediaQueryList | null = null
 let reduceMotionListener: (() => void) | null = null
+let removeScrollListener: (() => void) | null = null
 let moveHeroTrack: ((value: number) => void) | null = null
+let moveStoryFlowY: ((value: number) => void) | null = null
+let stageProgress = 0
+let stageStart = 0
+let stageScrollLength = 1
+let lastKnownScrollPosition = 0
+let ticking = false
+let scrollSource: Window | HTMLElement | null = null
 
 const xSwiperAdvantages = (item: HTMLElement) => gsap.quickTo(item, 'xPercent', { duration: 0.1 })
+const yStoryFlow = (item: HTMLElement) => gsap.quickTo(item, 'y', { duration: 0.1 })
 
 const syncHeroTrack = () => {
   const heroTrack = heroTrackRef.value
@@ -122,7 +111,23 @@ const syncHeroTrack = () => {
     moveHeroTrack = xSwiperAdvantages(heroTrack)
   }
 
-  moveHeroTrack(heroPanX.value)
+  const heroPanX = -50 * segment(stageProgress, 0, 0.94)
+  moveHeroTrack(heroPanX)
+}
+
+const syncStoryFlow = () => {
+  const storyFlow = storyFlowRef.value
+
+  if (!storyFlow) {
+    return
+  }
+
+  if (!moveStoryFlowY) {
+    moveStoryFlowY = yStoryFlow(storyFlow)
+  }
+
+  const storyFlowLift = prefersReducedMotion.value ? 0 : -128 * segment(stageProgress, 0.94, 1)
+  moveStoryFlowY(storyFlowLift)
 }
 
 const animateUninsuredPeople = () => {
@@ -157,33 +162,103 @@ const animateUninsuredPeople = () => {
   uninsuredAnimationId = window.requestAnimationFrame(step)
 }
 
-const syncProgressFromViewport = () => {
-  requestId = 0
-
-  if (prefersReducedMotion.value) {
-    stageProgress.value = 0.64
-    syncHeroTrack()
-    return
-  }
-
+const calculateStageMetrics = () => {
   const section = stageSection.value
 
   if (!section || typeof window === 'undefined') {
     return
   }
 
-  const rect = section.getBoundingClientRect()
-  const scrollRange = Math.max(1, rect.height - window.innerHeight)
-  stageProgress.value = clamp(-rect.top / scrollRange, 0, 1)
-  syncHeroTrack()
+  const containerTop = scrollSource instanceof HTMLElement ? scrollSource.getBoundingClientRect().top : 0
+  const currentScroll = readScrollTop()
+  const sectionTop = section.getBoundingClientRect().top
+  stageStart = currentScroll + (sectionTop - containerTop)
+  stageScrollLength = Math.max(1, section.offsetHeight - window.innerHeight)
 }
 
-const scheduleProgressSync = () => {
+const readScrollTop = () => {
+  if (typeof window === 'undefined') {
+    return 0
+  }
+
+  if (scrollSource instanceof HTMLElement) {
+    return scrollSource.scrollTop
+  }
+
+  return window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0
+}
+
+const syncProgressFromScroll = () => {
+  requestId = 0
+
+  if (prefersReducedMotion.value) {
+    stageProgress = 0.64
+    syncHeroTrack()
+    syncStoryFlow()
+    return
+  }
+
+  stageProgress = clamp((lastKnownScrollPosition - stageStart) / stageScrollLength, 0, 1)
+  syncHeroTrack()
+  syncStoryFlow()
+}
+
+const queueScrollFrame = () => {
   if (requestId !== 0 || typeof window === 'undefined') {
     return
   }
 
-  requestId = window.requestAnimationFrame(syncProgressFromViewport)
+  requestId = window.requestAnimationFrame(() => {
+    syncProgressFromScroll()
+    ticking = false
+  })
+}
+
+const initScrollListener = () => {
+  if (typeof window === 'undefined') {
+    return () => {}
+  }
+
+  scrollSource = stageSection.value?.closest('.scrollable') ?? window
+
+  const scrollHandler = () => {
+    lastKnownScrollPosition = readScrollTop()
+
+    if (!ticking) {
+      queueScrollFrame()
+      ticking = true
+    }
+  }
+
+  if (scrollSource instanceof HTMLElement) {
+    scrollSource.addEventListener('scroll', scrollHandler, { passive: true })
+  } else {
+    window.addEventListener('scroll', scrollHandler, { passive: true })
+  }
+
+  return () => {
+    if (scrollSource instanceof HTMLElement) {
+      scrollSource.removeEventListener('scroll', scrollHandler)
+    } else {
+      window.removeEventListener('scroll', scrollHandler)
+    }
+
+    scrollSource = null
+  }
+}
+
+const handleResize = () => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  calculateStageMetrics()
+  lastKnownScrollPosition = readScrollTop()
+
+  if (!ticking) {
+    queueScrollFrame()
+    ticking = true
+  }
 }
 
 const applyMotionPreference = () => {
@@ -194,7 +269,17 @@ const applyMotionPreference = () => {
     hasAnimatedUninsuredMetric = true
   }
 
-  scheduleProgressSync()
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  calculateStageMetrics()
+  lastKnownScrollPosition = readScrollTop()
+
+  if (!ticking) {
+    queueScrollFrame()
+    ticking = true
+  }
 }
 
 onMounted(() => {
@@ -213,11 +298,9 @@ onMounted(() => {
     reduceMotionQuery.addListener(reduceMotionListener)
   }
 
+  removeScrollListener = initScrollListener()
+  window.addEventListener('resize', handleResize, { passive: true })
   applyMotionPreference()
-
-  window.addEventListener('scroll', scheduleProgressSync, { passive: true })
-  window.addEventListener('resize', scheduleProgressSync, { passive: true })
-  scheduleProgressSync()
 
   if (!prefersReducedMotion.value) {
     uninsuredPeopleCount.value = 0
@@ -241,8 +324,9 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (typeof window !== 'undefined') {
-    window.removeEventListener('scroll', scheduleProgressSync)
-    window.removeEventListener('resize', scheduleProgressSync)
+    removeScrollListener?.()
+    removeScrollListener = null
+    window.removeEventListener('resize', handleResize)
   }
 
   if (requestId !== 0 && typeof window !== 'undefined') {
@@ -267,6 +351,8 @@ onBeforeUnmount(() => {
   }
 
   moveHeroTrack = null
+  moveStoryFlowY = null
+  ticking = false
 })
 </script>
 
@@ -279,10 +365,6 @@ onBeforeUnmount(() => {
       <div class="story-sticky">
         <div
           class="hero-panorama"
-          :style="{
-            opacity: heroOpacity.toFixed(3),
-            transform: `translateY(${(1 - heroOpacity) * 34}px) scale(${heroScale})`
-          }"
         >
           <div
             ref="heroTrackRef"
@@ -330,8 +412,8 @@ onBeforeUnmount(() => {
     </section>
 
     <section
+      ref="storyFlowRef"
       class="story-flow shell"
-      :style="{ marginTop: `${storyFlowLift}px` }"
     >
       <div class="headline-layer">
         <h2>
@@ -473,6 +555,7 @@ onBeforeUnmount(() => {
   display: grid;
   gap: 120px;
   padding-block: clamp(0.25rem, 1.2vh, 1.1rem) clamp(2.4rem, 6vh, 5rem);
+  will-change: transform;
 }
 
 .studio-nav-pill {
@@ -850,7 +933,7 @@ onBeforeUnmount(() => {
   }
 
   .story-sticky {
-    top: 74px;
+    top: var(--layout-header-height);
     min-height: calc(100vh - 76px);
   }
 
@@ -881,12 +964,12 @@ onBeforeUnmount(() => {
 
   .hero-mission-title {
     margin-top: 0.55rem;
-    max-width: 20ch;
+    max-width: 22ch;
     font-size: clamp(1.8rem, 5.4vw, 2.9rem);
   }
 
   .hero-mission-image {
-    min-height: clamp(220px, 40vw, 330px);
+    min-height: clamp(300px, 40vw, 330px);
   }
 
   .hero-metric-panel {
@@ -896,12 +979,12 @@ onBeforeUnmount(() => {
   }
 
   .hero-metric-number {
-    font-size: clamp(2.4rem, 11vw, 4.8rem);
+    font-size: clamp(5rem, 17vw, 5.4rem);
   }
 
   .hero-metric-label {
     max-width: 30ch;
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
 
   .split-layer {
@@ -923,14 +1006,23 @@ onBeforeUnmount(() => {
     margin: 0;
     display: block;
     font-size: clamp(1.4rem, 6.2vw, 2.3rem);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
+    line-height: 1.2;
+    /* letter-spacing: -0.03em; */
     font-family: var(--theme-font-title);
+  }
+
+  .story-flow {
+    gap: 80px;
   }
 
   .manifesto-reveal,
   .split-divider {
     display: none;
+  }
+
+  .team-avatar {
+    border-radius: 6px;
+    box-shadow: 6px 6px 0 var(--muted);
   }
 
   .team-rail-wrap {
@@ -939,7 +1031,14 @@ onBeforeUnmount(() => {
 
   .team-card {
     grid-template-columns: 108px minmax(0, 1fr);
-    gap: 0.58rem;
+    gap: 1.5rem;
+  }
+
+  .team-card-copy .role {
+    margin: 0.22rem 0 0;
+    font-size: 0.9rem;
+    line-height: 1.1;
+    color: #acacac;
   }
 
   .next-layer {
@@ -949,7 +1048,11 @@ onBeforeUnmount(() => {
 
   .chapter-card {
     margin-left: 0;
-    width: 162px;
+    width: 100%;
+  }
+
+  .after-note {
+    margin-top: -128px;
   }
 }
 
@@ -958,6 +1061,9 @@ onBeforeUnmount(() => {
     padding-inline: 16px;
   }
 
+  .team-card-copy .person {
+    font-size: 1.5rem;
+  }
   .about-intro {
     padding-top: 2rem;
   }
@@ -991,12 +1097,16 @@ onBeforeUnmount(() => {
 
   .hero-mission-panel,
   .hero-metric-panel {
-    height: clamp(370px, calc(100vh - 145px), 560px);
+    height: calc(100svh - var(--layout-header-height) - 2rem);
     border-radius: 8px;
   }
 
+  .hero-panorama {
+    padding-block: 1rem;
+  }
+
   .hero-mission-panel {
-    width: 94vw;
+    width: calc(100vw - 32px);
   }
 
   .hero-metric-panel {
@@ -1015,17 +1125,14 @@ onBeforeUnmount(() => {
     font-size: 0.78rem;
   }
 
-  .hero-metric-number {
-    font-size: clamp(2rem, 13vw, 3.4rem);
-  }
-
   .hero-metric-label {
-    font-size: 0.74rem;
+    font-size: 1rem;
     line-height: 1.34;
+    max-width: 23ch;
   }
 
   .hero-metric-source {
-    font-size: 0.58rem;
+    font-size: 12px;
   }
 
   .headline-layer h2,
