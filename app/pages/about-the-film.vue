@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { gsap } from 'gsap'
 
 type TeamMember = {
   name: string
@@ -61,6 +62,7 @@ useSeoMeta({
 })
 
 const stageSection = ref<HTMLElement | null>(null)
+const heroTrackRef = ref<HTMLElement | null>(null)
 const stageProgress = ref(0)
 const prefersReducedMotion = ref(false)
 
@@ -105,6 +107,23 @@ let uninsuredAnimationId = 0
 let hasAnimatedUninsuredMetric = false
 let reduceMotionQuery: MediaQueryList | null = null
 let reduceMotionListener: (() => void) | null = null
+let moveHeroTrack: ((value: number) => void) | null = null
+
+const xSwiperAdvantages = (item: HTMLElement) => gsap.quickTo(item, 'xPercent', { duration: 0.1 })
+
+const syncHeroTrack = () => {
+  const heroTrack = heroTrackRef.value
+
+  if (!heroTrack) {
+    return
+  }
+
+  if (!moveHeroTrack) {
+    moveHeroTrack = xSwiperAdvantages(heroTrack)
+  }
+
+  moveHeroTrack(heroPanX.value)
+}
 
 const animateUninsuredPeople = () => {
   if (hasAnimatedUninsuredMetric || typeof window === 'undefined') {
@@ -143,6 +162,7 @@ const syncProgressFromViewport = () => {
 
   if (prefersReducedMotion.value) {
     stageProgress.value = 0.64
+    syncHeroTrack()
     return
   }
 
@@ -155,6 +175,7 @@ const syncProgressFromViewport = () => {
   const rect = section.getBoundingClientRect()
   const scrollRange = Math.max(1, rect.height - window.innerHeight)
   stageProgress.value = clamp(-rect.top / scrollRange, 0, 1)
+  syncHeroTrack()
 }
 
 const scheduleProgressSync = () => {
@@ -244,6 +265,8 @@ onBeforeUnmount(() => {
       reduceMotionQuery.removeListener(reduceMotionListener)
     }
   }
+
+  moveHeroTrack = null
 })
 </script>
 
@@ -262,8 +285,8 @@ onBeforeUnmount(() => {
           }"
         >
           <div
+            ref="heroTrackRef"
             class="hero-track"
-            :style="{ transform: `translateX(${heroPanX}%)` }"
           >
             <article class="hero-mission-panel">
               <div class="hero-mission-copy">
@@ -526,10 +549,8 @@ onBeforeUnmount(() => {
 .hero-mission-kicker {
   margin: 0;
   font-size: var(--fs-brand);
-  text-transform: uppercase;
   font-weight: 700;
   color: var(--accent-contrast);
-  letter-spacing: 0.08em;
 }
 
 .hero-mission-title {
@@ -574,7 +595,7 @@ onBeforeUnmount(() => {
   inset: 11% 10%;
   background-image: radial-gradient(circle, rgb(243 243 243 / 20%) 1px, #ffffff00 1.2px);
   background-size: 12px 12px;
-  opacity: 1;
+  opacity: 0.2;
   width: 100%;
   height: 100%;
   top: 0;
