@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const navLinks = [
   { label: 'Home', to: '/' },
@@ -45,6 +45,7 @@ const resourceColumns = [
 
 const headerEl = ref<HTMLElement | null>(null)
 const headerHeight = ref(69)
+const isMobileMenuOpen = ref(false)
 const currentYear = new Date().getFullYear()
 const route = useRoute()
 const isResourcesRoute = computed(() => route.path === '/resources' || route.path.startsWith('/resources/'))
@@ -65,6 +66,48 @@ const syncHeaderHeight = () => {
   headerHeight.value = Math.ceil(headerEl.value.getBoundingClientRect().height)
 }
 
+const isMobileViewport = () => {
+  if (!import.meta.client) {
+    return false
+  }
+
+  return window.innerWidth <= 767
+}
+
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+}
+
+const toggleMobileMenu = () => {
+  if (!isMobileViewport()) {
+    return
+  }
+
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+const setBodyScrollLock = (locked: boolean) => {
+  if (!import.meta.client) {
+    return
+  }
+
+  document.body.style.overflow = locked ? 'hidden' : ''
+}
+
+const handleResize = () => {
+  syncHeaderHeight()
+
+  if (!isMobileViewport()) {
+    closeMobileMenu()
+  }
+}
+
+const handleWindowKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    closeMobileMenu()
+  }
+}
+
 const scrollToTop = () => {
   if (!import.meta.client) {
     return
@@ -75,12 +118,26 @@ const scrollToTop = () => {
 
 onMounted(() => {
   syncHeaderHeight()
-  window.addEventListener('resize', syncHeaderHeight)
+  window.addEventListener('resize', handleResize)
+  window.addEventListener('keydown', handleWindowKeydown)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', syncHeaderHeight)
+  window.removeEventListener('resize', handleResize)
+  window.removeEventListener('keydown', handleWindowKeydown)
+  setBodyScrollLock(false)
 })
+
+watch(isMobileMenuOpen, (isOpen) => {
+  setBodyScrollLock(isOpen && isMobileViewport())
+})
+
+watch(
+  () => route.fullPath,
+  () => {
+    closeMobileMenu()
+  }
+)
 </script>
 
 <template>
@@ -94,12 +151,36 @@ onBeforeUnmount(() => {
       :class="{ 'top-nav--resources': isResourcesRoute }"
     >
       <div class="layout-shell nav-shell">
-        <NuxtLink
-          to="/"
-          class="brand"
-        >
-          billings
-        </NuxtLink>
+        <div class="nav-brand-row">
+          <button
+            type="button"
+            class="mobile-nav-toggle"
+            :class="{ 'is-open': isMobileMenuOpen }"
+            aria-controls="mobile-menu-panel"
+            :aria-expanded="isMobileMenuOpen ? 'true' : 'false'"
+            @click="toggleMobileMenu"
+          >
+            <span class="sr-only">
+              {{ isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu' }}
+            </span>
+            <span
+              class="mobile-nav-toggle__bars"
+              aria-hidden="true"
+            >
+              <span class="mobile-nav-toggle__line" />
+              <span class="mobile-nav-toggle__line" />
+              <span class="mobile-nav-toggle__line" />
+            </span>
+          </button>
+
+          <NuxtLink
+            to="/"
+            class="brand"
+            @click="closeMobileMenu"
+          >
+            billings
+          </NuxtLink>
+        </div>
 
         <nav class="nav-links">
           <NuxtLink
@@ -123,6 +204,54 @@ onBeforeUnmount(() => {
         </NuxtLink>
       </div>
     </header>
+
+    <div
+      class="mobile-menu-backdrop"
+      :class="{ 'is-open': isMobileMenuOpen }"
+      aria-hidden="true"
+      @click="closeMobileMenu"
+    />
+
+    <aside
+      id="mobile-menu-panel"
+      class="mobile-menu"
+      :class="{ 'is-open': isMobileMenuOpen }"
+      :aria-hidden="isMobileMenuOpen ? 'false' : 'true'"
+    >
+      <div class="layout-shell mobile-menu__shell">
+        <nav
+          class="mobile-menu__links"
+          aria-label="Mobile navigation"
+        >
+          <NuxtLink
+            v-for="item in navLinks"
+            :key="`mobile-${item.label}`"
+            :to="item.to"
+            :class="{ 'is-current': isCurrentRoute(item.to) }"
+            @click="closeMobileMenu"
+          >
+            {{ item.label }}
+          </NuxtLink>
+        </nav>
+
+        <div class="mobile-menu__footer">
+          <NuxtLink
+            to="/resources#help-now"
+            class="mobile-menu__footer-btn mobile-menu__footer-btn--urgent"
+            @click="closeMobileMenu"
+          >
+            Urgent Care
+          </NuxtLink>
+          <NuxtLink
+            to="/share-your-story"
+            class="mobile-menu__footer-btn"
+            @click="closeMobileMenu"
+          >
+            Share Your Story
+          </NuxtLink>
+        </div>
+      </div>
+    </aside>
 
     <main class="layout-main">
       <slot />
@@ -273,6 +402,12 @@ onBeforeUnmount(() => {
   gap: 1.25rem;
 }
 
+.nav-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .brand {
   color: var(--ink);
   text-decoration: none;
@@ -315,6 +450,154 @@ onBeforeUnmount(() => {
   padding: 0.52rem 0.92rem;
   cursor: pointer;
   text-decoration: none;
+}
+
+.mobile-nav-toggle {
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mobile-nav-toggle__bars {
+  width: 1.08rem;
+  height: 0.94rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.mobile-nav-toggle__line {
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  border-radius: 999px;
+  transform-origin: center;
+  transition: transform 300ms cubic-bezier(.6, 0, .2, 1), opacity 220ms ease;
+}
+
+.mobile-nav-toggle.is-open .mobile-nav-toggle__line:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.mobile-nav-toggle.is-open .mobile-nav-toggle__line:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-nav-toggle.is-open .mobile-nav-toggle__line:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+.mobile-menu-backdrop {
+  position: fixed;
+  inset: var(--layout-header-height) 0 0;
+  background: rgb(14 21 23 / 38%);
+  z-index: 58;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 360ms cubic-bezier(.6, 0, .2, 1);
+}
+
+.mobile-menu-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-menu {
+  position: fixed;
+  inset: var(--layout-header-height) 0 0;
+  z-index: 60;
+  border-top: 1px solid var(--line);
+  background: var(--theme-color-bg);
+  transform: translateY(calc(-100% - 1px));
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    transform 460ms cubic-bezier(.6, 0, .2, 1),
+    visibility 0s linear 460ms;
+}
+
+.mobile-menu.is-open {
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+  transition: transform 460ms cubic-bezier(.6, 0, .2, 1);
+}
+
+.mobile-menu__shell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
+}
+
+.mobile-menu__links {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.mobile-menu__links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid rgb(255 255 255 / 17%);
+  padding: 0.78rem 0;
+}
+
+.mobile-menu__links a.is-current {
+  opacity: 0.4;
+}
+
+.mobile-menu__footer {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  padding-top: 0.95rem;
+  border-top: 1px solid rgb(255 255 255 / 19%);
+}
+
+.mobile-menu__footer-btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  border-radius: 999px;
+  background: var(--theme-color-accent);
+  color: var(--theme-color-accent-contrast);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.35rem 0.85rem;
+}
+
+.mobile-menu__footer-btn--urgent {
+  background: #b84a4a;
+  color: #fff;
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }
 
 .site-footer {
@@ -429,10 +712,6 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 1023px) {
-  .nav-links {
-    display: none;
-  }
-
   .footer-shell {
     gap: 3.1rem;
   }
@@ -453,7 +732,25 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+  .mobile-nav-toggle {
+    display: inline-flex;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-cta {
+    margin-inline-start: auto;
+    font-size: 0.74rem;
+    padding: 0.45rem 0.74rem;
+  }
+
+  .brand {
+    font-size: 2.1rem;
+  }
+
   .layout-shell {
     padding-inline: 16px;
   }
@@ -487,6 +784,13 @@ onBeforeUnmount(() => {
   .footer-meta {
     justify-content: flex-start;
     padding-bottom: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-menu,
+  .mobile-menu-backdrop {
+    display: none;
   }
 }
 </style>

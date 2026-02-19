@@ -957,16 +957,21 @@ onBeforeUnmount(() => {
     transition: transform 220ms ease;
     max-height: 84vh;
     overflow-y: auto;
-    padding: 0.9rem 0.9rem 1.15rem;
+    padding: 0.9rem 0.9rem 2rem;
+    background-color: white;
   }
 
+  .share-panel p {
+    color: var(--accent-contrast);
+  }
   .share-panel.is-mobile-open {
     transform: translateY(0);
   }
 
   .mobile-close {
-    display: inline-flex;
+    display: block;
     border: 0;
+    margin-left: auto;
     border-radius: 999px;
     background: var(--mobile-close-bg);
     color: var(--muted-18);
@@ -995,8 +1000,8 @@ onBeforeUnmount(() => {
     z-index: 40;
     border: 0;
     border-radius: 999px;
-    background: var(--accent);
-    color: var(--accent-contrast);
+    background: var(--accent-contrast);
+    color: var(--accent);
     font-size: var(--fs-mobile-cta);
     font-weight: 760;
     letter-spacing: 0.01em;

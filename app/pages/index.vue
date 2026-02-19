@@ -441,7 +441,7 @@ const goToResourcesWithNeed = (need: string) => {
   margin: 0 auto;
   text-align: center;
   font-size: var(--fs-hero-xl);
-  line-height: 0.98;
+  line-height: 1;
 }
 
 .hero-rail {
@@ -680,7 +680,7 @@ const goToResourcesWithNeed = (need: string) => {
 .stats h3 {
   margin: 0;
   font-size: var(--fs-display-xl);
-  line-height: 0.98;
+  line-height: 1;
 }
 
 .stats p {
@@ -700,7 +700,7 @@ const goToResourcesWithNeed = (need: string) => {
   max-width: 620px;
   margin: 0;
   font-size: var(--fs-heading-md);
-  line-height: 1.03;
+  line-height: 1;
 }
 
 :deep(.stories-btn) {
@@ -766,7 +766,7 @@ const goToResourcesWithNeed = (need: string) => {
 .impact-card h3 {
   margin: 0.75rem 0 1rem;
   font-size: var(--fs-display-md);
-  line-height: 0.98;
+  line-height: 1;
 }
 
 .card-copy {
@@ -1061,7 +1061,7 @@ const goToResourcesWithNeed = (need: string) => {
   .quote {
     width: 100%;
     margin-inline: 0;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     line-height: 1.5;
     text-align: left;
     width: 100%;
