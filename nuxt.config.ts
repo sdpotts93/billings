@@ -1,10 +1,9 @@
+/// <reference types="node" />
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const isDev = process.env.NODE_ENV !== 'production'
+
 export default defineNuxtConfig({
-  modules: [
-    '@nuxt/eslint',
-    '@nuxt/fonts',
-    '@nuxt/ui'
-  ],
+  modules: ['@nuxt/eslint', '@nuxt/fonts', '@nuxt/ui', '@nuxt/image'],
 
   devtools: {
     enabled: true
@@ -47,6 +46,14 @@ export default defineNuxtConfig({
     }
   },
 
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        types: ['node']
+      }
+    }
+  },
+
   eslint: {
     config: {
       stylistic: {
@@ -68,5 +75,15 @@ export default defineNuxtConfig({
         weights: [400]
       }
     ]
+  },
+  image: {
+    provider: isDev ? 'ipx' : 'ipxStatic',
+    format: ['webp'],
+    ipx: {
+      modifiers: {
+        format: 'webp',
+        fit: 'cover'
+      }
+    }
   }
 })
