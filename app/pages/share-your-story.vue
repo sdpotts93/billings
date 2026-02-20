@@ -769,7 +769,7 @@ onBeforeUnmount(() => {
 
 .story-avatar {
   background: white;
-  color: var(--accent);
+  color: var(--theme-color-text);
   display: inline-flex;
   align-items: center;
   justify-content: center;
