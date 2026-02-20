@@ -1891,8 +1891,8 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           <div class="help-now-grid">
             <figure class="section-photo section-photo--help section-photo--wide grid-photo-item">
               <img
-                src="https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=1800&q=80"
-                alt="Support team helping someone by phone"
+                src="/images/resources-emergency.jpg"
+                alt="A police car driving towards the camera"
                 loading="lazy"
               >
             </figure>
@@ -1949,7 +1949,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           <div class="spotlight-grid">
             <figure class="section-photo section-photo--cf section-photo--portrait grid-photo-item">
               <img
-                src="https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=1800&q=80"
+                src="/images/resources-cf.jpg"
                 alt="Clinician discussing care plan with patient"
                 loading="lazy"
               >
@@ -2021,7 +2021,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           <div class="conditions-grid">
             <figure class="section-photo section-photo--conditions section-photo--square grid-photo-item">
               <img
-                src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1800&q=80"
+                src="/images/resources-top.png"
                 alt="Medical records and notes on a desk"
                 loading="lazy"
               >
@@ -2120,7 +2120,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               class="section-photo section-photo--docs section-photo--landscape grid-photo-item"
             >
               <img
-                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1800&q=80"
+                src="/images/resources-paperwork.jpg"
                 alt="Checklist documents and pen ready for planning"
                 loading="lazy"
               >
