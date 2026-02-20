@@ -332,12 +332,12 @@ onBeforeUnmount(() => {
                 </p>
 
                 <footer class="story-footer">
-                  <img
+                  <NuxtImg
                     v-if="story.photoUrl"
                     :src="story.photoUrl"
                     :alt="`${story.author} photo`"
                     class="story-photo"
-                  >
+                  />
                   <span
                     v-else
                     class="story-avatar"

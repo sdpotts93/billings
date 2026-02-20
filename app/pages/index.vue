@@ -138,10 +138,10 @@ const goToResourcesWithNeed = (need: string) => {
                   :style="{ '--tone': card.tone, '--card-delay': `${index * 0.7}s` }"
                 >
                   <div class="card-media">
-                    <img
+                    <NuxtImg
                       :src="card.image"
                       :alt="card.title"
-                    >
+                    />
                   </div>
                   <div class="card-body">
                     <p class="source">
@@ -167,10 +167,10 @@ const goToResourcesWithNeed = (need: string) => {
                   :style="{ '--tone': card.tone, '--card-delay': `${index * 0.7}s` }"
                 >
                   <div class="card-media">
-                    <img
+                    <NuxtImg
                       :src="card.image"
                       :alt="card.title"
-                    >
+                    />
                   </div>
                   <div class="card-body">
                     <p class="source">

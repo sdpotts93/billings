@@ -1867,11 +1867,11 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             <p class="hero-media-title">
               Explore our<br>resources
             </p>
-            <img
+            <NuxtImg
               src="/images/form-alter.jpg"
               alt="A man grabbing a medical device"
               loading="lazy"
-            >
+            />
           </figure>
         </div>
       </section>
@@ -1890,11 +1890,11 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           <p>Use one of these first if you need immediate support.</p>
           <div class="help-now-grid">
             <figure class="section-photo section-photo--help section-photo--wide grid-photo-item">
-              <img
+              <NuxtImg
                 src="/images/resources-emergency.jpg"
                 alt="A police car driving towards the camera"
                 loading="lazy"
-              >
+              />
             </figure>
             <a href="tel:911">
               <UIcon
@@ -1948,11 +1948,11 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           </p>
           <div class="spotlight-grid">
             <figure class="section-photo section-photo--cf section-photo--portrait grid-photo-item">
-              <img
+              <NuxtImg
                 src="/images/resources-cf.jpg"
                 alt="Clinician discussing care plan with patient"
                 loading="lazy"
-              >
+              />
             </figure>
             <article>
               <h3>
@@ -2020,11 +2020,11 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           </p>
           <div class="conditions-grid">
             <figure class="section-photo section-photo--conditions section-photo--square grid-photo-item">
-              <img
+              <NuxtImg
                 src="/images/resources-top.png"
                 alt="Medical records and notes on a desk"
                 loading="lazy"
-              >
+              />
             </figure>
             <article
               v-for="condition in conditionCards"
@@ -2119,11 +2119,11 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               v-if="activeTopicFilter === 'all'"
               class="section-photo section-photo--docs section-photo--landscape grid-photo-item"
             >
-              <img
+              <NuxtImg
                 src="/images/resources-paperwork.jpg"
                 alt="Checklist documents and pen ready for planning"
                 loading="lazy"
-              >
+              />
             </figure>
             <article
               v-for="document in filteredDocuments"

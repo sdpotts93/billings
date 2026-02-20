@@ -382,11 +382,11 @@ onBeforeUnmount(() => {
               </div>
 
               <div class="hero-mission-image">
-                <img
+                <NuxtImg
                   :src="heroMissionImageSrc"
                   alt="Medical team collaborating in a hospital hallway"
                   loading="eager"
-                >
+                />
               </div>
             </article>
 
@@ -444,12 +444,12 @@ onBeforeUnmount(() => {
               class="team-card"
             >
               <div class="team-avatar">
-                <img
+                <NuxtImg
                   :src="member.imageSrc"
                   :alt="member.imageAlt"
                   :style="{ objectPosition: member.imagePosition ?? 'top' }"
                   loading="lazy"
-                >
+                />
               </div>
               <div class="team-card-copy">
                 <p class="person">

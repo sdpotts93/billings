@@ -335,12 +335,12 @@ onBeforeUnmount(() => {
             why this story matters
           </h1>
 
-          <img
+          <NuxtImg
             :src="heroImageSrc"
             alt="Behind-the-scenes still"
             loading="eager"
             decoding="async"
-          >
+          />
 
           <a
             class="hero-play"
@@ -378,12 +378,12 @@ onBeforeUnmount(() => {
             :data-tile-id="tile.id"
             :style="getStudioTileStyle(tile.id)"
           >
-            <img
+            <NuxtImg
               :src="tile.src"
               :alt="tile.alt"
               loading="lazy"
               decoding="async"
-            >
+            />
           </figure>
 
           <div class="studio-life-copy">
