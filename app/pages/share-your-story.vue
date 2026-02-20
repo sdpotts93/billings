@@ -5,7 +5,6 @@ type Story = {
   id: string
   author: string
   message: string
-  accent: string
   initials: string
   photoUrl?: string
 }
@@ -17,14 +16,6 @@ type ApiStory = {
   createdAt: string
   imageUrl?: string
 }
-
-const accentPalette = [
-  'var(--theme-story-accent-1)',
-  'var(--theme-story-accent-2)',
-  'var(--theme-story-accent-3)',
-  'var(--theme-story-accent-4)',
-  'var(--theme-story-accent-5)'
-]
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -52,12 +43,14 @@ const visibleStories = ref<Story[]>([])
 const loadSentinel = ref<HTMLElement | null>(null)
 const batchSize = 30
 const loadedCount = ref(0)
+const isFeedLoading = ref(true)
 const isLoadingMore = ref(false)
 const isSubmitting = ref(false)
 const isMobileFormOpen = ref(false)
 const selectedPhoto = ref<File | null>(null)
 const selectedPhotoPreview = ref<string | null>(null)
 const submitNotice = ref('')
+const skeletonCardIds = Array.from({ length: 6 }, (_, index) => `story-skeleton-${index}`)
 
 const formState = reactive({
   name: '',
@@ -65,25 +58,9 @@ const formState = reactive({
 })
 
 const hasMoreStories = computed(() => loadedCount.value < allStories.value.length)
-
-const hashString = (value: string) => {
-  let hash = 0
-
-  for (let i = 0; i < value.length; i += 1) {
-    hash = ((hash << 5) - hash + value.charCodeAt(i)) >>> 0
-  }
-
-  return hash
-}
-
-const getAccentFromSeed = (seed: string) => {
-  if (accentPalette.length === 0) {
-    return 'var(--theme-color-accent)'
-  }
-
-  const index = hashString(seed) % accentPalette.length
-  return accentPalette[index] ?? accentPalette[0] ?? 'var(--theme-color-accent)'
-}
+const showStoriesSkeleton = computed(() => {
+  return isFeedLoading.value || (visibleStories.value.length === 0 && isLoadingMore.value)
+})
 
 const toClientStory = (story: ApiStory): Story => {
   return {
@@ -91,7 +68,6 @@ const toClientStory = (story: ApiStory): Story => {
     author: story.author,
     message: story.message,
     initials: getInitials(story.author),
-    accent: getAccentFromSeed(story.id),
     photoUrl: story.imageUrl
   }
 }
@@ -104,6 +80,8 @@ const hydrateStories = async (stories: ApiStory[]) => {
 }
 
 const loadStoriesFromFeed = async () => {
+  isFeedLoading.value = true
+
   try {
     const response = await $fetch<{ stories: ApiStory[] }>('/api/approved-stories')
     await hydrateStories(response.stories ?? [])
@@ -113,6 +91,8 @@ const loadStoriesFromFeed = async () => {
     loadedCount.value = 0
     submitNotice.value = 'Could not load the live feed. Please try again.'
     clearSubmitNotice()
+  } finally {
+    isFeedLoading.value = false
   }
 }
 
@@ -321,41 +301,68 @@ onBeforeUnmount(() => {
       <section class="content-grid">
         <div class="stories-feed">
           <div class="stories-columns">
-            <article
-              v-for="story in visibleStories"
-              :key="story.id"
-              class="story-card"
-              :style="{ '--accent': story.accent }"
-            >
-              <p class="story-message">
-                {{ story.message }}
-              </p>
-
-              <footer class="story-footer">
-                <img
-                  v-if="story.photoUrl"
-                  :src="story.photoUrl"
-                  :alt="`${story.author} photo`"
-                  class="story-photo"
-                >
-                <span
-                  v-else
-                  class="story-avatar"
-                >
-                  {{ story.initials }}
-                </span>
-
-                <div>
-                  <p class="story-author">
-                    {{ story.author }}
-                  </p>
+            <template v-if="showStoriesSkeleton">
+              <article
+                v-for="skeletonCardId in skeletonCardIds"
+                :key="skeletonCardId"
+                class="story-card story-card--skeleton"
+                aria-hidden="true"
+              >
+                <div class="story-message-skeleton">
+                  <span class="skeleton-line skeleton-line--long" />
+                  <span class="skeleton-line skeleton-line--medium" />
+                  <span class="skeleton-line skeleton-line--short" />
                 </div>
-              </footer>
-            </article>
+
+                <footer class="story-footer">
+                  <span class="story-avatar skeleton-block" />
+                  <div class="story-author-skeleton skeleton-block" />
+                </footer>
+              </article>
+            </template>
+
+            <template v-else>
+              <article
+                v-for="story in visibleStories"
+                :key="story.id"
+                class="story-card"
+              >
+                <p class="story-message">
+                  {{ story.message }}
+                </p>
+
+                <footer class="story-footer">
+                  <img
+                    v-if="story.photoUrl"
+                    :src="story.photoUrl"
+                    :alt="`${story.author} photo`"
+                    class="story-photo"
+                  >
+                  <span
+                    v-else
+                    class="story-avatar"
+                  >
+                    {{ story.initials }}
+                  </span>
+
+                  <div>
+                    <p class="story-author">
+                      {{ story.author }}
+                    </p>
+                  </div>
+                </footer>
+              </article>
+            </template>
           </div>
 
           <p
-            v-if="isLoadingMore"
+            v-if="showStoriesSkeleton"
+            class="feed-status"
+          >
+            Loading stories...
+          </p>
+          <p
+            v-else-if="isLoadingMore"
             class="feed-status"
           >
             Loading more stories...
@@ -683,6 +690,10 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
+.story-card--skeleton::before {
+  content: '';
+}
+
 .story-message {
   margin: 0;
   color: var(--theme-color-accent-contrast);
@@ -706,6 +717,48 @@ onBeforeUnmount(() => {
   gap: 0.68rem;
 }
 
+.story-message-skeleton {
+  display: grid;
+  gap: 0.45rem;
+  padding-right: 1.2rem;
+}
+
+.skeleton-line,
+.skeleton-block {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--line), white 34%) 25%,
+    color-mix(in oklab, var(--line), white 54%) 50%,
+    color-mix(in oklab, var(--line), white 34%) 75%
+  );
+  background-size: 200% 100%;
+  animation: story-skeleton-wave 1.2s ease-in-out infinite;
+}
+
+.skeleton-line {
+  display: block;
+  height: 0.92rem;
+  border-radius: 999px;
+}
+
+.skeleton-line--long {
+  width: 100%;
+}
+
+.skeleton-line--medium {
+  width: 84%;
+}
+
+.skeleton-line--short {
+  width: 63%;
+}
+
+.story-author-skeleton {
+  width: 116px;
+  height: 0.86rem;
+  border-radius: 999px;
+}
+
 .story-avatar,
 .story-photo {
   width: 38px;
@@ -715,7 +768,7 @@ onBeforeUnmount(() => {
 }
 
 .story-avatar {
-  background: color-mix(in oklab, var(--accent), white 85%);
+  background: white;
   color: var(--accent);
   display: inline-flex;
   align-items: center;
@@ -741,6 +794,16 @@ onBeforeUnmount(() => {
   margin: 0.2rem 0 0;
   color: var(--muted-14);
   font-size: var(--fs-btn);
+}
+
+@keyframes story-skeleton-wave {
+  0% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0 50%;
+  }
 }
 
 .load-sentinel {
@@ -983,6 +1046,11 @@ onBeforeUnmount(() => {
 @media (prefers-reduced-motion: reduce) {
   .share-panel {
     transition: none;
+  }
+
+  .skeleton-line,
+  .skeleton-block {
+    animation: none;
   }
 }
 </style>

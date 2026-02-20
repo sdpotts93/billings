@@ -1053,6 +1053,7 @@ const answers = reactive<Record<QuestionId, string>>({
 
 const questionIndex = ref(0)
 const result = ref<GeneratedResult | null>(null)
+const isSubmittingEmail = ref(false)
 const activeTopicFilter = ref('all')
 const route = useRoute()
 
@@ -1378,25 +1379,49 @@ const setOptionalInputValue = (value: string) => {
   }
 }
 
-const submitOptionalInputAndContinue = () => {
-  if (currentQuestion.value.input === 'email') {
-    answers.email = answers.email.trim()
-  }
+const sendResourcesEmail = async (email: string) => {
+  await $fetch('/api/resources-email', {
+    method: 'POST',
+    body: { email }
+  })
+}
 
-  if (questionIndex.value === wizardQuestions.length - 1) {
-    result.value = buildResultPlan()
+const submitOptionalInputAndContinue = async () => {
+  if (isSubmittingEmail.value) {
     return
   }
 
-  questionIndex.value += 1
+  isSubmittingEmail.value = true
+  try {
+    if (currentQuestion.value.input === 'email') {
+      answers.email = answers.email.trim()
+
+      if (answers.email) {
+        try {
+          await sendResourcesEmail(answers.email)
+        } catch (error) {
+          console.error('Could not send resources email.', error)
+        }
+      }
+    }
+
+    if (questionIndex.value === wizardQuestions.length - 1) {
+      result.value = buildResultPlan()
+      return
+    }
+
+    questionIndex.value += 1
+  } finally {
+    isSubmittingEmail.value = false
+  }
 }
 
-const skipOptionalInput = () => {
+const skipOptionalInput = async () => {
   if (currentQuestion.value.input === 'email') {
     answers.email = ''
   }
 
-  submitOptionalInputAndContinue()
+  await submitOptionalInputAndContinue()
 }
 
 const goBack = () => {
@@ -1588,6 +1613,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                         <button
                           type="button"
                           class="primary-btn"
+                          :disabled="isSubmittingEmail"
                           @click="submitOptionalInputAndContinue"
                         >
                           Continue
@@ -1595,6 +1621,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                         <button
                           type="button"
                           class="ghost-btn"
+                          :disabled="isSubmittingEmail"
                           @click="skipOptionalInput"
                         >
                           Skip
