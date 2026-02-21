@@ -214,7 +214,7 @@ const submitStory = async () => {
 
     resetForm()
 
-    if (typeof window !== 'undefined' && window.matchMedia('(max-width: 64rem)').matches) {
+    if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1024px)').matches) {
       isMobileFormOpen.value = false
     }
   } catch {
@@ -920,7 +920,7 @@ onBeforeUnmount(() => {
   display: none;
 }
 
-@media (max-width: 73.75rem) {
+@media screen and (max-width: 1280px) {
   .content-grid {
     grid-template-columns: minmax(0, 1fr) 20rem;
   }
@@ -930,7 +930,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 64rem) {
+@media screen and (max-width: 1024px) {
   .nav-links,
   .nav-cta {
     display: none;
@@ -1018,7 +1018,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 48rem) {
+@media screen and (max-width: 767px) {
   .page-shell {
     padding-inline: var(--space-4);
   }

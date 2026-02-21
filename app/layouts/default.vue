@@ -376,7 +376,7 @@ watch(
 
 .layout-shell {
   width: 100%;
-  max-width: 76.25rem;
+  max-width: 1120px;
   margin-inline: auto;
   padding-inline: var(--space-6);
 }
@@ -624,7 +624,7 @@ watch(
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: clamp(2.5rem, 8vw, 10rem);
+  gap: 3rem;
   padding-top: clamp(2.3rem, 4.9vw, 3.5rem);
 }
 
@@ -650,7 +650,7 @@ watch(
 .footer-column a {
   color: var(--accent-contrast);
   text-decoration: none;
-  font-size: var(--theme-font-size-mobile-cta);
+  font-size: var(--theme-font-size-brand);
   font-family: var(--font-sans);
 }
 
@@ -682,7 +682,7 @@ watch(
   color: var(--ink);
   text-decoration: none;
   font-family: var(--font-title);
-  font-size: clamp(4.5rem, 15.4vw, 15.5rem);
+  font-size: 9rem;
   font-weight: 900;
   line-height: 1;
   letter-spacing: 0.009em;
@@ -699,7 +699,7 @@ watch(
 .footer-meta p {
   margin: 0;
   color: var(--theme-color-link-soft);
-  font-size: var(--theme-font-size-mobile-cta);
+  font-size: var(--theme-font-size-caption);
 }
 
 .back-to-top {
@@ -707,12 +707,12 @@ watch(
   background: transparent;
   color: var(--theme-color-link-soft);
   font: inherit;
-  font-size: var(--theme-font-size-mobile-cta);
+  font-size: var(--theme-font-size-caption);
   cursor: pointer;
   padding: 0;
 }
 
-@media (max-width: 64rem) {
+@media screen and (max-width: 1024px) {
   .footer-shell {
     gap: 3.1rem;
   }
@@ -733,7 +733,7 @@ watch(
   }
 }
 
-@media (max-width: 48rem) {
+@media screen and (max-width: 991px) {
   .mobile-nav-toggle {
     display: inline-flex;
   }
@@ -788,7 +788,7 @@ watch(
   }
 }
 
-@media (min-width: 48.0625rem) {
+@media screen and (min-width: 768px) {
   .mobile-menu,
   .mobile-menu-backdrop {
     display: none;

@@ -917,7 +917,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 77.5rem) {
+@media screen and (max-width: 1280px) {
   .hero-track {
     margin-left: 0;
     grid-auto-columns: 100vw;
@@ -928,7 +928,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 64rem) {
+@media screen and (max-width: 1024px) {
   .story-stage {
     min-height: 250vh;
   }
@@ -1057,7 +1057,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 48rem) {
+@media screen and (max-width: 767px) {
   .shell {
     padding-inline: var(--space-4);
   }

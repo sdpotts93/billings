@@ -25,6 +25,7 @@
   --space-8: 2rem;
   --space-16: 4rem;
   --space-20: 5rem;
+  --space-24: 6rem;
   --space-30: 7.5rem;
 
   --radius-sm: 0.5rem;
@@ -33,10 +34,10 @@
   --radius-xl: 1.25rem;
   --radius-pill: 999rem;
 
-  --theme-font-size-caption: var(--text-xs);
-  --theme-font-size-caption-plus: var(--text-sm);
+  --theme-font-size-caption: 14px;
+  --theme-font-size-caption-plus: var(--text-xs);
   --theme-font-size-xs: var(--text-xs);
-  --theme-font-size-note: var(--text-sm);
+  --theme-font-size-note: var(--text-xs);
   --theme-font-size-note-plus: var(--text-md);
   --theme-font-size-label: var(--text-sm);
   --theme-font-size-sm: var(--text-sm);
@@ -46,19 +47,20 @@
   --theme-font-size-md-plus: var(--text-lg);
   --theme-font-size-body: var(--text-md);
   --theme-font-size-body-lg: var(--text-lg);
-  --theme-font-size-brand: var(--text-md);
+  --theme-font-size-brand: 15px;
+  --theme-font-size-brand-mobile: 16px;
   --theme-font-size-mobile-cta: var(--text-md);
   --theme-font-size-quote-mark: 4rem;
   --theme-font-size-panel-title: var(--text-2xl);
-  --theme-font-size-hero-xl: clamp(2rem, 6vw, 3.25rem);
+  --theme-font-size-hero-xl: clamp(2rem, 5vw, 3rem);
   --theme-font-size-hero-lg: clamp(2rem, 5vw, 3.75rem);
   --theme-font-size-hero-mobile: clamp(2rem, 9vw, 2.75rem);
   --theme-font-size-heading-lg: clamp(2rem, 3.7vw, 3rem);
   --theme-font-size-heading-md: clamp(1.75rem, 4.2vw, 3rem);
-  --theme-font-size-display-md: clamp(1.5rem, 2.7vw, 2.5rem);
+  --theme-font-size-display-md: clamp(1.5rem, 2.7vw, 2rem);
   --theme-font-size-display-lg: clamp(2.25rem, 4vw, 3rem);
-  --theme-font-size-display-xl: clamp(2.5rem, 5.4vw, 4rem);
-  --theme-font-size-card-title: clamp(1.25rem, 1.6vw, 1.5rem);
+  --theme-font-size-display-xl: clamp(2rem, 5vw, 3rem);
+  --theme-font-size-card-title: clamp(1rem, 1.6vw, 24px);
   --theme-font-size-quote: clamp(1.125rem, 2.2vw, 1.5rem);
 
   --theme-color-bg: #334549;

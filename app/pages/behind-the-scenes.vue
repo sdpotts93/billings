@@ -609,7 +609,7 @@ onBeforeUnmount(() => {
   outline-offset: 0.25rem;
 }
 
-@media (max-width: 64rem) {
+@media screen and (max-width: 1024px) {
   .intro-copy h2 {
     font-size: var(--fs-hero-mobile);
   }
@@ -647,7 +647,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 48rem) {
+@media screen and (max-width: 767px) {
   .hero-play {
     width: clamp(4.5rem, 22vw, 5.75rem);
     height: clamp(4.5rem, 22vw, 5.75rem);

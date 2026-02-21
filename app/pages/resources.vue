@@ -3461,7 +3461,7 @@ h1 {
   color: var(--muted);
 }
 
-@media (max-width: 68.75rem) {
+@media screen and (max-width: 1024px) {
   .results-state .result-resource-list {
     grid-template-columns: 1fr;
   }
@@ -3505,7 +3505,7 @@ h1 {
   }
 }
 
-@media (max-width: 56.25rem) {
+@media screen and (max-width: 991px) {
   .hero-transform {
     height: auto;
     min-height: auto;
@@ -3557,7 +3557,7 @@ h1 {
   }
 }
 
-@media (max-width: 48rem) {
+@media screen and (max-width: 767px) {
   .hero-transform {
     padding: 2rem var(--space-4) 0;
   }

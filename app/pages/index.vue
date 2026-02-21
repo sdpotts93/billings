@@ -95,13 +95,13 @@ const impactCards: ImpactCard[] = [
     need: 'bills'
   },
   {
-    label: 'Finding care (appointments, specialists)',
+    label: 'Finding care',
     brand: 'Find care and specialists',
     copy: 'Locate clinics, referrals, and follow-up support for ongoing conditions.',
     need: 'finding-care'
   },
   {
-    label: 'Helping someone else (caregiver)',
+    label: 'Helping someone else',
     brand: 'Support for families',
     copy: 'Tools for caregiver planning, respite options, and long-term coordination.',
     need: 'caregiver'
@@ -359,7 +359,7 @@ const goToResourcesWithNeed = (need: string) => {
   --fs-display-md: var(--theme-font-size-display-md);
   --fs-display-lg: var(--theme-font-size-display-lg);
   --fs-display-xl: var(--theme-font-size-display-xl);
-  --lane-gap: var(--space-6);
+  --lane-gap: var(--space-3);
   width: 100%;
   background: var(--bg);
   color: var(--ink);
@@ -415,7 +415,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .hero {
-  padding-top: 5.25rem;
+  padding-top: 4rem;
 }
 
 .hero-header h1 {
@@ -478,14 +478,13 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .hero-card {
-  width: min(86vw, 25rem);
+  width: min(86vw, 20rem);
   padding: var(--space-5);
   border-radius: var(--radius-md);
-  border: 1px solid color-mix(in oklab, var(--tone), var(--line) 72%);
   background: #e7e4de;
   box-shadow: 0 0.625rem 1.25rem rgba(29, 23, 69, 0.06);
   display: grid;
-  grid-template-columns: 55% minmax(0, 1fr);
+  grid-template-columns: 45% minmax(0, 1fr);
   gap: var(--space-3);
   transition: transform 220ms ease, box-shadow 220ms ease;
   will-change: transform;
@@ -495,7 +494,7 @@ const goToResourcesWithNeed = (need: string) => {
   position: relative;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  min-height: 11.75rem;
+  min-height: 14.5rem;
 }
 
 .card-media img {
@@ -556,7 +555,7 @@ const goToResourcesWithNeed = (need: string) => {
 
 .social-proof p {
   margin: 0;
-  font-size: var(--fs-body);
+  font-size: var(--fs-xs);
   color: var(--muted);
 }
 
@@ -572,7 +571,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .testimonial {
-  padding-top: var(--space-30);
+  padding-top: var(--space-24);
 }
 
 .quote-card {
@@ -673,8 +672,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .impact {
-  margin-top: 2.8rem;
-  padding-top: var(--space-30);
+  padding-top: var(--space-24);
 }
 
 .impact h2 {
@@ -704,7 +702,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .impact-card {
-  min-height: 16.25rem;
+  min-height: 260px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: var(--surface);
@@ -745,7 +743,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .impact-card h3 {
-  margin: 0.75rem 0 1rem;
+  margin: 8px 0 16px;
   font-size: var(--fs-display-md);
   line-height: 1;
 }
@@ -762,7 +760,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .emergency-links {
-    margin-top: 2rem;
+    margin-top: 1rem;
     display: flex;
     flex-wrap: wrap;
     gap: 3rem;
@@ -916,7 +914,7 @@ const goToResourcesWithNeed = (need: string) => {
   }
 }
 
-@media (max-width: 61.25rem) {
+@media screen and (max-width: 991px) {
   .shell {
     max-width: 61.25rem;
     padding-inline: var(--space-5);
@@ -946,7 +944,7 @@ const goToResourcesWithNeed = (need: string) => {
   }
 }
 
-@media (max-width: 48rem) {
+@media screen and (max-width: 767px) {
 
   .quote-title {
     margin-inline: 0;
@@ -1056,6 +1054,7 @@ const goToResourcesWithNeed = (need: string) => {
 
   .stats p {
     max-width: unset;
+    font-size: var(--theme-font-size-brand-mobile);
   }
   .quote-foot {
     flex-direction: column;
