@@ -15,7 +15,6 @@
   --text-xl: 1.25rem;
   --text-2xl: 1.5rem;
   --text-3xl: 2rem;
-  --text-4xl: 2.5rem;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -24,11 +23,8 @@
   --space-5: 1.25rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
   --space-16: 4rem;
   --space-20: 5rem;
-  --space-24: 6rem;
   --space-30: 7.5rem;
 
   --radius-sm: 0.5rem;
@@ -54,7 +50,7 @@
   --theme-font-size-mobile-cta: var(--text-md);
   --theme-font-size-quote-mark: 4rem;
   --theme-font-size-panel-title: var(--text-2xl);
-  --theme-font-size-hero-xl: clamp(2rem, 6vw, 4rem);
+  --theme-font-size-hero-xl: clamp(2rem, 6vw, 3.25rem);
   --theme-font-size-hero-lg: clamp(2rem, 5vw, 3.75rem);
   --theme-font-size-hero-mobile: clamp(2rem, 9vw, 2.75rem);
   --theme-font-size-heading-lg: clamp(2rem, 3.7vw, 3rem);
@@ -94,7 +90,6 @@
   --theme-color-line-photo: #efe8e5;
   --theme-color-accent: #e8e5de;
   --theme-color-accent-contrast: #202624;
-  --theme-color-quote: #d9d1cb;
   --theme-color-strong-surface: #202624;
   --theme-color-brand-soft: #202624;
   --theme-color-link-soft: #727272;
@@ -108,11 +103,6 @@
   --theme-card-tone-4: #f5d0ac;
   --theme-card-tone-5: #a9ddd6;
 
-  --theme-story-accent-1: #ff6a3d;
-  --theme-story-accent-2: #1d78ff;
-  --theme-story-accent-3: #0b9965;
-  --theme-story-accent-4: #f08a00;
-  --theme-story-accent-5: #6a56d9;
   --alt-bg: var(--theme-color-bg);
 }
 

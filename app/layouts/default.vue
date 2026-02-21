@@ -400,6 +400,7 @@ watch(
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
+  max-width: 1120px;
 }
 
 .nav-brand-row {

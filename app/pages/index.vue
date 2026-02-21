@@ -373,7 +373,7 @@ const goToResourcesWithNeed = (need: string) => {
 
 .shell {
   width: 100%;
-  max-width: 70rem;
+  max-width: 1120px;
   margin-inline: auto;
   padding-inline: var(--space-6);
 }
@@ -479,7 +479,6 @@ const goToResourcesWithNeed = (need: string) => {
 
 .hero-card {
   width: min(86vw, 25rem);
-  min-height: 20.5rem;
   padding: var(--space-5);
   border-radius: var(--radius-md);
   border: 1px solid color-mix(in oklab, var(--tone), var(--line) 72%);
