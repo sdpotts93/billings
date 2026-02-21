@@ -11,9 +11,19 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      htmlAttrs: {
+        lang: 'en'
+      },
       meta: [
+        { name: 'format-detection', content: 'telephone=no' },
+        { name: 'theme-color', content: '#f8f5ee' },
         { name: 'robots', content: 'noindex,nofollow,noarchive' },
         { name: 'googlebot', content: 'noindex,nofollow,noarchive' }
+      ],
+      link: [
+        { rel: 'icon', href: '/favicon.ico' }
       ]
     }
   },

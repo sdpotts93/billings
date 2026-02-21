@@ -1878,7 +1878,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             </p>
             <NuxtImg
               src="/images/form-alter.jpg"
-              alt="A man grabbing a medical device"
+              alt="A woman grabbing a medical device"
               loading="lazy"
             />
           </figure>
@@ -1959,7 +1959,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             <figure class="section-photo section-photo--cf section-photo--portrait grid-photo-item">
               <NuxtImg
                 src="/images/resources-cf.jpg"
-                alt="Clinician discussing care plan with patient"
+                alt="A caregiver helping a patient with Cystic Fibrosis"
                 loading="lazy"
               />
             </figure>
@@ -2031,7 +2031,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             <figure class="section-photo section-photo--conditions section-photo--square grid-photo-item">
               <NuxtImg
                 src="/images/resources-top.png"
-                alt="Medical records and notes on a desk"
+                alt="A picture of a pharmacy in billings"
                 loading="lazy"
               />
             </figure>
@@ -2129,7 +2129,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             >
               <NuxtImg
                 src="/images/resources-paperwork.jpg"
-                alt="Checklist documents and pen ready for planning"
+                alt="A man observes medical records and medicine on a desk"
                 loading="lazy"
               />
             </figure>

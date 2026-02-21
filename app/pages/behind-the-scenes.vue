@@ -520,7 +520,7 @@ onBeforeUnmount(() => {
   max-width: min(78%, 10ch);
   font-family: var(--theme-font-title);
   font-size: clamp(2.1rem, 8.8vw, 7.2rem);
-  line-height: 1.1;
+  line-height: 1;
   text-transform: lowercase;
   text-wrap: balance;
   color: var(--theme-color-text);

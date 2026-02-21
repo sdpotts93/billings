@@ -384,7 +384,7 @@ onBeforeUnmount(() => {
               <div class="hero-mission-image">
                 <NuxtImg
                   :src="heroMissionImageSrc"
-                  alt="Medical team collaborating in a hospital hallway"
+                  alt="A still of grace, lead actress, talking about the film"
                   loading="eager"
                 />
               </div>
