@@ -720,7 +720,7 @@ watch(
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.9rem;
+    gap: 1rem;
     padding-bottom: 0;
   }
 

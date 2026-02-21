@@ -126,7 +126,7 @@ const syncStoryFlow = () => {
     moveStoryFlowY = yStoryFlow(storyFlow)
   }
 
-  const storyFlowLift = prefersReducedMotion.value ? 0 : -128 * segment(stageProgress, 0.94, 1)
+  const storyFlowLift = prefersReducedMotion.value ? 0 : -90 * segment(stageProgress, 0.94, 1)
   moveStoryFlowY(storyFlowLift)
 }
 
@@ -534,7 +534,7 @@ onBeforeUnmount(() => {
   max-width: 47.5rem;
   font-size: var(--theme-font-size-brand);
   line-height: 1.5;
-  color: var(--muted);
+  color: var(--theme-color-muted);
 }
 
 .story-stage {
@@ -625,14 +625,14 @@ onBeforeUnmount(() => {
   align-items: center;
   text-align: center;
   padding: clamp(1.4rem, 3vw, 3rem);
-  background:var(--muted);
+  background:var(--theme-color-muted);
 }
 
 .hero-mission-kicker {
   margin: 0;
-  font-size: var(--fs-brand);
+  font-size: var(--theme-font-size-brand);
   font-weight: 700;
-  color: var(--accent-contrast);
+  color: var(--theme-color-accent-contrast);
 }
 
 .hero-mission-title {
@@ -640,7 +640,7 @@ onBeforeUnmount(() => {
   max-width: 16ch;
   font-family: var(--theme-font-title);
   font-size: clamp(1.9rem, 3.5vw, 3.7rem);
-  line-height: 1.1;
+  line-height: 1;
 }
 
 .hero-mission-image {
@@ -690,37 +690,37 @@ onBeforeUnmount(() => {
 }
 
 .hero-metric-overline {
-    margin: 0.9rem auto 0;
+    margin: 1rem auto 0;
     max-width: 38.75rem;
     color: var(--theme-color-text);
-    line-height: 1.5;
-    font-size: var(--fs-brand);
+    line-height: 1;
+    font-size: 2rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    font-weight: 700;
+    font-family: var(--theme-font-title);
 }
 
 .hero-metric-number {
   margin: 0;
   font-family: var(--theme-font-title);
-  font-size: 10rem;
-  line-height: 1.1;
+  font-size: 8rem;
+  line-height: 1;
   letter-spacing: -0.034em;
-  color: var(--muted);
+  color: var(--theme-color-muted);
 }
 
 .hero-metric-label {
-  margin: 0.7rem auto 0;
+  margin: 0rem auto 0;
   max-width: 24ch;
-  font-size: clamp(0.78rem, 1.2vw, 1.02rem);
+  font-size: var(--theme-font-size-brand);
   line-height: 1.5;
-  color: var(--muted);
+  color: var(--theme-color-muted);
   text-transform: lowercase;
 }
 
 .hero-metric-source {
-  margin: 0.55rem 0 0;
-  font-size: 0.66rem;
+  margin: 0.5rem 0 0;
+  font-size: var(--theme-font-size-caption);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #959595;
@@ -762,14 +762,14 @@ onBeforeUnmount(() => {
 .manifesto-copy {
   padding-right: clamp(0.4rem, 2vw, 1.8rem);
   position: sticky;
-  top: 5.75rem;
+  top: calc(var(--layout-header-height) + 90px + 2rem);
   align-self: start;
 }
 
 .manifesto-full {
   margin: 0;
   font-size: clamp(1.4rem, 3.5vw, 4.2rem);
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: -0.03em;
   max-width: 48.75rem;
   font-family: var(--theme-font-title);
@@ -810,7 +810,7 @@ onBeforeUnmount(() => {
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: #d6d9de;
-  box-shadow: 0.625rem 0.625rem 0 var(--muted);
+  box-shadow: 0.625rem 0.625rem 0 var(--theme-color-muted);
 }
 
 .team-avatar img {
@@ -825,14 +825,13 @@ onBeforeUnmount(() => {
   margin: 0;
   font-size: 2rem;
   line-height: 1;
-  font-weight: 700;
   font-family: var(--theme-font-title);
-  color: var(--muted);
+  color: var(--theme-color-muted);
 }
 
 .team-card-copy .role {
   margin: 0.22rem 0 0;
-  font-size: 1rem;
+  font-size: var(--theme-font-size-brand);
   line-height: 1.5;
   color: #959595;;
 }
@@ -869,15 +868,15 @@ onBeforeUnmount(() => {
   margin-left: auto;
   width: clamp(11rem, 16vw, 15.5rem);
   border-radius: var(--radius-lg);
-  background: var(--muted);
-  color: var(--accent-contrast);
+  background: var(--theme-color-muted);
+  color: var(--theme-color-accent-contrast);
   padding: 0.9rem 0.85rem;
   overflow: hidden;
 }
 
 .chapter-card p {
   margin: 0;
-  font-size: var(--theme-font-size-sm);
+  font-size: var(--theme-font-size-caption);
   line-height: 1.5;
   position: relative;
   z-index: 1;
@@ -897,7 +896,7 @@ onBeforeUnmount(() => {
 .after-note p {
   margin: 0.65rem 0 0;
   max-width: 42.5rem;
-  color: var(--muted);
+  color: var(--theme-color-muted);
   line-height: 1.5;
 }
 
@@ -1021,11 +1020,12 @@ onBeforeUnmount(() => {
 
   .team-avatar {
     border-radius: 0.375rem;
-    box-shadow: 0.375rem 0.375rem 0 var(--muted);
+    box-shadow: 0.375rem 0.375rem 0 var(--theme-color-muted);
   }
 
   .team-rail-wrap {
     min-height: 52vh;
+    margin-top: 2rem;
   }
 
   .team-card {
@@ -1128,10 +1128,6 @@ onBeforeUnmount(() => {
     font-size: 1rem;
     line-height: 1.5;
     max-width: 23ch;
-  }
-
-  .hero-metric-source {
-    font-size: var(--theme-font-size-caption);
   }
 
   .headline-layer h2,
