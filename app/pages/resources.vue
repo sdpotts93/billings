@@ -1041,42 +1041,6 @@ const result = ref<GeneratedResult | null>(null)
 const activeTopicFilter = ref('all')
 const route = useRoute()
 
-const updatesEmail = ref('')
-const updatesStatus = ref<'idle' | 'sending' | 'success' | 'error'>('idle')
-const updatesError = ref('')
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-const submitUpdatesEmail = async () => {
-  const email = updatesEmail.value.trim()
-  updatesError.value = ''
-
-  if (!email || !EMAIL_PATTERN.test(email)) {
-    updatesStatus.value = 'error'
-    updatesError.value = 'Enter a valid email address.'
-    return
-  }
-
-  updatesStatus.value = 'sending'
-  try {
-    await $fetch('/api/resources-email', {
-      method: 'POST',
-      body: { email }
-    })
-    updatesStatus.value = 'success'
-  } catch (error) {
-    updatesStatus.value = 'error'
-    updatesError.value = 'Could not submit email right now. Please try again later.'
-    console.error('Could not submit updates email.', error)
-  }
-}
-
-const resetUpdatesForm = () => {
-  if (updatesStatus.value !== 'sending') {
-    updatesStatus.value = 'idle'
-  }
-  updatesError.value = ''
-}
-
 const needQuestion = wizardQuestions.find(question => question.id === 'need')
 const validNeedValues = new Set((needQuestion?.options ?? []).map(option => option.value))
 const queryNeedValue = Array.isArray(route.query.need) ? route.query.need[0] : route.query.need
@@ -2328,52 +2292,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           </div>
         </section>
 
-        <section
-          id="updates"
-          class="updates-section content-section section-updates"
-        >
-          <h2 class="title-with-icon">
-            <UIcon
-              name="i-lucide-mail"
-              class="title-icon"
-            /> Get updates (optional)
-          </h2>
-          <p>Occasional Billings updates. We only collect your email address (we do not collect your wizard answers).</p>
-          <form
-            class="updates-form"
-            @submit.prevent="submitUpdatesEmail"
-          >
-            <input
-              v-model="updatesEmail"
-              type="email"
-              inputmode="email"
-              autocomplete="email"
-              placeholder="you@example.com"
-              :disabled="updatesStatus === 'sending'"
-              @input="resetUpdatesForm"
-            >
-            <button
-              type="submit"
-              class="primary-btn"
-              :disabled="updatesStatus === 'sending'"
-            >
-              {{ updatesStatus === 'sending' ? 'Sending...' : 'Sign up' }}
-            </button>
-          </form>
-          <p
-            v-if="updatesStatus === 'success'"
-            class="updates-status updates-status--success"
-          >
-            Thanks. You are on the list.
-          </p>
-          <p
-            v-else-if="updatesStatus === 'error'"
-            class="updates-status updates-status--error"
-          >
-            {{ updatesError }}
-          </p>
-        </section>
-
         <section class="footer-lines content-section section-footer">
           <a href="mailto:resources@billings.app?subject=Resource%20update">
             <UIcon
@@ -2434,12 +2352,12 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 
 .hero-layout {
   width: 100%;
-  max-width: 82.5rem;
   margin-inline: auto;
   height: 100%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(1.2rem, 2.8vw, 2.8rem);
+  padding-inline: 2.5rem;
 }
 
 .hero-copy {
@@ -2790,43 +2708,6 @@ h1 {
 
 .state-input-wrap input:focus {
   outline: none;
-}
-
-.updates-form {
-  margin-top: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-.updates-form input {
-  flex: 1 1 16rem;
-  max-width: 26rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
-  font: inherit;
-  background: #ffffff;
-  color: var(--theme-color-accent-contrast);
-  font-size: var(--theme-font-size-form);
-}
-
-.updates-form input:focus {
-  outline: none;
-}
-
-.updates-status {
-  margin: var(--space-2) 0 0;
-  font-size: var(--theme-font-size-brand);
-}
-
-.updates-status--success {
-  color: var(--theme-color-muted);
-}
-
-.updates-status--error {
-  color: #b84a4a;
 }
 
 .state-actions {
@@ -3662,6 +3543,7 @@ h1 {
   .hero-layout {
     max-width: 76.25rem;
     grid-template-columns: 1fr;
+    padding-inline: 0;
   }
 
   .question-card {

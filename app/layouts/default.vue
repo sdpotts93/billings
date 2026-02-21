@@ -46,9 +46,13 @@ const resourceColumns = [
 const headerEl = ref<HTMLElement | null>(null)
 const headerHeight = ref(69)
 const isMobileMenuOpen = ref(false)
+const updatesEmail = ref('')
+const updatesStatus = ref<'idle' | 'sending' | 'success' | 'error'>('idle')
+const updatesError = ref('')
 const currentYear = new Date().getFullYear()
 const route = useRoute()
 const isResourcesRoute = computed(() => route.path === '/resources' || route.path.startsWith('/resources/'))
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const isCurrentRoute = (to: string) => {
   if (to === '/') {
@@ -114,6 +118,38 @@ const scrollToTop = () => {
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+const submitUpdatesEmail = async () => {
+  const email = updatesEmail.value.trim()
+  updatesError.value = ''
+
+  if (!email || !EMAIL_PATTERN.test(email)) {
+    updatesStatus.value = 'error'
+    updatesError.value = 'Enter a valid email address.'
+    return
+  }
+
+  updatesStatus.value = 'sending'
+  try {
+    await $fetch('/api/resources-email', {
+      method: 'POST',
+      body: { email }
+    })
+    updatesStatus.value = 'success'
+  } catch (error) {
+    updatesStatus.value = 'error'
+    updatesError.value = 'Could not submit email right now. Please try again later.'
+    console.error('Could not submit updates email.', error)
+  }
+}
+
+const resetUpdatesForm = () => {
+  if (updatesStatus.value !== 'sending') {
+    updatesStatus.value = 'idle'
+  }
+
+  updatesError.value = ''
 }
 
 onMounted(() => {
@@ -264,7 +300,50 @@ watch(
     <footer class="site-footer">
       <div class="layout-shell footer-shell">
         <div class="footer-top">
-          <div class="footer-column">
+          <div class="footer-column footer-column--updates">
+            <div class="footer-updates">
+              <h3>GET UPDATES</h3>
+              <p class="footer-updates-copy">
+                Occasional Billings updates.
+              </p>
+              <form
+                v-if="updatesStatus !== 'success'"
+                class="footer-updates-form"
+                @submit.prevent="submitUpdatesEmail"
+              >
+                <input
+                  v-model="updatesEmail"
+                  type="email"
+                  inputmode="email"
+                  autocomplete="email"
+                  placeholder="you@example.com"
+                  :disabled="updatesStatus === 'sending'"
+                  @input="resetUpdatesForm"
+                >
+                <button
+                  type="submit"
+                  class="footer-updates-btn"
+                  :disabled="updatesStatus === 'sending'"
+                >
+                  {{ updatesStatus === 'sending' ? 'Sending...' : 'Sign up' }}
+                </button>
+              </form>
+              <p
+                v-if="updatesStatus === 'success'"
+                class="footer-updates-status footer-updates-status--success"
+              >
+                Thanks. You are on the list.
+              </p>
+              <p
+                v-else-if="updatesStatus === 'error'"
+                class="footer-updates-status footer-updates-status--error"
+              >
+                {{ updatesError }}
+              </p>
+            </div>
+          </div>
+
+          <div class="footer-column footer-column--sitemap">
             <h3>Sitemap</h3>
             <ul>
               <li
@@ -614,12 +693,16 @@ watch(
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 3rem;
+  gap: 1rem;
   padding-top: clamp(2.3rem, 4.9vw, 3.5rem);
 }
 
 .footer-column {
   min-width: min(11rem, 100%);
+}
+
+.footer-top .footer-column--updates {
+  min-width: 25ch;
 }
 
 .footer-column h3 {
@@ -663,6 +746,77 @@ watch(
   text-underline-offset: 0.5em;
 }
 
+.footer-updates {
+  max-width: 28rem;
+  padding-right: 3rem;
+}
+
+.footer-updates-copy {
+  margin: clamp(0.7rem, 1.2vw, 1rem) 0 0;
+  color: var(--theme-color-accent-contrast);
+  font-size: var(--theme-font-size-brand);
+  font-family: var(--font-sans);
+}
+
+.footer-updates-form {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.footer-updates-form input {
+  flex: none;
+  width: 100%;
+  border: 1px solid #b9bec8;
+  border-radius: 8px;
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+  font-size: var(--theme-font-size-form);
+  color: var(--theme-color-accent-contrast);
+  background: #fff;
+}
+
+.footer-updates-form input:focus {
+  outline: none;
+}
+
+.footer-updates-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  white-space: nowrap;
+  background: var(--theme-color-accent-contrast);
+  color: var(--theme-color-muted);
+  font-size: var(--theme-font-size-btn);
+  line-height: 1.5;
+  font-weight: 700;
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+}
+
+.footer-updates-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.footer-updates-status {
+  margin: 0.65rem 0 0;
+  font-size: var(--theme-font-size-brand);
+}
+
+.footer-updates-status--success {
+  color: var(--theme-color-accent-contrast);
+}
+
+.footer-updates-status--error {
+  color: #b84a4a;
+}
+
 .footer-bottom {
   display: flex;
   justify-content: space-between;
@@ -704,6 +858,19 @@ watch(
   padding: 0;
 }
 
+@media screen and (min-width: 991px) {
+  .footer-top {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: clamp(1.2rem, 2.4vw, 3rem);
+  }
+
+  .footer-column {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
 @media screen and (max-width: 1024px) {
   .footer-shell {
     gap: 3.1rem;
@@ -736,6 +903,9 @@ watch(
     display: none;
   }
 
+      .footer-updates {
+        padding-right: 0;
+      }
   .nav-cta {
     margin-inline-start: auto;
     font-size: var(--theme-font-size-sm);
@@ -770,6 +940,17 @@ watch(
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2.2rem;
     padding-top: 2rem;
+  }
+
+  .footer-column--updates {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .footer-updates {
+    max-width: 100%;
+    width: 100%;
+    padding-right: 0;
   }
 
   .footer-logo {
