@@ -2356,7 +2356,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 
 .page-shell {
   width: 100%;
-  max-width: 76.25rem;
+  max-width: 1220px;
   margin-inline: auto;
   padding: var(--space-16) var(--space-6) 4rem;
   display: grid;
@@ -2370,8 +2370,10 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   height: var(--hero-available-height);
   min-height: var(--hero-available-height);
   max-height: var(--hero-available-height);
-  padding: var(--hero-top-pad) var(--hero-inline-pad);
+  padding: var(--hero-top-pad) var(--space-6);
   overflow: hidden;
+  max-width: 1320px;
+  margin: 0 auto;
 }
 
 .hero-layout {
@@ -2435,6 +2437,8 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   max-height: none;
   padding-bottom: 0;
   overflow: visible;
+  max-width: 1220px;
+  margin: 0 auto;
 }
 
 .hero-transform.is-result .hero-layout {
@@ -2463,13 +2467,13 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   background: var(--section-rule, #8b97b4);
 }
 
-.section-help { --section-rule: #c5862e; padding-top: var(--space-30); }
-.section-cf { --section-rule: #c5862e; padding-top: var(--space-30);}
-.section-conditions { --section-rule: #c5862e; padding-top: var(--space-30);}
-.section-docs { --section-rule: #c5862e;padding-top: var(--space-30); }
-.section-directory { --section-rule: #c5862e;padding-top: var(--space-30); }
-.section-faq { --section-rule: #c5862e;padding-top: var(--space-30); }
-.section-footer { --section-rule: #c5862e;padding-top: var(--space-30); }
+.section-help { --section-rule: #c5862e; padding-top: var(--space-24); }
+.section-cf { --section-rule: #c5862e; padding-top: var(--space-24);}
+.section-conditions { --section-rule: #c5862e; padding-top: var(--space-24);}
+.section-docs { --section-rule: #c5862e;padding-top: var(--space-24); }
+.section-directory { --section-rule: #c5862e;padding-top: var(--space-24); }
+.section-faq { --section-rule: #c5862e;padding-top: var(--space-24); }
+.section-footer { --section-rule: #c5862e;padding-top: var(--space-24); }
 
 .wizard-state {
   margin-top: 0;
@@ -2539,7 +2543,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 
 h1 {
   margin: 0.3rem 0 0;
-  font-size: clamp(1.75rem, 4vw, 2.8rem);
+  font-size:var(--theme-font-size-display-md);
   line-height: 1.1;
   color: var(--ink);
 }
@@ -2567,6 +2571,9 @@ h1 {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.help-now-grid .section-photo img {
+  min-height: 400px;
 }
 
 .section-photo--wide {
@@ -2694,6 +2701,7 @@ h1 {
   background: var(--muted);
   color: var(--accent-contrast);
   padding: var(--space-3) var(--space-4);
+  font-size: var(--theme-font-size-brand-mobile);
   transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
@@ -2709,13 +2717,14 @@ h1 {
 
 .state-input-wrap input {
   width: 100%;
+  max-width: 500px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: var(--space-3);
   font: inherit;
   background: #ffffff;
   color: var(--accent-contrast);
-  font-size: var(--fs-brand);
+  font-size: var(--theme-font-size-form);
 }
 
 .state-input-wrap input:focus {
@@ -2732,6 +2741,7 @@ h1 {
   background: var(--accent);
   color: var(--accent-contrast);
   padding: var(--space-3) var(--space-4);
+  font-size: var(--theme-font-size-btn);
 }
 
 .directory-group .resource-title {
@@ -2745,6 +2755,7 @@ h1 {
   border-color: var(--muted);
   color: var(--muted);
   padding: var(--space-3) var(--space-4);
+  font-size: var(--theme-font-size-btn);
 }
 
 .back-btn {
@@ -3015,7 +3026,7 @@ h1 {
 .condition-links a {
   display: flex;
   margin-top: var(--space-2);
-  font-size: var(--theme-font-size-sm);
+  font-size: var(--text-xs);
   font-weight: 700;
   color: var(--accent);
   text-decoration: none;
@@ -3028,7 +3039,7 @@ h1 {
 .doc-card a {
   display: flex;
   margin-top: 1rem;
-  font-size: var(--theme-font-size-sm);
+  font-size: var(--text-xs);
   font-weight: 700;
   text-decoration: none;
   align-items: anchor-center;
@@ -3097,7 +3108,7 @@ h1 {
   line-height: 1.35;
   min-height: 5.75rem;
   text-align: center;
-  font-size: var(--theme-font-size-body-lg);
+  font-size: var(--theme-font-size-brand-mobile);
   box-shadow: var(--surface-shadow);
   transition: transform 160ms ease, box-shadow 160ms ease;
   column-gap: 0.3rem;
@@ -3132,7 +3143,7 @@ h1 {
 .doc-card h3,
 .directory-group h3 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;
   line-height: 1.28;
 }
 
@@ -3141,6 +3152,7 @@ h1 {
   margin: 0.64rem 0 0;
   color: var(--muted);
   line-height: 1.5;
+  font-size: var(--text-xs);
 }
 
 .inline-downloads {
@@ -3151,7 +3163,7 @@ h1 {
 
 .inline-downloads a {
   margin-top: 0;
-  font-size: var(--theme-font-size-sm);
+  font-size: var(--text-xs);
   text-decoration: underline;
 }
 
@@ -3194,6 +3206,7 @@ h1 {
   margin: 0.52rem 0 0;
   color: var(--muted);
   line-height: 1.5;
+  font-size: var(--text-xs);
 }
 
 .condition-impact {
@@ -3339,6 +3352,7 @@ h1 {
 .doc-card .doc-row-copy {
   display: block;
   flex: 1;
+  font-size: var(--text-xs);
 }
 
 .directory-grid {
@@ -3609,7 +3623,6 @@ h1 {
   }
 
   h1 {
-    font-size: clamp(1.45rem, 7vw, 2rem);
     line-height: 1.16;
   }
 

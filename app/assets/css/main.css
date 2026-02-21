@@ -57,7 +57,7 @@
   --theme-font-size-hero-lg: clamp(2rem, 5vw, 3.75rem);
   --theme-font-size-hero-mobile: clamp(2rem, 9vw, 2.75rem);
   --theme-font-size-heading-lg: clamp(2rem, 3.7vw, 3rem);
-  --theme-font-size-heading-md: clamp(1.75rem, 4.2vw, 3rem);
+  --theme-font-size-heading-md: clamp(1.75rem, 5vw, 2.5rem);
   --theme-font-size-display-md: clamp(1.5rem, 2.7vw, 2rem);
   --theme-font-size-display-lg: clamp(2.25rem, 4vw, 3rem);
   --theme-font-size-display-xl: clamp(2rem, 5vw, 3rem);
