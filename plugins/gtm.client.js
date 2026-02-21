@@ -1,11 +1,47 @@
 // plugins/gtm.client.js
 
 export default defineNuxtPlugin(() => {
-  console.log('GTM plugin initialized')
+  const CONSENT_STORAGE_KEY = 'billings_cookie_consent'
+  const CONSENT_COOKIE_KEY = 'billings_cookie_consent'
+  const CONSENT_GRANTED_EVENT = 'billings:cookie-consent-granted'
+  const CONSENT_ACCEPTED_VALUE = 'accepted'
+  const INTERACTION_EVENTS = ['scroll', 'mousemove', 'touchstart']
 
   const initTrackingOnEvent = (event) => {
     initTrackingScripts()
     event.currentTarget.removeEventListener(event.type, initTrackingOnEvent)
+  }
+
+  const addInteractionListeners = () => {
+    INTERACTION_EVENTS.forEach((interactionEvent) => {
+      document.addEventListener(interactionEvent, initTrackingOnEvent, { passive: true })
+    })
+  }
+
+  const removeInteractionListeners = () => {
+    INTERACTION_EVENTS.forEach((interactionEvent) => {
+      document.removeEventListener(interactionEvent, initTrackingOnEvent)
+    })
+  }
+
+  const getConsentFromCookie = () => {
+    return document.cookie
+      .split(';')
+      .map(cookiePart => cookiePart.trim())
+      .find(cookiePart => cookiePart.startsWith(`${CONSENT_COOKIE_KEY}=`))
+      ?.split('=')[1] ?? null
+  }
+
+  const hasTrackingConsent = () => {
+    try {
+      if (window.localStorage.getItem(CONSENT_STORAGE_KEY) === CONSENT_ACCEPTED_VALUE) {
+        return true
+      }
+    } catch {
+      // Ignore storage access errors and fall back to cookies.
+    }
+
+    return getConsentFromCookie() === CONSENT_ACCEPTED_VALUE
   }
 
   /** Initiates all tracking scripts **/
@@ -14,6 +50,7 @@ export default defineNuxtPlugin(() => {
       return false
     }
     window.trackingDidInit = true
+    removeInteractionListeners()
     initGTM()
   }
 
@@ -44,11 +81,15 @@ export default defineNuxtPlugin(() => {
     }
   }
 
-  initOnLoad()
+  const startTracking = () => {
+    initOnLoad()
+    addInteractionListeners()
+  }
 
-  // Attach event listeners
+  if (hasTrackingConsent()) {
+    startTracking()
+    return
+  }
 
-  document.addEventListener('scroll', initTrackingOnEvent)
-  document.addEventListener('mousemove', initTrackingOnEvent)
-  document.addEventListener('touchstart', initTrackingOnEvent)
+  window.addEventListener(CONSENT_GRANTED_EVENT, startTracking, { once: true })
 })

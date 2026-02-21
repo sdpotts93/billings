@@ -421,6 +421,8 @@ watch(
         </div>
       </div>
     </footer>
+
+    <CookieConsentBanner />
   </div>
 </template>
 
