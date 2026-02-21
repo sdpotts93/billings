@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Flip } from 'gsap/Flip'
-import { gsap } from 'gsap'
+import { gsap } from 'gsap/gsap-core'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const heroImageSrc = '/images/behind-the-scenes.jpg'
@@ -435,14 +435,14 @@ onBeforeUnmount(() => {
 
 .intro-copy {
   margin-inline: auto;
-  max-width: 860px;
+  max-width: 53.75rem;
   padding: clamp(2.1rem, 6vw, 4.2rem) 0 0;
   text-align: center;
 }
 
 .eyebrow {
     margin: 0.9rem auto 0;
-    max-width: 620px;
+    max-width: 38.75rem;
     color: var(--muted);
     line-height: 1.45;
     font-size: var(--fs-brand);
@@ -453,7 +453,7 @@ onBeforeUnmount(() => {
 
 .intro-copy h2 {
   margin: 0.45rem auto 0;
-  max-width: 720px;
+  max-width: 45rem;
   font-family: var(--font-title);
   font-size: var(--fs-hero-lg);
   line-height: 1.02;
@@ -461,7 +461,7 @@ onBeforeUnmount(() => {
 
 .intro-copy > p:not(.eyebrow) {
   margin: 0.9rem auto 0;
-  max-width: 620px;
+  max-width: 38.75rem;
   color: var(--muted);
   line-height: 1.45;
   font-size: var(--fs-brand);
@@ -470,7 +470,7 @@ onBeforeUnmount(() => {
 .studio-life {
   background: var(--theme-color-bg);
   margin-inline: calc(var(--frame-gap) * -1);
-  padding: clamp(0.5rem, 1.4vw, 0.95rem) var(--frame-gap) var(--frame-gap);
+  padding: clamp(var(--space-2), 1.4vw, var(--space-4)) var(--frame-gap) var(--frame-gap);
 }
 
 .studio-life-copy {
@@ -498,14 +498,14 @@ onBeforeUnmount(() => {
 }
 
 .studio-life-grid {
-  --studio-grid-gap: clamp(8px, 1.15vw, 14px);
+  --studio-grid-gap: clamp(0.5rem, 1.15vw, 0.875rem);
   margin-top: clamp(1.35rem, 2.4vw, 1.95rem);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-template-rows: repeat(3, minmax(0, 1fr));
   gap: var(--studio-grid-gap);
   position: relative;
-  height: clamp(420px, 70vw, 980px);
+  height: clamp(26.25rem, 70vw, 61.25rem);
 }
 
 .studio-tile {
@@ -541,13 +541,13 @@ onBeforeUnmount(() => {
 
 .hero-media {
   position: relative;
-  border-radius: 24px;
+  border-radius: 1.5rem;
   overflow: hidden;
   width: 100%;
-  height: calc(100vh - 68px - (var(--frame-gap) * 2));
-  min-height: 380px;
+  height: calc(100vh - 4.25rem - (var(--frame-gap) * 2));
+  min-height: 23.75rem;
   background: #d5ddd6;
-  box-shadow: 24px 24px 0px var(--muted);
+  box-shadow: 1.5rem 1.5rem 0 var(--muted);
 }
 
 .hero-media::after {
@@ -569,14 +569,14 @@ onBeforeUnmount(() => {
 }
 
 .hero-play {
-  --play-offset-x: 0px;
-  --play-offset-y: 0px;
+  --play-offset-x: 0;
+  --play-offset-y: 0;
   position: absolute;
   top: 50%;
   left: 50%;
   z-index: 4;
-  width: clamp(84px, 10vw, 132px);
-  height: clamp(84px, 10vw, 132px);
+  width: clamp(5.25rem, 10vw, 8.25rem);
+  height: clamp(5.25rem, 10vw, 8.25rem);
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.45);
   background: color-mix(in oklab, #101316, transparent 34%);
@@ -585,8 +585,8 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 18px 42px rgba(4, 6, 8, 0.35);
-  backdrop-filter: blur(6px);
+  box-shadow: 0 1.125rem 2.625rem rgba(4, 6, 8, 0.35);
+  backdrop-filter: blur(0.375rem);
   transform: translate(
     calc(-50% + var(--play-offset-x)),
     calc(-50% + var(--play-offset-y))
@@ -595,8 +595,8 @@ onBeforeUnmount(() => {
 }
 
 .hero-play :deep(.iconify) {
-  width: clamp(34px, 3.5vw, 46px);
-  height: clamp(34px, 3.5vw, 46px);
+  width: clamp(2.125rem, 3.5vw, 2.875rem);
+  height: clamp(2.125rem, 3.5vw, 2.875rem);
   margin-left: 0.15rem;
 }
 
@@ -605,11 +605,11 @@ onBeforeUnmount(() => {
 }
 
 .hero-play:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 4px;
+  outline: 0.125rem solid #ffffff;
+  outline-offset: 0.25rem;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 64rem) {
   .intro-copy h2 {
     font-size: var(--fs-hero-mobile);
   }
@@ -624,8 +624,8 @@ onBeforeUnmount(() => {
   }
 
   .hero-media {
-    border-radius: 18px;
-    box-shadow: 12px 12px 0px var(--muted);
+    border-radius: 1.125rem;
+    box-shadow: 0.75rem 0.75rem 0 var(--muted);
   }
 
   .studio-life-copy {
@@ -647,14 +647,14 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
   .hero-play {
-    width: clamp(72px, 22vw, 92px);
-    height: clamp(72px, 22vw, 92px);
+    width: clamp(4.5rem, 22vw, 5.75rem);
+    height: clamp(4.5rem, 22vw, 5.75rem);
   }
 
   .page-shell {
-    padding-inline: 16px;
+    padding-inline: var(--space-4);
   }
 
   .hero-media {

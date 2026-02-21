@@ -202,10 +202,10 @@ const goToResourcesWithNeed = (need: string) => {
         <article class="quote-card">
           <div class="quote-left">
             <p class="quote">
-              "One of the goals of the movie is to shed light on the broken American healthcare system."
+              "My real hope for this film is that it inspires people to start using their voices for good and really fight for those who can't fight for themselves."
             </p>
             <p class="meta">
-              Quote from the Billings movie team
+              Quote from Alexander Ludwig
             </p>
           </div>
           <div class="quote-foot">
@@ -359,7 +359,7 @@ const goToResourcesWithNeed = (need: string) => {
   --fs-display-md: var(--theme-font-size-display-md);
   --fs-display-lg: var(--theme-font-size-display-lg);
   --fs-display-xl: var(--theme-font-size-display-xl);
-  --lane-gap: 24px;
+  --lane-gap: var(--space-6);
   width: 100%;
   background: var(--bg);
   color: var(--ink);
@@ -373,32 +373,14 @@ const goToResourcesWithNeed = (need: string) => {
 
 .shell {
   width: 100%;
-  max-width: 1120px;
+  max-width: 70rem;
   margin-inline: auto;
-  padding-inline: 24px;
+  padding-inline: var(--space-6);
 }
 
 .top-nav {
   border-bottom: 1px solid var(--line-soft);
   background: var(--bg);
-}
-
-.nav-shell {
-  min-height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.brand {
-  color: var(--ink);
-  text-decoration: none;
-  font-size: 2.5rem;
-  /* font-weight: 800; */
-  letter-spacing: -0.02em;
-  font-family: var(--font-title);
-  line-height: 1;
-  letter-spacing: 0.009em;
 }
 
 .nav-links {
@@ -427,7 +409,7 @@ const goToResourcesWithNeed = (need: string) => {
   color: white;
   font-size: var(--fs-btn);
   font-weight: 700;
-  padding: 0.52rem 0.92rem;
+  padding: var(--space-2) var(--space-4);
   cursor: pointer;
   text-decoration: none;
 }
@@ -437,7 +419,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .hero-header h1 {
-  max-width: 760px;
+  max-width: 29ch;
   margin: 0 auto;
   text-align: center;
   font-size: var(--fs-hero-xl);
@@ -453,10 +435,10 @@ const goToResourcesWithNeed = (need: string) => {
     width: 100vw;
     margin-left: calc(50% - 50vw);
     overflow: hidden;
-    padding-top: 32px;
-    padding-bottom: 16px;
-    margin-top: -12px;
-    margin-bottom: -14px;
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-4);
+    margin-top: calc(var(--space-3) * -1);
+    margin-bottom: calc(var(--space-3) * -1);
     position: relative;
 }
 
@@ -465,7 +447,7 @@ const goToResourcesWithNeed = (need: string) => {
   content: '';
   position: absolute;
   top: 0;
-  width: clamp(36px, 7vw, 88px);
+  width: clamp(2.25rem, 7vw, 5.5rem);
   height: 100%;
   z-index: 2;
   pointer-events: none;
@@ -496,25 +478,25 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .hero-card {
-  width: min(86vw, 400px);
-  min-height: 330px;
-  padding: 20px;
-  border-radius: 10px;
+  width: min(86vw, 25rem);
+  min-height: 20.5rem;
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
   border: 1px solid color-mix(in oklab, var(--tone), var(--line) 72%);
   background: #e7e4de;
-  box-shadow: 0 10px 20px rgba(29, 23, 69, 0.06);
+  box-shadow: 0 0.625rem 1.25rem rgba(29, 23, 69, 0.06);
   display: grid;
   grid-template-columns: 55% minmax(0, 1fr);
-  gap: 12px;
+  gap: var(--space-3);
   transition: transform 220ms ease, box-shadow 220ms ease;
   will-change: transform;
 }
 
 .card-media {
   position: relative;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  min-height: 188px;
+  min-height: 11.75rem;
 }
 
 .card-media img {
@@ -530,7 +512,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .source {
-  margin: 2px 0 0;
+  margin: 0.125rem 0 0;
   font-size: var(--fs-caption-plus);
   letter-spacing: 0.005em;
   color: var(--brand-soft);
@@ -560,12 +542,12 @@ const goToResourcesWithNeed = (need: string) => {
   text-transform: none;
   font-family: var(--font-sans) !important;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
   font-size: 2rem;
   line-height: 1.1;
   width: 70%;
   margin: 0 auto;
-  margin-bottom: 32px;
+  margin-bottom: var(--space-8);
   letter-spacing: 0;
 }
 .social-proof {
@@ -591,11 +573,11 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .testimonial {
-  padding-top: 120px;
+  padding-top: var(--space-30);
 }
 
 .quote-card {
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   border: 1px solid var(--line);
   background: var(--surface);
   padding: 1.5rem;
@@ -613,12 +595,12 @@ const goToResourcesWithNeed = (need: string) => {
 
 .quote {
   margin: 0.65rem 0;
-  max-width: 760px;
-  font-size: 2rem;
+  max-width: 47.5rem;
+  font-size: 1.5rem;
   line-height: 1.3;
   letter-spacing: -0.008em;
   font-weight: 600;
-  margin-bottom: 80px;
+  margin-bottom: 5rem;
   color:  #7d5e4a;;
 }
 
@@ -674,7 +656,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .stats article {
-  min-height: 130px;
+  min-height: 8rem;
 }
 
 .stats h3 {
@@ -685,7 +667,7 @@ const goToResourcesWithNeed = (need: string) => {
 
 .stats p {
   margin: 0.5rem 0 0;
-  max-width: 260px;
+  max-width: 16.25rem;
   font-size: var(--theme-font-size-brand);
   line-height: 1.32;
   color: var(--muted);
@@ -693,11 +675,11 @@ const goToResourcesWithNeed = (need: string) => {
 
 .impact {
   margin-top: 2.8rem;
-  padding-top: 120px;
+  padding-top: var(--space-30);
 }
 
 .impact h2 {
-  max-width: 620px;
+  max-width: 38.75rem;
   margin: 0;
   font-size: var(--fs-heading-md);
   line-height: 1;
@@ -710,7 +692,7 @@ const goToResourcesWithNeed = (need: string) => {
   color: white;
   font-size: var(--fs-btn);
   font-weight: 700;
-  padding: 0.52rem 0.92rem;
+  padding: var(--space-2) var(--space-4);
   cursor: pointer;
   text-decoration: none;
 }
@@ -723,9 +705,9 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .impact-card {
-  min-height: 260px;
+  min-height: 16.25rem;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   background: var(--surface);
   padding: 1rem;
   display: flex;
@@ -740,8 +722,8 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .impact-card:focus-visible {
-  outline: 2px solid color-mix(in oklab, var(--accent), #ffffff 70%);
-  outline-offset: 2px;
+  outline: 0.125rem solid color-mix(in oklab, var(--accent), #ffffff 70%);
+  outline-offset: 0.125rem;
 }
 
 .impact-card:first-child {
@@ -817,7 +799,7 @@ const goToResourcesWithNeed = (need: string) => {
 
 .cta {
   text-align: center;
-  padding: 120px 0 5rem;
+  padding: var(--space-30) 0 5rem;
 }
 
 .cta h2 {
@@ -840,7 +822,7 @@ const goToResourcesWithNeed = (need: string) => {
   color: var(--accent-contrast);
   font-size: var(--fs-btn);
   font-weight: 700;
-  padding: 0.52rem 0.92rem;
+  padding: var(--space-2) var(--space-4);
   cursor: pointer;
   text-decoration: none;
 }
@@ -853,10 +835,10 @@ const goToResourcesWithNeed = (need: string) => {
 
 .footer-glow {
   position: absolute;
-  top: -56px;
+  top: -3.5rem;
   left: 0;
   right: 0;
-  height: 130px;
+  height: 8rem;
   pointer-events: none;
   background: radial-gradient(circle at 38% 0%, rgba(243, 197, 209, 0.48) 0%, transparent 58%),
     radial-gradient(circle at 66% 0%, rgba(177, 168, 255, 0.42) 0%, transparent 58%);
@@ -918,7 +900,7 @@ const goToResourcesWithNeed = (need: string) => {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-2px);
+    transform: translateY(-0.125rem);
   }
 }
 
@@ -931,14 +913,14 @@ const goToResourcesWithNeed = (need: string) => {
   .hero-card:hover,
   .hero-card:focus-within {
     animation: none;
-    transform: translateY(-24px);
+    transform: translateY(-1.5rem);
   }
 }
 
-@media (max-width: 980px) {
+@media (max-width: 61.25rem) {
   .shell {
-    max-width: 980px;
-    padding-inline: 20px;
+    max-width: 61.25rem;
+    padding-inline: var(--space-5);
   }
 
   .nav-links {
@@ -946,13 +928,13 @@ const goToResourcesWithNeed = (need: string) => {
   }
 
   .hero-card {
-    width: min(84vw, 332px);
-    min-height: 196px;
-    grid-template-columns: 106px minmax(0, 1fr);
+    width: min(84vw, 20.75rem);
+    min-height: 12.25rem;
+    grid-template-columns: 6.625rem minmax(0, 1fr);
   }
 
   .card-media {
-    min-height: 176px;
+    min-height: 11rem;
   }
 
   .stats,
@@ -965,7 +947,7 @@ const goToResourcesWithNeed = (need: string) => {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
 
   .quote-title {
     margin-inline: 0;
@@ -980,7 +962,7 @@ const goToResourcesWithNeed = (need: string) => {
   }
 
   .shell {
-    padding-inline: 16px;
+    padding-inline: var(--space-4);
   }
 
   .hero {
@@ -992,23 +974,23 @@ const goToResourcesWithNeed = (need: string) => {
   }
 
   .hero-card {
-    width: min(82vw, 320px);
-    min-height: 182px;
-    padding: 10px;
-    grid-template-columns: 108px minmax(0, 1fr);
-    gap: 10px;
+    width: min(82vw, 20rem);
+    min-height: 11.25rem;
+    padding: var(--space-3);
+    grid-template-columns: 6.75rem minmax(0, 1fr);
+    gap: var(--space-3);
   }
 
   .impact-card {
-    min-height: 210px;
+    min-height: 13.125rem;
   }
 
   .stats article {
-    min-height: 90px;
+    min-height: 5.5rem;
   }
 
   .card-media {
-    min-height: 162px;
+    min-height: 10.25rem;
   }
 
   .hero-card h2 {
@@ -1021,12 +1003,12 @@ const goToResourcesWithNeed = (need: string) => {
   }
 
   .social-proof {
-    margin-top: 18px;
-    font-size: 12px;
+    margin-top: var(--space-4);
+    font-size: var(--theme-font-size-caption);
   }
 
   .social-proof p {
-    font-size: 12px;
+    font-size: var(--theme-font-size-caption);
   }
   .impact h2 {
     font-size: var(--fs-display-xl);
@@ -1083,16 +1065,16 @@ const goToResourcesWithNeed = (need: string) => {
   }
 
   .testimonial {
-    padding-top: 80px;
+    padding-top: var(--space-20);
   }
 
   .impact {
     margin-top: 0;
-    padding-top: 80px;
+    padding-top: var(--space-20);
   }
 
   .cta {
-    padding: 3.4rem 16px 3.8rem;
+    padding: 3.5rem var(--space-4) 3.75rem;
   }
 
   :where(.i-lucide\:arrow-right-circle) {

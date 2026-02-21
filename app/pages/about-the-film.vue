@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { gsap } from 'gsap'
+import { gsap } from 'gsap/gsap-core'
 
 type TeamMember = {
   name: string
@@ -503,9 +503,9 @@ onBeforeUnmount(() => {
 
 .shell {
   width: 100%;
-  max-width: 1380px;
+  max-width: 86.25rem;
   margin-inline: auto;
-  padding-inline: 20px;
+  padding-inline: var(--space-5);
 }
 
 .about-intro {
@@ -516,7 +516,7 @@ onBeforeUnmount(() => {
 
 .eyebrow {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: var(--theme-font-size-caption);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: #6e7077;
@@ -525,7 +525,7 @@ onBeforeUnmount(() => {
 
 .about-intro h1 {
   margin: 0.68rem auto 0;
-  max-width: 980px;
+  max-width: 61.25rem;
   font-size: clamp(1.8rem, 4.3vw, 3.75rem);
   line-height: 0.98;
   font-family: var(--theme-font-title);
@@ -533,8 +533,8 @@ onBeforeUnmount(() => {
 
 .about-intro p {
   margin: 0.9rem auto 0;
-  max-width: 760px;
-  font-size: 0.96rem;
+  max-width: 47.5rem;
+  font-size: var(--theme-font-size-brand);
   line-height: 1.55;
   color: var(--muted);
 }
@@ -545,8 +545,8 @@ onBeforeUnmount(() => {
 
 .story-sticky {
   position: sticky;
-  top: 76px;
-  min-height: calc(100vh - 78px);
+  top: 4.75rem;
+  min-height: calc(100vh - 4.875rem);
   overflow: hidden;
   display: grid;
   align-items: center;
@@ -554,7 +554,7 @@ onBeforeUnmount(() => {
 
 .story-flow {
   display: grid;
-  gap: 120px;
+  gap: var(--space-30);
   padding-block: clamp(0.25rem, 1.2vh, 1.1rem) clamp(2.4rem, 6vh, 5rem);
   will-change: transform;
 }
@@ -564,8 +564,8 @@ onBeforeUnmount(() => {
   top: 0.7rem;
   left: 50%;
   transform: translateX(-50%);
-  height: 44px;
-  min-width: min(92vw, 480px);
+  height: 2.75rem;
+  min-width: min(92vw, 30rem);
   border-radius: 999px;
   background: color-mix(in oklab, #f7f7f8, transparent 7%);
   border: 1px solid color-mix(in oklab, #f0f0f2, #d6d7dc 45%);
@@ -573,17 +573,17 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-around;
   z-index: 20;
-  backdrop-filter: blur(7px);
+  backdrop-filter: blur(0.5rem);
 }
 
 .studio-nav-pill span {
-  font-size: 0.72rem;
+  font-size: var(--theme-font-size-caption);
   color: #696c75;
   letter-spacing: 0.09em;
 }
 
 .studio-nav-pill strong {
-  font-size: 2.05rem;
+  font-size: 2rem;
   font-weight: 800;
   letter-spacing: -0.025em;
   line-height: 1;
@@ -610,11 +610,11 @@ onBeforeUnmount(() => {
 }
 
 .hero-mission-panel {
-  width: min(90vw, 1700px);
-  height: clamp(420px, calc(100vh - 150px), 760px);
-  border-radius: 8px;
+  width: min(90vw, 106.25rem);
+  height: clamp(26.25rem, calc(100vh - 9.375rem), 47.5rem);
+  border-radius: var(--radius-sm);
   background: linear-gradient(180deg, #f1f2f4 0%, #ececef 100%);
-  box-shadow: 0 28px 42px rgba(35, 37, 45, 0.1);
+  box-shadow: 0 1.75rem 2.625rem rgba(35, 37, 45, 0.1);
   overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 0.5fr) minmax(0, 0.5fr);
@@ -659,10 +659,10 @@ onBeforeUnmount(() => {
 }
 
 .hero-metric-panel {
-  width: min(96vw, 1760px);
+  width: min(96vw, 110rem);
   position: relative;
-  height: clamp(420px, calc(100vh - 150px), 760px);
-  border-radius: 8px;
+  height: clamp(26.25rem, calc(100vh - 9.375rem), 47.5rem);
+  border-radius: var(--radius-sm);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -678,7 +678,7 @@ onBeforeUnmount(() => {
   position: absolute;
   inset: 11% 10%;
   background-image: radial-gradient(circle, rgb(243 243 243 / 20%) 1px, #ffffff00 1.2px);
-  background-size: 12px 12px;
+  background-size: 0.75rem 0.75rem;
   opacity: 0.2;
   width: 100%;
   height: 100%;
@@ -693,7 +693,7 @@ onBeforeUnmount(() => {
 
 .hero-metric-overline {
     margin: 0.9rem auto 0;
-    max-width: 620px;
+    max-width: 38.75rem;
     color: var(--ink);
     line-height: 1.45;
     font-size: var(--fs-brand);
@@ -764,7 +764,7 @@ onBeforeUnmount(() => {
 .manifesto-copy {
   padding-right: clamp(0.4rem, 2vw, 1.8rem);
   position: sticky;
-  top: 92px;
+  top: 5.75rem;
   align-self: start;
 }
 
@@ -773,7 +773,7 @@ onBeforeUnmount(() => {
   font-size: clamp(1.4rem, 3.5vw, 4.2rem);
   line-height: 0.98;
   letter-spacing: -0.03em;
-  max-width: 780px;
+  max-width: 48.75rem;
   font-family: var(--theme-font-title);
 }
 
@@ -801,7 +801,7 @@ onBeforeUnmount(() => {
 
 .team-card {
   display: grid;
-  grid-template-columns: 160px minmax(0, 1fr);
+  grid-template-columns: 10rem minmax(0, 1fr);
   gap: 2rem;
   align-items: flex-start;
 }
@@ -809,10 +809,10 @@ onBeforeUnmount(() => {
 .team-avatar {
   width: 100%;
   aspect-ratio: 1;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   background: #d6d9de;
-  box-shadow: 10px 10px 0 var(--muted);
+  box-shadow: 0.625rem 0.625rem 0 var(--muted);
 }
 
 .team-avatar img {
@@ -869,8 +869,8 @@ onBeforeUnmount(() => {
   right: auto;
   top: auto;
   margin-left: auto;
-  width: clamp(176px, 16vw, 246px);
-  border-radius: 14px;
+  width: clamp(11rem, 16vw, 15.5rem);
+  border-radius: var(--radius-lg);
   background: var(--muted);
   color: var(--accent-contrast);
   padding: 0.9rem 0.85rem;
@@ -879,7 +879,7 @@ onBeforeUnmount(() => {
 
 .chapter-card p {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: var(--theme-font-size-sm);
   line-height: 2;
   position: relative;
   z-index: 1;
@@ -898,7 +898,7 @@ onBeforeUnmount(() => {
 
 .after-note p {
   margin: 0.65rem 0 0;
-  max-width: 680px;
+  max-width: 42.5rem;
   color: var(--muted);
   line-height: 1.5;
 }
@@ -917,25 +917,25 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 1240px) {
+@media (max-width: 77.5rem) {
   .hero-track {
     margin-left: 0;
     grid-auto-columns: 100vw;
   }
 
   .team-card {
-    grid-template-columns: 140px minmax(0, 1fr);
+    grid-template-columns: 8.75rem minmax(0, 1fr);
   }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 64rem) {
   .story-stage {
     min-height: 250vh;
   }
 
   .story-sticky {
     top: var(--layout-header-height);
-    min-height: calc(100vh - 76px);
+    min-height: calc(100vh - 4.75rem);
   }
 
   .story-flow {
@@ -954,9 +954,9 @@ onBeforeUnmount(() => {
 
   .hero-mission-panel {
     width: 92vw;
-    height: clamp(410px, calc(100vh - 150px), 700px);
+    height: clamp(25.5rem, calc(100vh - 9.375rem), 43.75rem);
     grid-template-columns: 1fr;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
   }
 
   .hero-mission-copy {
@@ -970,13 +970,13 @@ onBeforeUnmount(() => {
   }
 
   .hero-mission-image {
-    min-height: clamp(300px, 40vw, 330px);
+    min-height: clamp(18.75rem, 40vw, 20.5rem);
   }
 
   .hero-metric-panel {
     width: 96vw;
-    height: clamp(410px, calc(100vh - 150px), 700px);
-    border-radius: 8px;
+    height: clamp(25.5rem, calc(100vh - 9.375rem), 43.75rem);
+    border-radius: var(--radius-sm);
   }
 
   .hero-metric-number {
@@ -1013,7 +1013,7 @@ onBeforeUnmount(() => {
   }
 
   .story-flow {
-    gap: 80px;
+    gap: var(--space-20);
   }
 
   .manifesto-reveal,
@@ -1022,8 +1022,8 @@ onBeforeUnmount(() => {
   }
 
   .team-avatar {
-    border-radius: 6px;
-    box-shadow: 6px 6px 0 var(--muted);
+    border-radius: 0.375rem;
+    box-shadow: 0.375rem 0.375rem 0 var(--muted);
   }
 
   .team-rail-wrap {
@@ -1031,7 +1031,7 @@ onBeforeUnmount(() => {
   }
 
   .team-card {
-    grid-template-columns: 108px minmax(0, 1fr);
+    grid-template-columns: 6.75rem minmax(0, 1fr);
     gap: 1.5rem;
   }
 
@@ -1053,13 +1053,13 @@ onBeforeUnmount(() => {
   }
 
   .after-note {
-    margin-top: -128px;
+    margin-top: -8rem;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
   .shell {
-    padding-inline: 16px;
+    padding-inline: var(--space-4);
   }
 
   .team-card-copy .person {
@@ -1079,12 +1079,12 @@ onBeforeUnmount(() => {
 
   .studio-nav-pill {
     top: 0.4rem;
-    min-width: min(94vw, 372px);
-    height: 40px;
+    min-width: min(94vw, 23.25rem);
+    height: 2.5rem;
   }
 
   .studio-nav-pill span {
-    font-size: 0.62rem;
+    font-size: var(--theme-font-size-caption);
   }
 
   .studio-nav-pill strong {
@@ -1099,7 +1099,7 @@ onBeforeUnmount(() => {
   .hero-mission-panel,
   .hero-metric-panel {
     height: calc(100svh - var(--layout-header-height) - 2rem);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
   }
 
   .hero-panorama {
@@ -1107,7 +1107,7 @@ onBeforeUnmount(() => {
   }
 
   .hero-mission-panel {
-    width: calc(100vw - 32px);
+    width: calc(100vw - 2rem);
   }
 
   .hero-metric-panel {
@@ -1123,7 +1123,7 @@ onBeforeUnmount(() => {
   }
 
   .hero-metric-overline {
-    font-size: 0.78rem;
+    font-size: var(--theme-font-size-sm);
   }
 
   .hero-metric-label {
@@ -1133,7 +1133,7 @@ onBeforeUnmount(() => {
   }
 
   .hero-metric-source {
-    font-size: 12px;
+    font-size: var(--theme-font-size-caption);
   }
 
   .headline-layer h2,
@@ -1172,7 +1172,7 @@ onBeforeUnmount(() => {
   .hero-mission-panel,
   .hero-metric-panel {
     height: auto;
-    min-height: 260px;
+    min-height: 16.25rem;
   }
 
   .headline-layer,
