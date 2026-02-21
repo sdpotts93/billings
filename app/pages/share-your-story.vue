@@ -518,50 +518,10 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .story-page {
-  --ink: var(--theme-color-text);
-  --muted: var(--theme-color-muted);
-  --muted-13: var(--theme-color-muted-13);
-  --muted-14: var(--theme-color-muted-14);
-  --muted-15: var(--theme-color-muted-15);
-  --muted-16: var(--theme-color-muted-16);
-  --muted-17: var(--theme-color-muted-17);
-  --muted-18: var(--theme-color-muted-18);
-  --line: var(--theme-color-line);
-  --line-strong: var(--theme-color-line-strong);
-  --line-photo: var(--theme-color-line-photo);
-  --paper: var(--theme-color-surface);
-  --surface: var(--theme-color-bg);
-  --bg-glow-1: var(--theme-color-bg-glow-1);
-  --bg-glow-2: var(--theme-color-bg-glow-2);
-  --accent: var(--theme-color-accent);
-  --accent-contrast: var(--theme-color-accent-contrast);
-  --quote-mark: var(--ink);
-  --notice-bg: var(--theme-color-notice-bg);
-  --notice-text: var(--theme-color-notice-text);
-  --mobile-close-bg: var(--theme-color-mobile-close-bg);
-  --font-title: var(--theme-font-title);
-  --font-text: var(--theme-font-text);
-  --fs-caption: var(--theme-font-size-caption);
-  --fs-xs: var(--theme-font-size-xs);
-  --fs-note-plus: var(--theme-font-size-note-plus);
-  --fs-label: var(--theme-font-size-label);
-  --fs-sm: var(--theme-font-size-sm);
-  --fs-sm-plus: var(--theme-font-size-sm-plus);
-  --fs-btn: var(--theme-font-size-btn);
-  --fs-md: var(--theme-font-size-md);
-  --fs-md-plus: var(--theme-font-size-md-plus);
-  --fs-body: var(--theme-font-size-body);
-  --fs-body-lg: var(--theme-font-size-body-lg);
-  --fs-brand: var(--theme-font-size-brand);
-  --fs-mobile-cta: var(--theme-font-size-mobile-cta);
-  --fs-quote-mark: var(--theme-font-size-quote-mark);
-  --fs-panel-title: var(--theme-font-size-panel-title);
-  --fs-hero-lg: var(--theme-font-size-hero-xl);
-  --fs-hero-mobile: var(--theme-font-size-hero-mobile);
   min-height: 100vh;
-  background:var(--theme-color-bg);
-  color: var(--ink);
-  font-family: var(--font-text);
+  background: var(--theme-color-bg);
+  color: var(--theme-color-text);
+  font-family: var(--theme-font-text);
 }
 
 .page-shell {
@@ -572,7 +532,7 @@ onBeforeUnmount(() => {
 }
 
 .top-nav {
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--theme-color-line);
   backdrop-filter: blur(0.25rem);
   background: var(--theme-color-bg);
   position: sticky;
@@ -587,18 +547,19 @@ onBeforeUnmount(() => {
 }
 
 .nav-links a {
-  color: var(--muted);
+  color: var(--theme-color-muted);
   text-decoration: none;
-  font-size: var(--fs-brand);
+  font-size: var(--theme-font-size-brand);
   font-weight: 600;
 }
 
 .nav-cta {
   border: 0;
   border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-contrast);
-  font-size: var(--fs-btn);
+  background: var(--theme-color-accent);
+  color: var(--theme-color-accent-contrast);
+  font-size: var(--theme-font-size-btn);
+  line-height: 1.5;
   font-weight: 700;
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
@@ -611,7 +572,7 @@ onBeforeUnmount(() => {
 
 .eyebrow {
   margin: 0;
-  font-size: var(--fs-sm-plus);
+  font-size: var(--theme-font-size-sm-plus);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 700;
@@ -621,17 +582,17 @@ onBeforeUnmount(() => {
 .hero h1 {
   margin: 0.45rem auto 0;
   max-width: 29ch;
-  font-family: var(--font-title);
-  font-size: var(--fs-hero-lg);
-  line-height: 1.02;
+  font-family: var(--theme-font-title);
+  font-size: var(--theme-font-size-hero-xl);
+  line-height: 1;
 }
 
 .hero p {
   margin: 0.9rem auto 0;
   max-width: 50ch;
-  color: var(--muted);
-  line-height: 1.45;
-  font-size: var(--fs-brand);
+  color: var(--theme-color-muted);
+  line-height: 1.5;
+  font-size: var(--theme-font-size-brand);
 }
 
 .content-grid {
@@ -655,9 +616,9 @@ onBeforeUnmount(() => {
   position: relative;
   break-inside: avoid;
   margin-bottom: 0.875rem;
-  border: 1px solid var(--line);
+  border: 1px solid var(--theme-color-line);
   border-radius: var(--radius-md);
-  background: var(--paper);
+  background: var(--theme-color-surface);
   padding: var(--space-8) var(--space-4) var(--space-4);
   box-shadow: 0 0.625rem 1.5rem rgba(31, 24, 39, 0.04);
 }
@@ -667,10 +628,10 @@ onBeforeUnmount(() => {
   position: absolute;
   top: 0.55rem;
   right: 0.62rem;
-  font-family: var(--font-title);
-  font-size: var(--fs-quote-mark);
+  font-family: var(--theme-font-title);
+  font-size: var(--theme-font-size-quote-mark);
   line-height: 1;
-  color: var(--quote-mark);
+  color: var(--theme-color-text);
   pointer-events: none;
 }
 
@@ -681,8 +642,8 @@ onBeforeUnmount(() => {
 .story-message {
   margin: 0;
   color: var(--theme-color-accent-contrast);
-  font-family: var(--font-text);
-  font-size: var(--theme-font-size-brand-mobile);
+  font-family: var(--theme-font-text);
+  font-size: var(--theme-font-size-brand);
   line-height: 1.5;
   letter-spacing: -0.005em;
   text-wrap: pretty;
@@ -691,7 +652,7 @@ onBeforeUnmount(() => {
 
 .story-message::after {
   content: '”';
-  color: var(--quote-mark);
+  color: var(--theme-color-text);
 }
 
 .story-footer {
@@ -711,9 +672,9 @@ onBeforeUnmount(() => {
 .skeleton-block {
   background: linear-gradient(
     90deg,
-    color-mix(in oklab, var(--line), white 34%) 25%,
-    color-mix(in oklab, var(--line), white 54%) 50%,
-    color-mix(in oklab, var(--line), white 34%) 75%
+    color-mix(in oklab, var(--theme-color-line), white 34%) 25%,
+    color-mix(in oklab, var(--theme-color-line), white 54%) 50%,
+    color-mix(in oklab, var(--theme-color-line), white 34%) 75%
   );
   background-size: 200% 100%;
   animation: story-skeleton-wave 1.2s ease-in-out infinite;
@@ -757,18 +718,18 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--fs-xs);
+  font-size: var(--theme-font-size-xs);
   font-weight: 760;
 }
 
 .story-photo {
   object-fit: cover;
-  border: 1px solid var(--line-photo);
+  border: 1px solid var(--theme-color-line-photo);
 }
 
 .story-author {
   margin: 0;
-  font-size: var(--fs-btn);
+  font-size: var(--theme-font-size-btn);
   font-weight: 740;
   color: var(--theme-color-link-soft);
   letter-spacing: 0.01em;
@@ -776,8 +737,8 @@ onBeforeUnmount(() => {
 
 .feed-status {
   margin: 0.2rem 0 0;
-  color: var(--muted-14);
-  font-size: var(--fs-btn);
+  color: var(--theme-color-muted-2);
+  font-size: var(--theme-font-size-btn);
 }
 
 @keyframes story-skeleton-wave {
@@ -798,23 +759,23 @@ onBeforeUnmount(() => {
 .share-panel {
   position: sticky;
   top: 5.5rem;
-  border: 1px solid var(--line);
+  border: 1px solid var(--theme-color-line);
   border-radius: var(--radius-md);
   padding: 1rem;
 }
 
 .share-panel h2 {
   margin: 0;
-  font-family: var(--font-title);
-  font-size: var(--fs-panel-title);
+  font-family: var(--theme-font-title);
+  font-size: var(--theme-font-size-panel-title);
   letter-spacing: -0.02em;
 }
 
 .share-panel p {
   margin: 0.5rem 0 0;
   color: var(--theme-color-accent);
-  font-size: var(--fs-brand);
-  line-height: 1.44;
+  font-size: var(--theme-font-size-brand);
+  line-height: 1.5;
 }
 
 .share-form {
@@ -824,21 +785,21 @@ onBeforeUnmount(() => {
 }
 
 .share-form label {
-  font-size: var(--fs-brand);
+  font-size: var(--theme-font-size-brand);
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: var(--ink);
+  color: var(--theme-color-text);
 }
 
 .share-form input,
 .share-form textarea {
   width: 100%;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--theme-color-line-strong);
   border-radius: var(--radius-sm);
-  background: var(--paper);
+  background: var(--theme-color-surface);
   padding: var(--space-2) var(--space-3);
   font-size: var(--theme-font-size-form);
-  color: var(--accent-contrast);
+  color: var(--theme-color-accent-contrast);
 }
 
 .share-form textarea {
@@ -869,14 +830,14 @@ onBeforeUnmount(() => {
 }
 
 .photo-upload-avatar {
-  border: 1px solid var(--line-photo);
-  background: var(--paper);
+  border: 1px solid var(--theme-color-line-photo);
+  background: var(--theme-color-surface);
 }
 
 .photo-name {
   margin: 0;
-  color: var(--muted-17);
-  font-size: var(--fs-label);
+  color: var(--theme-color-muted-2);
+  font-size: var(--theme-font-size-label);
 }
 
 ::v-deep(.photo-remove) {
@@ -890,9 +851,10 @@ onBeforeUnmount(() => {
   margin-top: 0.3rem;
   border: 0;
   border-radius: var(--radius-sm);
-  background: var(--ink);
+  background: var(--theme-color-text);
   color: white;
-  font-size: var(--fs-btn);
+  font-size: var(--theme-font-size-btn);
+  line-height: 1.5;
   font-weight: 700;
   padding: var(--space-3) var(--space-4);
   cursor: pointer;
@@ -918,7 +880,7 @@ p.submit-notice {
   border-radius: var(--radius-sm);
   padding: var(--space-2) var(--space-3);
   color: var(--ui-error);
-  font-size: var(--fs-sm);
+  font-size: var(--theme-font-size-sm);
 }
 
 @media screen and (max-width: 1280px) {
@@ -942,7 +904,7 @@ p.submit-notice {
   }
 
   .hero h1 {
-    font-size: var(--fs-hero-mobile);
+    font-size: var(--theme-font-size-hero-mobile);
   }
 
   .content-grid {
@@ -970,7 +932,7 @@ p.submit-notice {
   }
 
   .share-panel p {
-    color: var(--accent-contrast);
+    color: var(--theme-color-accent-contrast);
   }
   .share-panel.is-mobile-open {
     transform: translateY(0);
@@ -981,9 +943,9 @@ p.submit-notice {
     border: 0;
     margin-left: auto;
     border-radius: 999px;
-    background: var(--mobile-close-bg);
-    color: var(--muted-18);
-    font-size: var(--fs-label);
+    background: var(--theme-color-mobile-close-bg);
+    color: var(--theme-color-muted-2);
+    font-size: var(--theme-font-size-label);
     font-weight: 700;
     padding: var(--space-1) var(--space-3);
     cursor: pointer;
@@ -1008,9 +970,10 @@ p.submit-notice {
     z-index: 40;
     border: 0;
     border-radius: 999px;
-    background: var(--accent-contrast);
-    color: var(--accent);
-    font-size: var(--fs-mobile-cta);
+    background: var(--theme-color-accent-contrast);
+    color: var(--theme-color-accent);
+    font-size: var(--theme-font-size-mobile-cta);
+    line-height: 1.5;
     font-weight: 760;
     letter-spacing: 0.01em;
     min-height: 3.25rem;

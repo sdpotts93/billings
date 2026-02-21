@@ -34,22 +34,15 @@
   --radius-xl: 1.25rem;
   --radius-pill: 999rem;
 
-  --theme-font-size-caption: 14px;
-  --theme-font-size-caption-plus: var(--text-xs);
   --theme-font-size-xs: var(--text-xs);
-  --theme-font-size-note: var(--text-xs);
   --theme-font-size-note-plus: var(--text-md);
   --theme-font-size-label: var(--text-sm);
   --theme-font-size-sm: var(--text-sm);
   --theme-font-size-sm-plus: var(--text-md);
-  --theme-font-size-btn: 14px;
   --theme-font-size-md: var(--text-md);
   --theme-font-size-md-plus: var(--text-lg);
   --theme-font-size-body: var(--text-md);
   --theme-font-size-body-lg: var(--text-lg);
-  --theme-font-size-brand: 15px;
-  --theme-font-size-brand-mobile: 16px;
-  --theme-font-size-form: 16px;
   --theme-font-size-mobile-cta: var(--text-md);
   --theme-font-size-quote-mark: 4rem;
   --theme-font-size-panel-title: var(--text-2xl);
@@ -64,29 +57,17 @@
   --theme-font-size-card-title: clamp(1rem, 1.6vw, 24px);
   --theme-font-size-quote: clamp(1.125rem, 2.2vw, 1.5rem);
 
+  --theme-font-size-form: 16px;
+  --theme-font-size-brand: max(15px, 0.75rem);
+  --theme-font-size-caption: max(14px, 0.6rem);
+  --theme-font-size-note: max(14px, 0.6rem);
+  --theme-font-size-btn: max(14px, 0.6rem);
+
   --theme-color-bg: #334549;
-  --theme-color-bg-glow-1: #f8f2ed;
-  --theme-color-bg-glow-2: #f3f7ff;
   --theme-color-surface: #e8e5de;
   --theme-color-text: #ce8040;
   --theme-color-muted: #E9E2D2;
-  --theme-color-muted-2: #585373;
-  --theme-color-muted-3: #4f486d;
-  --theme-color-muted-4: #908aa8;
-  --theme-color-muted-5: #85809f;
-  --theme-color-muted-6: #4c4667;
-  --theme-color-muted-7: #76708f;
-  --theme-color-muted-8: #928ca8;
-  --theme-color-muted-9: #474260;
-  --theme-color-muted-10: #6d6788;
-  --theme-color-muted-11: #746f8f;
-  --theme-color-muted-12: #3f395c;
-  --theme-color-muted-13: #8d868f;
-  --theme-color-muted-14: #8a848d;
-  --theme-color-muted-15: #69636d;
-  --theme-color-muted-16: #4f4a53;
-  --theme-color-muted-17: #7e7881;
-  --theme-color-muted-18: #5e5862;
+  --theme-color-muted-2: #929292;
   --theme-color-line: #ece6ef;
   --theme-color-line-soft: #f0ebf2;
   --theme-color-line-strong: #d8cfc9;
@@ -100,17 +81,12 @@
   --theme-color-notice-text: #b7522d;
   --theme-color-mobile-close-bg: #f3ece9;
 
-  --theme-card-tone-1: #f2c593;
-  --theme-card-tone-2: #9ce5dd;
-  --theme-card-tone-3: #d7cdfa;
-  --theme-card-tone-4: #f5d0ac;
-  --theme-card-tone-5: #a9ddd6;
-
   --alt-bg: var(--theme-color-bg);
 }
 
 :where(h1, h2, h3, h4, h5, h6) {
   font-family: var(--theme-font-title);
+  line-height: 1;
 }
 
 @theme static {
@@ -136,5 +112,13 @@ html, body {
 body {
   font-family: var(--theme-font-text);
   font-size: var(--theme-font-size-body);
+  line-height: 1.5;
+}
+
+p {
+  line-height: 1.5;
+}
+
+:where(button, [type='button'], [type='submit'], [type='reset']) {
   line-height: 1.5;
 }

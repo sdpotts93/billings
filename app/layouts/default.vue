@@ -347,21 +347,9 @@ watch(
 
 <style scoped>
 .layout-root {
-  --ink: var(--theme-color-text);
-  --muted: var(--theme-color-muted);
-  --line: var(--theme-color-line);
-  --surface: var(--theme-color-surface);
-  --accent: var(--theme-color-accent);
-  --accent-contrast: var(--theme-color-accent-contrast);
-  --font-title: var(--theme-font-title);
-  --font-text: var(--theme-font-text);
-  --fs-brand: var(--theme-font-size-brand);
-  --fs-body: var(--theme-font-size-body);
-  --fs-btn: var(--theme-font-size-btn);
-  --fs-sm: var(--theme-font-size-sm);
   min-height: 100vh;
-  color: var(--ink);
-  font-family: var(--font-text);
+  color: var(--theme-color-text);
+  font-family: var(--theme-font-text);
   display: flex;
   flex-direction: column;
 }
@@ -376,13 +364,13 @@ watch(
 
 .layout-shell {
   width: 100%;
-  max-width: 1120px;
+  max-width: 1220px;
   margin-inline: auto;
   padding-inline: var(--space-6);
 }
 
 .top-nav {
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--theme-color-line);
   backdrop-filter: blur(0.25rem);
   background: var(--theme-color-bg);
   position: sticky;
@@ -410,12 +398,12 @@ watch(
 }
 
 .brand {
-  color: var(--ink);
+  color: var(--theme-color-text);
   text-decoration: none;
   font-size: 40px;
   /* font-weight: 800; */
   letter-spacing: -0.02em;
-  font-family: var(--font-title);
+  font-family: var(--theme-font-title);
   line-height: 1;
   letter-spacing: 0.009em;
 }
@@ -427,7 +415,7 @@ watch(
 }
 
 .nav-links a {
-  color: var(--muted);
+  color: var(--theme-color-muted);
   text-decoration: none;
   font-size: 16px;
   font-weight: 400;
@@ -444,9 +432,10 @@ watch(
 .nav-cta {
   border: 0;
   border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-contrast);
-  font-size: var(--fs-btn);
+  background: var(--theme-color-accent);
+  color: var(--theme-color-accent-contrast);
+  font-size: var(--theme-font-size-btn);
+  line-height: 1.5;
   font-weight: 700;
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
@@ -460,7 +449,7 @@ watch(
   border-radius: 999px;
   padding: 0;
   background: transparent;
-  color: var(--muted);
+  color: var(--theme-color-muted);
   display: none;
   align-items: center;
   justify-content: center;
@@ -515,7 +504,7 @@ watch(
   position: fixed;
   inset: var(--layout-header-height) 0 0;
   z-index: 60;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--theme-color-line);
   background: var(--theme-color-bg);
   transform: translateY(calc(-100% - 1px));
   visibility: hidden;
@@ -547,9 +536,9 @@ watch(
 }
 
 .mobile-menu__links a {
-  color: var(--muted);
+  color: var(--theme-color-muted);
   text-decoration: none;
-  font-size: var(--fs-body);
+  font-size: var(--theme-font-size-body);
   font-weight: 600;
   letter-spacing: 0.02em;
   border-bottom: 1px solid rgb(255 255 255 / 17%);
@@ -578,7 +567,8 @@ watch(
   border-radius: 999px;
   background: var(--theme-color-accent);
   color: var(--theme-color-accent-contrast);
-  font-size: var(--fs-btn);
+  font-size: var(--theme-font-size-btn);
+  line-height: 1.5;
   font-weight: 700;
   letter-spacing: 0.02em;
   padding: var(--space-2) var(--space-4);
@@ -602,7 +592,7 @@ watch(
 }
 
 .site-footer {
-  background: var(--muted);
+  background: var(--theme-color-muted);
 }
 
 .footer-shell {
@@ -634,7 +624,7 @@ watch(
 
 .footer-column h3 {
   margin: 0;
-  color: var(--ink);
+  color: var(--theme-color-text);
   font-size: clamp(var(--text-md), 1.3vw, var(--text-3xl));
   font-weight: 700;
 }
@@ -648,7 +638,7 @@ watch(
 }
 
 .footer-column a {
-  color: var(--accent-contrast);
+  color: var(--theme-color-accent-contrast);
   text-decoration: none;
   font-size: var(--theme-font-size-brand);
   font-family: var(--font-sans);
@@ -679,9 +669,9 @@ watch(
 }
 
 .footer-logo {
-  color: var(--ink);
+  color: var(--theme-color-text);
   text-decoration: none;
-  font-family: var(--font-title);
+  font-family: var(--theme-font-title);
   font-size: 9rem;
   font-weight: 900;
   line-height: 1;
@@ -744,7 +734,7 @@ watch(
 
   .nav-cta {
     margin-inline-start: auto;
-    font-size: var(--fs-sm);
+    font-size: var(--theme-font-size-sm);
     padding: var(--space-2) var(--space-3);
   }
 

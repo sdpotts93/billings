@@ -18,48 +18,42 @@ const heroCards = [
     source: '#PatientStory',
     title: 'I delayed care while uninsured, then went to the ER when symptoms became unbearable.',
     cta: 'Read All',
-    image: '/images/person-1.jpg',
-    tone: 'var(--theme-card-tone-1)'
+    image: '/images/person-1.jpg'
   },
   {
     id: 'family-caregiver-appointments',
     source: '#FamilyCaregiver',
     title: 'I manage my dad\'s referrals and labs because one scheduling error can delay treatment.',
     cta: 'Read All',
-    image: '/images/person-2.jpg',
-    tone: 'var(--theme-card-tone-2)'
+    image: '/images/person-2.jpg'
   },
   {
     id: 'patient-billing-confusion',
     source: '#PatientVoice',
     title: 'As a patient, I still get surprise bills months later and cannot tell which are accurate.',
     cta: 'Read All',
-    image: '/images/person-3.jpg',
-    tone: 'var(--theme-card-tone-3)'
+    image: '/images/person-3.jpg'
   },
   {
     id: 'family-member-medication-help',
     source: '#FamilyMember',
     title: 'I compare pharmacy prices for my sister each month so she can stay on her medication.',
     cta: 'Read All',
-    image: '/images/person-4.jpg',
-    tone: 'var(--theme-card-tone-4)'
+    image: '/images/person-4.jpg'
   },
   {
     id: 'patient-prior-auth-delay',
     source: '#PatientJourney',
     title: 'My procedure was approved by my doctor, but prior authorization kept pushing it back.',
     cta: 'Read All',
-    image: '/images/person-5.jpg',
-    tone: 'var(--theme-card-tone-5)'
+    image: '/images/person-5.jpg'
   },
   {
     id: 'family-aftercare-coordination',
     source: '#CaregiverStory',
     title: 'After discharge, I coordinated follow-up visits for my spouse across three clinics.',
     cta: 'Read All',
-    image: '/images/person-6.jpg',
-    tone: 'var(--theme-card-tone-1)'
+    image: '/images/person-6.jpg'
   }
 ]
 
@@ -135,7 +129,7 @@ const goToResourcesWithNeed = (need: string) => {
                   v-for="(card, index) in heroCards"
                   :key="`${card.id}-a`"
                   class="hero-card"
-                  :style="{ '--tone': card.tone, '--card-delay': `${index * 0.7}s` }"
+                  :style="{ '--card-delay': `${index * 0.7}s` }"
                 >
                   <div class="card-media">
                     <NuxtImg
@@ -164,7 +158,7 @@ const goToResourcesWithNeed = (need: string) => {
                   v-for="(card, index) in heroCards"
                   :key="`${card.id}-b`"
                   class="hero-card"
-                  :style="{ '--tone': card.tone, '--card-delay': `${index * 0.7}s` }"
+                  :style="{ '--card-delay': `${index * 0.7}s` }"
                 >
                   <div class="card-media">
                     <NuxtImg
@@ -315,60 +309,16 @@ const goToResourcesWithNeed = (need: string) => {
 
 <style scoped>
 .home-page {
-  --bg: var(--theme-color-bg);
-  --ink: var(--theme-color-text);
-  --muted: var(--theme-color-muted);
-  --line: var(--theme-color-line);
-  --line-soft: var(--theme-color-line-soft);
-  --accent: var(--theme-color-accent);
-  --accent-contrast: var(--theme-color-accent-contrast);
-  --surface: var(--theme-color-surface);
-  --strong-surface: var(--theme-color-strong-surface);
-  --brand-soft: var(--theme-color-brand-soft);
-  --link-soft: var(--theme-color-link-soft);
-  --muted-2: var(--theme-color-muted-2);
-  --muted-3: var(--theme-color-muted-3);
-  --muted-4: var(--theme-color-muted-4);
-  --muted-5: var(--theme-color-muted-5);
-  --muted-6: var(--theme-color-muted-6);
-  --muted-7: var(--theme-color-muted-7);
-  --muted-8: var(--theme-color-muted-8);
-  --muted-9: var(--theme-color-muted-9);
-  --muted-10: var(--theme-color-muted-10);
-  --muted-11: var(--theme-color-muted-11);
-  --muted-12: var(--theme-color-muted-12);
-  --font-title: var(--theme-font-title);
-  --font-text: var(--theme-font-text);
-  --fs-caption: var(--theme-font-size-caption);
-  --fs-caption-plus: var(--theme-font-size-caption-plus);
-  --fs-xs: var(--theme-font-size-xs);
-  --fs-note: var(--theme-font-size-note);
-  --fs-note-plus: var(--theme-font-size-note-plus);
-  --fs-sm: var(--theme-font-size-sm);
-  --fs-sm-plus: var(--theme-font-size-sm-plus);
-  --fs-md: var(--theme-font-size-md);
-  --fs-md-plus: var(--theme-font-size-md-plus);
-  --fs-body: var(--theme-font-size-body);
-  --fs-brand: var(--theme-font-size-brand);
-  --fs-hero-xl: var(--theme-font-size-hero-xl);
-  --fs-hero-mobile: var(--theme-font-size-hero-mobile);
-  --fs-card-title: var(--theme-font-size-card-title);
-  --fs-quote: var(--theme-font-size-quote);
-  --fs-heading-md: var(--theme-font-size-heading-md);
-  --fs-heading-lg: var(--theme-font-size-heading-lg);
-  --fs-display-md: var(--theme-font-size-display-md);
-  --fs-display-lg: var(--theme-font-size-display-lg);
-  --fs-display-xl: var(--theme-font-size-display-xl);
   --lane-gap: var(--space-3);
   width: 100%;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-text);
+  background: var(--theme-color-bg);
+  color: var(--theme-color-text);
+  font-family: var(--theme-font-text);
   overflow-x: clip;
 }
 
 .home-page :is(h1, h2, h3) {
-  font-family: var(--font-title);
+  font-family: var(--theme-font-title);
 }
 
 .shell {
@@ -379,8 +329,8 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .top-nav {
-  border-bottom: 1px solid var(--line-soft);
-  background: var(--bg);
+  border-bottom: 1px solid var(--theme-color-muted);
+  background: var(--theme-color-bg);
 }
 
 .nav-links {
@@ -391,9 +341,9 @@ const goToResourcesWithNeed = (need: string) => {
 
 .nav-link,
 .login-link {
-  color: var(--muted);
+  color: var(--theme-color-muted);
   text-decoration: none;
-  font-size: var(--fs-md);
+  font-size: var(--theme-font-size-md);
   font-weight: 650;
 }
 
@@ -407,7 +357,8 @@ const goToResourcesWithNeed = (need: string) => {
   border-radius: 999px;
   background: #7d5d4a;
   color: white;
-  font-size: var(--fs-btn);
+  font-size: var(--theme-font-size-btn);
+  line-height: 1.5;
   font-weight: 700;
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
@@ -422,7 +373,7 @@ const goToResourcesWithNeed = (need: string) => {
   max-width: 29ch;
   margin: 0 auto;
   text-align: center;
-  font-size: var(--fs-hero-xl);
+  font-size: var(--theme-font-size-hero-xl);
   line-height: 1;
 }
 
@@ -455,12 +406,12 @@ const goToResourcesWithNeed = (need: string) => {
 
 .hero-carousel::before {
   left: 0;
-  background: linear-gradient(90deg, var(--bg) 0%, transparent 100%);
+  background: linear-gradient(90deg, var(--theme-color-bg) 0%, transparent 100%);
 }
 
 .hero-carousel::after {
   right: 0;
-  background: linear-gradient(270deg, var(--bg) 0%, transparent 100%);
+  background: linear-gradient(270deg, var(--theme-color-bg) 0%, transparent 100%);
 }
 
 .hero-lane {
@@ -511,16 +462,16 @@ const goToResourcesWithNeed = (need: string) => {
 
 .source {
   margin: 0.125rem 0 0;
-  font-size: var(--fs-caption-plus);
+  font-size: var(--theme-font-size-caption);
   letter-spacing: 0.005em;
-  color: var(--brand-soft);
+  color: var(--theme-color-brand-soft);
   font-weight: 780;
 }
 
 .hero-card h2 {
   margin: 0.4rem 0 0.55rem;
-  font-size: var(--fs-card-title);
-  line-height: 1.15;
+  font-size: var(--theme-font-size-card-title);
+  line-height: 1.1;
   letter-spacing: -0.012em;
 }
 
@@ -529,21 +480,21 @@ const goToResourcesWithNeed = (need: string) => {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  color: var(--link-soft);
+  color: var(--theme-color-link-soft);
   text-decoration: none;
-  font-size: var(--fs-note);
+  font-size: var(--theme-font-size-note);
   font-weight: 740;
 }
 
 .quote-title {
-  color: var(--muted);
+  color: var(--theme-color-muted);
   text-transform: none;
   font-family: var(--font-sans) !important;
   text-align: center;
   margin-bottom: var(--space-6);
   font-size: 2rem;
-  line-height: 1.1;
-  width: 70%;
+  line-height: 1.4;
+  width: 75%;
   margin: 0 auto;
   margin-bottom: var(--space-8);
   letter-spacing: 0;
@@ -555,8 +506,8 @@ const goToResourcesWithNeed = (need: string) => {
 
 .social-proof p {
   margin: 0;
-  font-size: var(--fs-xs);
-  color: var(--muted);
+  font-size: var(--theme-font-size-xs);
+  color: var(--theme-color-muted);
 }
 
 .logo-row {
@@ -565,8 +516,8 @@ const goToResourcesWithNeed = (need: string) => {
   justify-content: center;
   flex-wrap: wrap;
   gap: 1rem;
-  color: var(--muted-3);
-  font-size: var(--fs-note-plus);
+  color: var(--theme-color-muted-2);
+  font-size: var(--theme-font-size-note);
   font-weight: 720;
 }
 
@@ -576,18 +527,18 @@ const goToResourcesWithNeed = (need: string) => {
 
 .quote-card {
   border-radius: var(--radius-lg);
-  border: 1px solid var(--line);
-  background: var(--surface);
+  border: 1px solid var(--theme-color-line);
+  background: var(--theme-color-surface);
   padding: 1.5rem;
   display: flex;
 }
 
 .overline {
   margin: 0;
-  color: var(--muted-4);
+  color: var(--theme-color-muted-2);
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  font-size: var(--fs-caption);
+  font-size: var(--theme-font-size-caption);
   font-weight: 730;
 }
 
@@ -595,7 +546,7 @@ const goToResourcesWithNeed = (need: string) => {
   margin: 0.65rem 0;
   max-width: 47.5rem;
   font-size: 1.5rem;
-  line-height: 1.3;
+  line-height: 1.5;
   letter-spacing: -0.008em;
   font-weight: 600;
   margin-bottom: 5rem;
@@ -604,8 +555,8 @@ const goToResourcesWithNeed = (need: string) => {
 
 .meta {
   margin: 0;
-  color: var(--muted-5);
-  font-size: var(--fs-sm);
+  color: var(--theme-color-muted-2);
+  font-size: var(--theme-font-size-sm);
   letter-spacing: 0.008em;
 }
 
@@ -618,7 +569,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .quote-left {
-  border-right: 1px solid var(--muted-4);
+  border-right: 1px solid var(--theme-color-muted-2);
   width: 60%;
   flex-shrink: 0;
   padding-right: 1rem;
@@ -627,14 +578,14 @@ const goToResourcesWithNeed = (need: string) => {
   display: flex;
   flex-wrap: wrap;
   gap: 0.9rem;
-  color: var(--muted-6);
-  font-size: var(--fs-note);
+  color: var(--theme-color-muted-2);
+  font-size: var(--theme-font-size-note);
   font-weight: 710;
 }
 
 .quote-logo {
   margin: 0;
-  font-size: var(--fs-display-lg);
+  font-size: var(--theme-font-size-display-lg);
   line-height: 1;
   letter-spacing: 0.009em;
 }
@@ -642,7 +593,7 @@ const goToResourcesWithNeed = (need: string) => {
 .quote-logo span {
   display: block;
   font-size: 0.5em;
-  color: var(--muted-2);
+  color: var(--theme-color-muted-2);
   letter-spacing: 0.009em;
 }
 
@@ -659,7 +610,7 @@ const goToResourcesWithNeed = (need: string) => {
 
 .stats h3 {
   margin: 0;
-  font-size: var(--fs-display-xl);
+  font-size: var(--theme-font-size-display-xl);
   line-height: 1;
 }
 
@@ -667,8 +618,8 @@ const goToResourcesWithNeed = (need: string) => {
   margin: 0.5rem 0 0;
   max-width: 16.25rem;
   font-size: var(--theme-font-size-brand);
-  line-height: 1.32;
-  color: var(--muted);
+  line-height: 1.5;
+  color: var(--theme-color-muted);
 }
 
 .impact {
@@ -678,7 +629,7 @@ const goToResourcesWithNeed = (need: string) => {
 .impact h2 {
   max-width: 38.75rem;
   margin: 0;
-  font-size: var(--fs-heading-md);
+  font-size: var(--theme-font-size-heading-md);
   line-height: 1;
 }
 
@@ -687,7 +638,8 @@ const goToResourcesWithNeed = (need: string) => {
   border-radius: 999px;
   background: #7d5d4a;
   color: white;
-  font-size: var(--fs-btn);
+  font-size: var(--theme-font-size-btn);
+  line-height: 1.5;
   font-weight: 700;
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
@@ -703,9 +655,9 @@ const goToResourcesWithNeed = (need: string) => {
 
 .impact-card {
   min-height: 260px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--theme-color-line);
   border-radius: var(--radius-md);
-  background: var(--surface);
+  background: var(--theme-color-surface);
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -719,7 +671,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .impact-card:focus-visible {
-  outline: 0.125rem solid color-mix(in oklab, var(--accent), #ffffff 70%);
+  outline: 0.125rem solid color-mix(in oklab, var(--theme-color-accent), #ffffff 70%);
   outline-offset: 0.125rem;
 }
 
@@ -731,10 +683,10 @@ const goToResourcesWithNeed = (need: string) => {
 
 .card-label {
   margin: 0;
-  color: var(--muted-8);
+  color: var(--theme-color-muted-2);
   text-transform: uppercase;
   letter-spacing: 0.085em;
-  font-size: var(--fs-caption);
+  font-size: var(--theme-font-size-caption);
   font-weight: 720;
 }
 
@@ -744,15 +696,15 @@ const goToResourcesWithNeed = (need: string) => {
 
 .impact-card h3 {
   margin: 8px 0 16px;
-  font-size: var(--fs-display-md);
+  font-size: var(--theme-font-size-display-md);
   line-height: 1;
 }
 
 .card-copy {
   margin: 0;
-  color: var(--accent-contrast);
+  color: var(--theme-color-accent-contrast);
   font-size: var(--theme-font-size-brand);
-  line-height: 1.33;
+  line-height: 1.5;
 }
 
 .impact-card:first-child .card-copy{
@@ -770,7 +722,7 @@ const goToResourcesWithNeed = (need: string) => {
 .emergency-link {
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--accent-contrast);
+  color: var(--theme-color-accent-contrast);
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.3em;
@@ -782,12 +734,12 @@ const goToResourcesWithNeed = (need: string) => {
 
 .emergency-link:hover,
 .emergency-link:focus-visible {
-  color: var(--ink);
+  color: var(--theme-color-text);
 }
 
 .card-link {
   margin-top: auto;
-  color: var(--muted-10);
+  color: var(--theme-color-muted-2);
 }
 
 .impact-card:first-child .card-link {
@@ -801,7 +753,7 @@ const goToResourcesWithNeed = (need: string) => {
 
 .cta h2 {
   margin: 0;
-  font-size: var(--fs-heading-lg);
+  font-size: var(--theme-font-size-heading-lg);
 }
 
 .cta-actions {
@@ -815,9 +767,10 @@ const goToResourcesWithNeed = (need: string) => {
   border-radius: 999px;
   border: 0;
   border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-contrast);
-  font-size: var(--fs-btn);
+  background: var(--theme-color-accent);
+  color: var(--theme-color-accent-contrast);
+  font-size: var(--theme-font-size-btn);
+  line-height: 1.5;
   font-weight: 700;
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
@@ -826,8 +779,8 @@ const goToResourcesWithNeed = (need: string) => {
 
 .site-footer {
   position: relative;
-  border-top: 1px solid var(--line);
-  background: var(--muted);
+  border-top: 1px solid var(--theme-color-line);
+  background: var(--theme-color-muted);
 }
 
 .footer-glow {
@@ -862,10 +815,10 @@ const goToResourcesWithNeed = (need: string) => {
 
 .footer-columns h3 {
   margin: 0;
-  color: var(--muted-11);
+  color: var(--theme-color-muted-2);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  font-size: var(--fs-xs);
+  font-size: var(--theme-font-size-xs);
   font-weight: 710;
 }
 
@@ -878,9 +831,9 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .footer-columns a {
-  color: var(--muted-12);
+  color: var(--theme-color-muted-2);
   text-decoration: none;
-  font-size: var(--fs-sm);
+  font-size: var(--theme-font-size-sm);
 }
 
 @keyframes lane-scroll {
@@ -967,7 +920,7 @@ const goToResourcesWithNeed = (need: string) => {
   }
 
   .hero-header h1 {
-    font-size: var(--fs-hero-mobile);
+    font-size: var(--theme-font-size-hero-mobile);
   }
 
   .hero-card {
@@ -991,12 +944,12 @@ const goToResourcesWithNeed = (need: string) => {
   }
 
   .hero-card h2 {
-    font-size: var(--fs-brand);
+    font-size: var(--theme-font-size-brand);
     margin: 0.35rem 0 0.45rem;
   }
 
   .watch-link {
-    font-size: var(--fs-xs);
+    font-size: var(--theme-font-size-xs);
   }
 
   .social-proof {
@@ -1008,11 +961,11 @@ const goToResourcesWithNeed = (need: string) => {
     font-size: var(--theme-font-size-caption);
   }
   .impact h2 {
-    font-size: var(--fs-display-xl);
+    font-size: var(--theme-font-size-display-xl);
   }
 
   .stats h3 {
-    font-size: var(--fs-heading-md);;
+    font-size: var(--theme-font-size-heading-md);;
   }
   .stats,
   .impact-grid,
@@ -1029,7 +982,7 @@ const goToResourcesWithNeed = (need: string) => {
   .quote-left {
     width: 100%;
     border: none;
-    border-bottom: 1px solid var(--muted-4);
+    border-bottom: 1px solid var(--theme-color-muted-2);
     margin-inline: 0;
     font-size: 1.5rem;
     line-height: 1.2;
@@ -1054,7 +1007,7 @@ const goToResourcesWithNeed = (need: string) => {
 
   .stats p {
     max-width: unset;
-    font-size: var(--theme-font-size-brand-mobile);
+    font-size: var(  --theme-font-size-brand);
   }
   .quote-foot {
     flex-direction: column;

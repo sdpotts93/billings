@@ -2310,45 +2310,19 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   --line: #dde3eb;
   --line-strong: #cfd6df;
   --hero-a: #fdf1e5;
-  --hero-b: #e6f4f4;
-  --hero-c: #edf1ff;
-  --accent-soft: #ebf1ff;
-  --surface-card: #ffffff;
-  --surface-card-soft: #f7f9fc;
   --surface-border: #d9e1ec;
   --surface-shadow: 0 0.75rem 1.5rem rgba(15, 28, 44, 0.09);
   --result-surface: #ffffff;
-  --result-surface-soft: #f6f7f8;
   --result-line: #d9dde3;
   --result-text: #1f2428;
   --result-muted: #626a73;
   --result-link: #1f2428;
-  --result-tone-highlight-a: #d7f0ff;
-  --result-tone-highlight-b: #e4f8e8;
-  --result-tone-doc-a: #efe3ff;
-  --result-tone-doc-b: #ffe9ef;
-  --result-tone-plan-a: #eef7ff;
-  --result-tone-plan-b: #f5fff6;
-  --result-tone-today-a: #dff4ff;
-  --result-tone-today-b: #ebf9ff;
-  --result-tone-week-a: #eaf7e2;
-  --result-tone-week-b: #f3fde8;
-  --result-tone-ongoing-a: #fff0d8;
-  --result-tone-ongoing-b: #fff7e8;
-  --section-help-a: #ffe9cf;
-  --section-help-b: #fff6e8;
-  --section-cf-a: #dff5f4;
-  --section-cf-b: #effbfb;
-  --section-conditions-a: #e6ecff;
-  --section-conditions-b: #f1f4ff;
-  --section-docs-a: #f5ebff;
-  --section-docs-b: #faf4ff;
-  --section-directory-a: #e4f9ed;
-  --section-directory-b: #f0fdf5;
-  --section-faq-a: #f2f4f8;
-  --section-faq-b: #f8f9fc;
-  --section-footer-a: #e9eef6;
-  --section-footer-b: #f3f6fb;
+  --resource-card-padding: var(--space-6);
+  --resource-card-title-line-height: 1;
+  --resource-card-body-line-height: 1.5;
+  --resource-card-title-gap: var(--space-2);
+  --resource-card-text-gap: var(--space-2);
+  --resource-card-link-gap: var(--space-3);
   min-height: 100vh;
   color: var(--ink);
   background: var(--alt-bg);
@@ -2414,10 +2388,9 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   max-width: min(82%, 12ch);
   font-family: var(--theme-font-title);
   font-size: clamp(1.7rem, 5vw, 4rem);
-  line-height: 0.9;
+  line-height: 1;
   text-transform: lowercase;
   text-wrap: balance;
-  line-height: 1.1;
   text-align: right;
   color: var(--muted);
   text-shadow: 0 0.125rem 1.125rem rgba(18, 25, 34, 0.45);
@@ -2544,7 +2517,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 h1 {
   margin: 0.3rem 0 0;
   font-size:var(--theme-font-size-display-md);
-  line-height: 1.1;
+  line-height: 1;
   color: var(--ink);
 }
 
@@ -2655,7 +2628,7 @@ h1 {
 .optional-badge {
   margin: 0.45rem 0 0;
   font-size: 0.75rem;
-  color: var(--theme-color-muted-4);
+  color: var(--theme-color-muted-2);
 }
 
 .question-stage {
@@ -2691,7 +2664,7 @@ h1 {
   border-radius: var(--radius-md);
   border: 1px solid transparent;
   font-weight: 650;
-  line-height: 1.2;
+  line-height: 1.5;
   cursor: pointer;
 }
 
@@ -2701,8 +2674,9 @@ h1 {
   background: var(--muted);
   color: var(--accent-contrast);
   padding: var(--space-3) var(--space-4);
-  font-size: var(--theme-font-size-brand-mobile);
+  font-size: var(--theme-font-size-brand);
   transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+  padding-block: var(--space-2);
 }
 
 .option-btn:hover {
@@ -2747,7 +2721,8 @@ h1 {
 .directory-group .resource-title {
   margin-top: 0;
   font-family: var(--theme-font-title);
-  font-size: var(--text-xl);
+  font-size: var(--theme-font-size-card-title);
+  line-height: var(--resource-card-title-line-height);
   color: var(--muted);
 }
 .ghost-btn,
@@ -2788,7 +2763,7 @@ h1 {
 .content-section h2 {
   margin: 0.2rem 0 0;
   font-size: var(--theme-font-size-heading-md);
-  line-height: 1.03;
+  line-height: 1;
 }
 
 .results-state {
@@ -2825,7 +2800,7 @@ h1 {
 .result-panel {
   border: 1px solid var(--result-line);
   border-radius: 1.125rem;
-  padding: 1.5rem;
+  padding: var(--resource-card-padding);
   box-shadow: var(--surface-shadow);
 }
 
@@ -2840,18 +2815,18 @@ h1 {
 .result-simple-card h2,
 .result-plan-title,
 .result-resource-list-title {
-  margin: 0.56rem 0 0;
-  font-size: var(--theme-font-size-heading-md);
+  margin: var(--resource-card-title-gap) 0 0;
+  font-size: var(--theme-font-size-card-title);
   font-family: var(--theme-font-title);
-  line-height: 1.03;
+  line-height: var(--resource-card-title-line-height);
   color: var(--result-text);
 }
 
 .results-state .resource-meta {
-  margin: 0.42rem 0 0;
+  margin: var(--resource-card-text-gap) 0 0;
   color: var(--result-muted);
   font-size: var(--theme-font-size-sm);
-  line-height: 1.4;
+  line-height: var(--resource-card-body-line-height);
 }
 
 .resource-meta {
@@ -2865,7 +2840,7 @@ h1 {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  margin-top: var(--space-3);
+  margin-top: var(--resource-card-link-gap);
   color: var(--result-link);
   font-size: var(--theme-font-size-sm);
   font-weight: 700;
@@ -2892,7 +2867,7 @@ h1 {
 .plan-block {
   border: 1px solid color-mix(in oklab, var(--result-line), #ffffff 26%);
   border-radius: var(--radius-lg);
-  padding: 1.5rem;
+  padding: var(--resource-card-padding);
   box-shadow: 0 0.375rem 0.875rem rgba(15, 28, 44, 0.05);
 }
 
@@ -2969,7 +2944,7 @@ h1 {
 .results-state .resource-list li {
   border-radius: var(--radius-md);
   background: #ededed;
-  padding: 1.5rem;
+  padding: var(--resource-card-padding);
   margin-bottom: var(--space-2);
   display: flex;
   gap: var(--space-3);
@@ -2995,9 +2970,10 @@ h1 {
 
 .results-state .resource-title {
   margin: 0;
+  font-size: var(--theme-font-size-card-title);
+  line-height: var(--resource-card-title-line-height);
   font-weight: 680;
   color: var(--result-text);
-  line-height: 1.35;
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
@@ -3025,8 +3001,8 @@ h1 {
 .cf-spotlight a,
 .condition-links a {
   display: flex;
-  margin-top: var(--space-2);
-  font-size: var(--text-xs);
+  margin-top: var(--resource-card-link-gap);
+  font-size: var(--theme-font-size-sm);
   font-weight: 700;
   color: var(--accent);
   text-decoration: none;
@@ -3038,8 +3014,8 @@ h1 {
 }
 .doc-card a {
   display: flex;
-  margin-top: 1rem;
-  font-size: var(--text-xs);
+  margin-top: var(--resource-card-link-gap);
+  font-size: var(--theme-font-size-sm);
   font-weight: 700;
   text-decoration: none;
   align-items: anchor-center;
@@ -3051,7 +3027,7 @@ h1 {
 }
 
 .cf-spotlight a {
-  margin-top: 1rem;
+  margin-top: var(--resource-card-link-gap);
 }
 .result-controls {
   margin-top: 1rem;
@@ -3108,7 +3084,7 @@ h1 {
   line-height: 1.35;
   min-height: 5.75rem;
   text-align: center;
-  font-size: var(--theme-font-size-brand-mobile);
+  font-size: var(--theme-font-size-brand);
   box-shadow: var(--surface-shadow);
   transition: transform 160ms ease, box-shadow 160ms ease;
   column-gap: 0.3rem;
@@ -3129,7 +3105,7 @@ h1 {
 .spotlight-grid article {
     border-radius: var(--radius-lg);
     background: #3c2851;
-    padding: 1.5rem;
+    padding: var(--resource-card-padding);
     grid-column: 1 / span 4;
 }
 
@@ -3143,16 +3119,16 @@ h1 {
 .doc-card h3,
 .directory-group h3 {
   margin: 0;
-  font-size: 1.5rem;
-  line-height: 1.28;
+  font-size: var(--theme-font-size-card-title);
+  line-height: var(--resource-card-title-line-height);
 }
 
 .spotlight-grid ul,
 .spotlight-grid p {
-  margin: 0.64rem 0 0;
+  margin: var(--resource-card-text-gap) 0 0;
   color: var(--muted);
-  line-height: 1.5;
-  font-size: var(--text-xs);
+  line-height: var(--resource-card-body-line-height);
+  font-size: var(--theme-font-size-sm);
 }
 
 .inline-downloads {
@@ -3163,7 +3139,7 @@ h1 {
 
 .inline-downloads a {
   margin-top: 0;
-  font-size: var(--text-xs);
+  font-size: var(--theme-font-size-sm);
   text-decoration: underline;
 }
 
@@ -3192,21 +3168,22 @@ h1 {
 
 .condition-card {
   border-radius: var(--radius-lg);
-  padding: 1.5rem;
+  padding: var(--resource-card-padding);
   background: #273b54;
 }
 
 .card-summary {
-  margin: 0.52rem 0 0;
+  margin: var(--resource-card-text-gap) 0 0;
   color: var(--ink-soft);
-  line-height: 1.5;
+  line-height: var(--resource-card-body-line-height);
+  font-size: var(--theme-font-size-sm);
 }
 
 .condition-card p {
-  margin: 0.52rem 0 0;
+  margin: var(--resource-card-text-gap) 0 0;
   color: var(--muted);
-  line-height: 1.5;
-  font-size: var(--text-xs);
+  line-height: var(--resource-card-body-line-height);
+  font-size: var(--theme-font-size-sm);
 }
 
 .condition-impact {
@@ -3240,7 +3217,7 @@ h1 {
 }
 
 .condition-stat {
-  margin-top: 0.62rem;
+  margin-top: var(--resource-card-text-gap);
   font-size: var(--theme-font-size-sm);
   display: flex;
   align-items: start;
@@ -3259,7 +3236,7 @@ h1 {
 }
 
 .condition-links {
-  margin-top: 0.7rem;
+  margin-top: var(--resource-card-link-gap);
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
@@ -3318,23 +3295,20 @@ h1 {
 
 .doc-card {
   border-radius: var(--radius-lg);
-  padding: 1.5rem;
+  padding: var(--resource-card-padding);
   background: white;
 }
 
 .doc-card p,
 .directory-group p {
-  margin: 1rem 0 0;
+  margin: var(--resource-card-text-gap) 0 0;
   color: var(--accent-contrast);
-  line-height: 1.42;
+  line-height: var(--resource-card-body-line-height);
+  font-size: var(--theme-font-size-sm);
 }
 
 .directory-group p {
   color: var(--muted);
-}
-
-.doc-card p {
-  font-size: var(--theme-font-size-sm);
 }
 
 .doc-card .doc-row {
@@ -3352,7 +3326,7 @@ h1 {
 .doc-card .doc-row-copy {
   display: block;
   flex: 1;
-  font-size: var(--text-xs);
+  font-size: var(--theme-font-size-sm);
 }
 
 .directory-grid {
@@ -3367,7 +3341,7 @@ h1 {
 .directory-group {
     /* border: 1px solid var(--muted); */
     border-radius: var(--radius-lg);
-    padding: 1.5rem;
+    padding: var(--resource-card-padding);
     background: #333949;
 }
 
@@ -3398,6 +3372,7 @@ h1 {
     background: var(--muted);
     color: var(--accent-contrast);
     font-size: var(--theme-font-size-caption);
+    line-height: 1.5;
     font-weight: 700;
     cursor: pointer;
     margin-left: var(--space-5);
@@ -3579,11 +3554,11 @@ h1 {
   .condition-card h3,
   .doc-card h3,
   .directory-group h3 {
-    font-size: 1.5rem;
+    font-size: var(--theme-font-size-card-title);
   }
 
   .directory-group .resource-title {
-    font-size: 1.25rem;
+    font-size: var(--theme-font-size-card-title);
   }
 
   .back-btn {
@@ -3623,7 +3598,7 @@ h1 {
   }
 
   h1 {
-    line-height: 1.16;
+    line-height: 1;
   }
 
   .content-section h2 {
@@ -3633,7 +3608,7 @@ h1 {
 
   .section-subtitle {
     font-size: var(--theme-font-size-brand);
-    line-height: 1.45;
+    line-height: 1.5;
   }
 
   .section-photo {
@@ -3665,7 +3640,7 @@ h1 {
   .condition-action-list li,
   .doc-card p,
   .results-state .resource-meta {
-    font-size: 0.88rem;
+    font-size: var(--theme-font-size-sm);
   }
 
   .result-controls {

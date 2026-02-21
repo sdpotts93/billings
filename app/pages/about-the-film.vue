@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { gsap } from 'gsap/gsap-core'
+import { gsap } from 'gsap'
 
 type TeamMember = {
   name: string
@@ -489,15 +489,13 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .about-film-page {
-  --page-bg: var(--theme-color-bg);
-  --ink: var(--theme-color-text);
   --line: #111217;
   --card: #efeff1;
   --soft: #d5d6da;
   --accent: #2f58ff;
   min-height: 100vh;
-  background: var(--page-bg);
-  color: var(--ink);
+  background: var(--theme-color-bg);
+  color: var(--theme-color-text);
   font-family: var(--theme-font-text);
 }
 
@@ -527,7 +525,7 @@ onBeforeUnmount(() => {
   margin: 0.68rem auto 0;
   max-width: 61.25rem;
   font-size: clamp(1.8rem, 4.3vw, 3.75rem);
-  line-height: 0.98;
+  line-height: 1;
   font-family: var(--theme-font-title);
 }
 
@@ -535,7 +533,7 @@ onBeforeUnmount(() => {
   margin: 0.9rem auto 0;
   max-width: 47.5rem;
   font-size: var(--theme-font-size-brand);
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--muted);
 }
 
@@ -642,7 +640,7 @@ onBeforeUnmount(() => {
   max-width: 16ch;
   font-family: var(--theme-font-title);
   font-size: clamp(1.9rem, 3.5vw, 3.7rem);
-  line-height: 0.98;
+  line-height: 1;
 }
 
 .hero-mission-image {
@@ -694,8 +692,8 @@ onBeforeUnmount(() => {
 .hero-metric-overline {
     margin: 0.9rem auto 0;
     max-width: 38.75rem;
-    color: var(--ink);
-    line-height: 1.45;
+    color: var(--theme-color-text);
+    line-height: 1.5;
     font-size: var(--fs-brand);
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -706,7 +704,7 @@ onBeforeUnmount(() => {
   margin: 0;
   font-family: var(--theme-font-title);
   font-size: 10rem;
-  line-height: 0.9;
+  line-height: 1;
   letter-spacing: -0.034em;
   color: var(--muted);
 }
@@ -715,7 +713,7 @@ onBeforeUnmount(() => {
   margin: 0.7rem auto 0;
   max-width: 24ch;
   font-size: clamp(0.78rem, 1.2vw, 1.02rem);
-  line-height: 1.35;
+  line-height: 1.5;
   color: var(--muted);
   text-transform: lowercase;
 }
@@ -741,13 +739,13 @@ onBeforeUnmount(() => {
   text-align: center;
   max-width: 14ch;
   font-size: clamp(2.1rem, 6.4vw, 6.1rem);
-  line-height: 0.93;
+  line-height: 1;
   font-family: var(--theme-font-title);
 }
 
 .headline-layer h2 span {
   display: block;
-  color: color-mix(in oklab, var(--ink), #90939d 55%);
+  color: color-mix(in oklab, var(--theme-color-text), #90939d 55%);
   font-weight: 500;
 }
 
@@ -771,7 +769,7 @@ onBeforeUnmount(() => {
 .manifesto-full {
   margin: 0;
   font-size: clamp(1.4rem, 3.5vw, 4.2rem);
-  line-height: 0.98;
+  line-height: 1;
   letter-spacing: -0.03em;
   max-width: 48.75rem;
   font-family: var(--theme-font-title);
@@ -826,7 +824,7 @@ onBeforeUnmount(() => {
 .team-card-copy .person {
   margin: 0;
   font-size: 2rem;
-  line-height: 1.08;
+  line-height: 1;
   font-weight: 700;
   font-family: var(--theme-font-title);
   color: var(--muted);
@@ -835,7 +833,7 @@ onBeforeUnmount(() => {
 .team-card-copy .role {
   margin: 0.22rem 0 0;
   font-size: 1rem;
-  line-height: 1.1;
+  line-height: 1.5;
   color: #959595;;
 }
 
@@ -853,14 +851,14 @@ onBeforeUnmount(() => {
   margin: 0;
   text-align: left;
   font-size: clamp(2.05rem, 5.4vw, 5rem);
-  line-height: 0.93;
+  line-height: 1;
   letter-spacing: -0.028em;
   font-family: var(--theme-font-title);
 }
 
 .next-layer h3 span {
   display: block;
-  color: color-mix(in oklab, var(--ink), #90939d 55%);
+  color: color-mix(in oklab, var(--theme-color-text), #90939d 55%);
   font-weight: 500;
 }
 
@@ -880,7 +878,7 @@ onBeforeUnmount(() => {
 .chapter-card p {
   margin: 0;
   font-size: var(--theme-font-size-sm);
-  line-height: 2;
+  line-height: 1.5;
   position: relative;
   z-index: 1;
 }
@@ -1007,7 +1005,7 @@ onBeforeUnmount(() => {
     margin: 0;
     display: block;
     font-size: clamp(1.4rem, 6.2vw, 2.3rem);
-    line-height: 1.2;
+    line-height: 1;
     /* letter-spacing: -0.03em; */
     font-family: var(--theme-font-title);
   }
@@ -1038,7 +1036,7 @@ onBeforeUnmount(() => {
   .team-card-copy .role {
     margin: 0.22rem 0 0;
     font-size: 0.9rem;
-    line-height: 1.1;
+    line-height: 1.5;
     color: #acacac;
   }
 
@@ -1128,7 +1126,7 @@ onBeforeUnmount(() => {
 
   .hero-metric-label {
     font-size: 1rem;
-    line-height: 1.34;
+    line-height: 1.5;
     max-width: 23ch;
   }
 

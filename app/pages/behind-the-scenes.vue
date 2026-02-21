@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Flip } from 'gsap/Flip'
-import { gsap } from 'gsap/gsap-core'
+import { gsap } from 'gsap'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const heroImageSrc = '/images/behind-the-scenes.jpg'
@@ -403,22 +403,9 @@ onBeforeUnmount(() => {
 <style scoped>
 .behind-scenes-page {
   --frame-gap: 2.5rem;
-  --ink: var(--theme-color-text);
-  --muted: var(--theme-color-muted);
-  --muted-13: var(--theme-color-muted-13);
-  --line: var(--theme-color-line);
-  --surface: var(--theme-color-bg);
-  --bg-glow-1: var(--theme-color-bg-glow-1);
-  --bg-glow-2: var(--theme-color-bg-glow-2);
-  --font-title: var(--theme-font-title);
-  --font-text: var(--theme-font-text);
-  --fs-sm-plus: var(--theme-font-size-sm-plus);
-  --fs-brand: var(--theme-font-size-brand);
-  --fs-hero-lg: var(--theme-font-size-hero-lg);
-  --fs-hero-mobile: var(--theme-font-size-hero-mobile);
   min-height: 100vh;
-  color: var(--ink);
-  font-family: var(--font-text);
+  color: var(--theme-color-text);
+  font-family: var(--theme-font-text);
   background: var(--theme-color-bg);
 }
 
@@ -443,9 +430,9 @@ onBeforeUnmount(() => {
 .eyebrow {
     margin: 0.9rem auto 0;
     max-width: 38.75rem;
-    color: var(--muted);
-    line-height: 1.45;
-    font-size: var(--fs-brand);
+    color: var(--theme-color-muted);
+    line-height: 1.5;
+    font-size: var(--theme-font-size-brand);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 700;
@@ -454,17 +441,17 @@ onBeforeUnmount(() => {
 .intro-copy h2 {
   margin: 0.45rem auto 0;
   max-width: 45rem;
-  font-family: var(--font-title);
-  font-size: var(--fs-hero-lg);
-  line-height: 1.02;
+  font-family: var(--theme-font-title);
+  font-size: var(--theme-font-size-hero-lg);
+  line-height: 1;
 }
 
 .intro-copy > p:not(.eyebrow) {
   margin: 0.9rem auto 0;
   max-width: 38.75rem;
-  color: var(--muted);
-  line-height: 1.45;
-  font-size: var(--fs-brand);
+  color: var(--theme-color-muted);
+  line-height: 1.5;
+  font-size: var(--theme-font-size-brand);
 }
 
 .studio-life {
@@ -484,9 +471,9 @@ onBeforeUnmount(() => {
   background: transparent;
   padding: 1rem;
   align-self: stretch;
-  color: var(--muted);
-  font-size: var(--fs-brand);
-  line-height: 1.25;
+  color: var(--theme-color-muted);
+  font-size: var(--theme-font-size-brand);
+  line-height: 1.5;
 }
 
 .studio-life-copy p {
@@ -531,12 +518,12 @@ onBeforeUnmount(() => {
   z-index: 3;
   margin: 0;
   max-width: min(78%, 10ch);
-  font-family: var(--font-title);
+  font-family: var(--theme-font-title);
   font-size: clamp(2.1rem, 8.8vw, 7.2rem);
-  line-height: 0.9;
+  line-height: 1;
   text-transform: lowercase;
   text-wrap: balance;
-  color: var(--ink);
+  color: var(--theme-color-text);
 }
 
 .hero-media {
@@ -547,7 +534,7 @@ onBeforeUnmount(() => {
   height: calc(100vh - 4.25rem - (var(--frame-gap) * 2));
   min-height: 23.75rem;
   background: #d5ddd6;
-  box-shadow: 1.5rem 1.5rem 0 var(--muted);
+  box-shadow: 1.5rem 1.5rem 0 var(--theme-color-muted);
 }
 
 .hero-media::after {
@@ -611,7 +598,7 @@ onBeforeUnmount(() => {
 
 @media screen and (max-width: 1024px) {
   .intro-copy h2 {
-    font-size: var(--fs-hero-mobile);
+    font-size: var(--theme-font-size-hero-mobile);
   }
 
   .hero-title {
@@ -619,13 +606,13 @@ onBeforeUnmount(() => {
     right: 0.75rem;
     max-width: min(84%, 12ch);
     font-size: 4rem;
-    line-height: 0.92;
+    line-height: 1;
     text-align: right;
   }
 
   .hero-media {
     border-radius: 1.125rem;
-    box-shadow: 0.75rem 0.75rem 0 var(--muted);
+    box-shadow: 0.75rem 0.75rem 0 var(--theme-color-muted);
   }
 
   .studio-life-copy {
@@ -676,7 +663,7 @@ onBeforeUnmount(() => {
 
   .studio-life-copy {
     max-width: 100%;
-    line-height: 1.4;
+    line-height: 1.5;
     padding-inline: 0;
   }
 
