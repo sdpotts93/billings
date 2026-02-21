@@ -47,14 +47,16 @@ export default defineNuxtConfig({
     '/resources': { prerender: true },
     '/resources/': { prerender: true },
     '/behind-the-scenes': { prerender: true },
-    '/behind-the-scenes/': { prerender: true }
+    '/behind-the-scenes/': { prerender: true },
+    '/privacy-policy': { prerender: true },
+    '/privacy-policy/': { prerender: true }
   },
 
   compatibilityDate: '2025-01-15',
 
   nitro: {
     prerender: {
-      routes: ['/', '/about-the-film', '/about-the-film/', '/share-your-story', '/share-your-story/', '/resources', '/resources/', '/behind-the-scenes', '/behind-the-scenes/']
+      routes: ['/', '/about-the-film', '/about-the-film/', '/share-your-story', '/share-your-story/', '/resources', '/resources/', '/behind-the-scenes', '/behind-the-scenes/', '/privacy-policy', '/privacy-policy/']
     }
   },
 

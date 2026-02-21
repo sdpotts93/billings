@@ -112,14 +112,6 @@ const handleWindowKeydown = (event: KeyboardEvent) => {
   }
 }
 
-const scrollToTop = () => {
-  if (!import.meta.client) {
-    return
-  }
-
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
-
 const submitUpdatesEmail = async () => {
   const email = updatesEmail.value.trim()
   updatesError.value = ''
@@ -409,13 +401,12 @@ watch(
           </NuxtLink>
 
           <div class="footer-meta">
-            <button
-              type="button"
+            <NuxtLink
+              to="/privacy-policy"
               class="back-to-top"
-              @click="scrollToTop"
             >
-              Back to top ↑
-            </button>
+              Privacy Policy
+            </NuxtLink>
             <p>Copyright © Billings {{ currentYear }}</p>
           </div>
         </div>
