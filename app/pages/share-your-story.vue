@@ -680,7 +680,7 @@ onBeforeUnmount(() => {
   margin: 0;
   color: var(--theme-color-accent-contrast);
   font-family: var(--font-text);
-  font-size: var(--fs-body-lg);
+  font-size: var(--theme-font-size-brand-mobile);
   line-height: 1.5;
   letter-spacing: -0.005em;
   text-wrap: pretty;
