@@ -11,16 +11,16 @@ useHead({
   }
 })
 
-const title = 'Billings'
-const description = 'Product analytics that helps teams build from their data.'
+const title = 'Billings | Real Stories About Navigating U.S. Healthcare'
+const description = 'Billings shares real stories about healthcare access and connects patients and caregivers to practical, free resources they can use now.'
 
 useSeoMeta({
   title,
   description,
   ogTitle: title,
   ogDescription: description,
-  ogImage: '/favicon.ico',
-  twitterImage: '/favicon.ico',
+  ogImage: '/og-image.jpg',
+  twitterImage: '/og-image.jpg',
   twitterCard: 'summary_large_image'
 })
 </script>

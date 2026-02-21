@@ -1004,27 +1004,27 @@ const conditionCards: ConditionCard[] = [
 const faqItems: FaqItem[] = [
   {
     question: 'Is this medical advice?',
-    answer: 'No. This page is for navigation and cost support, not medical diagnosis or treatment.'
+    answer: 'No. This page is for navigation and cost support, not medical diagnosis or treatment. For emergencies call 911; for a mental health crisis call or text 988.'
   },
   {
     question: 'Do you store my answers?',
-    answer: 'No. Wizard answers are not stored. If you sign up for updates, we store only your email.'
+    answer: 'We do not save your wizard answers or personal health information. Your selections stay in your browser. If you sign up for updates, we collect your email address so we can contact you, but we do not attach your answers.'
   },
   {
     question: 'What if I’m uninsured?',
-    answer: 'Start with Medicaid or Marketplace checks. If you need care while coverage is in progress, try an HRSA health center or a free/charitable clinic and call 211 for local help.'
+    answer: 'Check Medicaid and Marketplace (ACA) eligibility for your state. If you need care while coverage is in progress, start with an HRSA health center (FQHC) or a free/charitable clinic, ask about sliding-scale fees, and call 211 for local help.'
   },
   {
     question: 'What if I can’t afford my meds?',
-    answer: 'Ask for a generic or formulary alternative, request prior authorization help, and check assistance programs. If you are rationing a critical medication, contact your care team promptly.'
+    answer: 'Ask the pharmacy about the lowest-cost clinically appropriate option (generic, biosimilar, formulary alternative, 90-day). Ask your clinician for prior authorization help and check patient assistance programs. If you are rationing a critical medication, contact your care team right away.'
   },
   {
     question: 'How do I fight a denial?',
-    answer: 'Get the denial reason and appeal deadline in writing. Appeal before the deadline with supporting records and keep proof of submission.'
+    answer: 'Ask for the denial reason (and reason code), the appeal deadline, and appeal instructions in writing. Submit your appeal before the deadline with supporting records and keep proof of submission. If the situation is urgent, ask about an expedited review.'
   },
   {
     question: 'What should I do about medical debt?',
-    answer: 'Request an itemized bill, compare it to your EOB, apply for assistance, and negotiate written zero-interest payment terms. Ask to pause collections while a dispute or assistance review is pending.'
+    answer: 'Request an itemized bill and, if insured, match it to your EOB before paying. Ask about charity care/financial assistance and negotiate a zero-interest payment plan in writing. If you are disputing a bill, ask billing/collections to pause while the review is pending.'
   }
 ]
 
@@ -1725,13 +1725,13 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                     <p class="resource-meta">
                       {{ compactCopy(topDocument.summary, 96) }}
                     </p>
-	                    <a
-	                      :href="documentDownloadHref(topDocument)"
-	                      :download="topDocument.filename"
-	                    >
-	                      Download PDF <UIcon name="i-lucide-download" />
-	                    </a>
-	                  </template>
+                    <a
+                      :href="documentDownloadHref(topDocument)"
+                      :download="topDocument.filename"
+                    >
+                      Download PDF <UIcon name="i-lucide-download" />
+                    </a>
+                  </template>
                   <p
                     v-else
                     class="resource-meta"
@@ -1741,7 +1741,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                 </article>
               </section>
 
-	              <section class="result-plan-card result-panel result-panel--plan">
+              <section class="result-plan-card result-panel result-panel--plan">
                 <p class="result-card-label">
                   <UIcon
                     name="i-lucide-list-checks"
@@ -1809,36 +1809,39 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                 >
                   Download full action plan <UIcon name="i-lucide-download" />
                 </a>
-	              </section>
+              </section>
 
-	              <section class="result-documents-card result-panel result-panel--documents">
-	                <p class="result-card-label">
-	                  <UIcon
-	                    name="i-lucide-file-down"
-	                    class="result-label-icon"
-	                  />
-	                  <span>Recommended PDFs</span>
-	                </p>
-	                <h2 class="result-resource-list-title">
-	                  Recommended PDFs
-	                </h2>
-	                <div class="inline-downloads">
-	                  <a
-	                    v-for="document in orderedResultDocuments.slice(0, 5)"
-	                    :key="document.id"
-	                    :href="documentDownloadHref(document)"
-	                    :download="document.filename"
-	                  >
-	                    <UIcon name="i-lucide-download" class="inline-icon" /> {{ document.title }}
-	                  </a>
-	                </div>
-	              </section>
+              <section class="result-documents-card result-panel result-panel--documents">
+                <p class="result-card-label">
+                  <UIcon
+                    name="i-lucide-file-down"
+                    class="result-label-icon"
+                  />
+                  <span>Recommended PDFs</span>
+                </p>
+                <h2 class="result-resource-list-title">
+                  Recommended PDFs
+                </h2>
+                <div class="inline-downloads">
+                  <a
+                    v-for="document in orderedResultDocuments.slice(0, 5)"
+                    :key="document.id"
+                    :href="documentDownloadHref(document)"
+                    :download="document.filename"
+                  >
+                    <UIcon
+                      name="i-lucide-download"
+                      class="inline-icon"
+                    /> {{ document.title }}
+                  </a>
+                </div>
+              </section>
 
-	              <section class="result-resource-list-card result-panel result-panel--resources">
-	                <p class="result-card-label">
-	                  <UIcon
-	                    name="i-lucide-link-2"
-	                    class="result-label-icon"
+              <section class="result-resource-list-card result-panel result-panel--resources">
+                <p class="result-card-label">
+                  <UIcon
+                    name="i-lucide-link-2"
+                    class="result-label-icon"
                   />
                   <span>All free resources</span>
                 </p>
@@ -1922,28 +1925,28 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
         <section
           id="help-now"
           class="help-now content-section section-help"
-	        >
-	          <h2 class="title-with-icon">
-	            <UIcon
-	              name="i-lucide-siren"
-	              class="title-icon"
-	            /> Help now
-	          </h2>
-	          <p>Start here if you need help right now. For emergencies call 911. For crisis support call/text 988. For local services (housing, food, rides) call 211.</p>
-	          <div class="help-now-grid">
-	            <figure class="section-photo section-photo--help section-photo--wide grid-photo-item">
-	              <NuxtImg
-	                src="/images/resources-emergency.jpg"
-	                alt="A police car with emergency lights"
-	                loading="lazy"
-	              />
-	            </figure>
-	            <a href="tel:911">
+        >
+          <h2 class="title-with-icon">
+            <UIcon
+              name="i-lucide-siren"
+              class="title-icon"
+            /> Help now
+          </h2>
+          <p>Start here if you need help right now. For emergencies call 911. For crisis support call/text 988. For local services (housing, food, rides) call 211.</p>
+          <div class="help-now-grid">
+            <figure class="section-photo section-photo--help section-photo--wide grid-photo-item">
+              <NuxtImg
+                src="/images/resources-emergency.jpg"
+                alt="A police car with emergency lights"
+                loading="lazy"
+              />
+            </figure>
+            <a href="tel:911">
               <UIcon
                 name="i-lucide-siren"
                 class="link-icon"
-	              /> Emergency: Call 911
-	            </a>
+              /> Emergency: Call 911
+            </a>
             <a
               href="https://988lifeline.org"
               target="_blank"
@@ -1951,7 +1954,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             ><UIcon
               name="i-lucide-phone-call"
               class="link-icon"
-	            /> Crisis support: Call/text 988</a>
+            /> Crisis support: Call/text 988</a>
             <a
               href="https://www.211.org"
               target="_blank"
@@ -1959,36 +1962,36 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             ><UIcon
               name="i-lucide-map-pin"
               class="link-icon"
-	            /> Local services: 211 (housing, food, rides)</a>
+            /> Local services: 211 (housing, food, rides)</a>
             <a
               href="https://www.cff.org/support/get-help-cf-foundation-compass"
               target="_blank"
               rel="noopener"
-	            >
-	              <span>
+            >
+              <span>
                 <UIcon
                   name="i-lucide-heart-pulse"
                   class="link-icon"
-	                /> CF help: CF Foundation Compass (coverage + financial)
-	              </span>
-	            </a>
-	          </div>
-	        </section>
+                /> CF help: CF Foundation Compass (coverage + financial)
+              </span>
+            </a>
+          </div>
+        </section>
 
         <section
           id="cf-quick-guide"
           class="cf-spotlight content-section section-cf"
-	        >
-	          <h2 class="title-with-icon">
-	            <UIcon
-	              name="i-lucide-heart-pulse"
-	              class="title-icon"
-	            /> Cystic fibrosis (CF) quick guide
-	          </h2>
-	          <p class="section-subtitle">
-	            Start with Compass for navigation help, then download PDFs to track refills and prior authorizations.
-	          </p>
-	          <div class="spotlight-grid">
+        >
+          <h2 class="title-with-icon">
+            <UIcon
+              name="i-lucide-heart-pulse"
+              class="title-icon"
+            /> Cystic fibrosis (CF) quick guide
+          </h2>
+          <p class="section-subtitle">
+            Start with Compass for navigation help, then download PDFs to track refills and prior authorizations.
+          </p>
+          <div class="spotlight-grid">
             <figure class="section-photo section-photo--cf section-photo--portrait grid-photo-item">
               <NuxtImg
                 src="/images/resources-cf.jpg"
@@ -1996,32 +1999,32 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                 loading="lazy"
               />
             </figure>
-	            <article>
-	              <h3>
-	                Why it gets expensive
-	              </h3>
-	              <ul>
-	                <li>Specialty meds and frequent follow-up can drive high monthly out-of-pocket costs.</li>
-	                <li>Prior authorizations and specialty pharmacies can delay refills if renewals slip.</li>
-	              </ul>
-	            </article>
+            <article>
+              <h3>
+                Why it gets expensive
+              </h3>
+              <ul>
+                <li>Specialty meds and frequent follow-up can drive high monthly out-of-pocket costs.</li>
+                <li>Prior authorizations and specialty pharmacies can delay refills if renewals slip.</li>
+              </ul>
+            </article>
 
-	            <article>
-	              <h3>
-	                Fast next steps
-	              </h3>
-	              <ul>
-	                <li>Contact CF Foundation Compass for insurance and financial navigation.</li>
-	                <li>Write down prior authorization and pharmacy renewal dates (a simple calendar helps).</li>
-	              </ul>
-	            </article>
+            <article>
+              <h3>
+                Fast next steps
+              </h3>
+              <ul>
+                <li>Contact CF Foundation Compass for insurance and financial navigation.</li>
+                <li>Write down prior authorization and pharmacy renewal dates (a simple calendar helps).</li>
+              </ul>
+            </article>
 
-	            <article>
-	              <h3>
-	                Download PDFs
-	              </h3>
-	              <p>Use these checklists to track calls, renewals, and next steps.</p>
-	              <div class="inline-downloads">
+            <article>
+              <h3>
+                Download PDFs
+              </h3>
+              <p>Use these checklists to track calls, renewals, and next steps.</p>
+              <div class="inline-downloads">
                 <a
                   v-for="document in cfQuickDocuments"
                   :key="document.id"
@@ -2033,33 +2036,33 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                     class="link-icon"
                   /> {{ document.title }}
                 </a>
-	              </div>
-	              <a
-	                v-if="cfCompassResource"
-	                :href="cfCompassResource.url"
-	                target="_blank"
-	                rel="noopener"
-	              ><UIcon
-	                name="i-lucide-arrow-up-right"
-	                class="link-icon"
-	              /> CF Foundation Compass (get help)</a>
-	            </article>
-	          </div>
-	        </section>
+              </div>
+              <a
+                v-if="cfCompassResource"
+                :href="cfCompassResource.url"
+                target="_blank"
+                rel="noopener"
+              ><UIcon
+                name="i-lucide-arrow-up-right"
+                class="link-icon"
+              /> CF Foundation Compass (get help)</a>
+            </article>
+          </div>
+        </section>
 
         <section
           id="conditions-section"
           class="conditions-section content-section section-conditions"
-	        >
-	          <h2 class="title-with-icon">
-	            <UIcon
-	              name="i-lucide-bar-chart-3"
-	              class="title-icon"
-	            /> Conditions that often create high costs
-	          </h2>
-	          <p class="section-subtitle">
-	            Skim the overview, then download a 1-page guide you can save or print.
-	          </p>
+        >
+          <h2 class="title-with-icon">
+            <UIcon
+              name="i-lucide-bar-chart-3"
+              class="title-icon"
+            /> Conditions that often create high costs
+          </h2>
+          <p class="section-subtitle">
+            Skim the overview, then download a 1-page guide you can save or print.
+          </p>
           <div class="conditions-grid">
             <figure class="section-photo section-photo--conditions section-photo--square grid-photo-item">
               <NuxtImg
@@ -2094,52 +2097,52 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               </p>
 
               <div class="condition-links">
-	                <a
-	                  :href="conditionGuideDownloadHref(condition)"
-	                  :download="conditionGuideFilename(condition)"
-	                >
+                <a
+                  :href="conditionGuideDownloadHref(condition)"
+                  :download="conditionGuideFilename(condition)"
+                >
                   <UIcon
                     name="i-lucide-file-down"
                     class="link-icon"
-	                  /> Download 1-page guide
-	                </a>
-	                <a
-	                  v-if="condition.sources[0]"
-	                  :href="condition.sources[0].url"
-	                  target="_blank"
-	                  rel="noopener"
-	                >
+                  /> Download 1-page guide
+                </a>
+                <a
+                  v-if="condition.sources[0]"
+                  :href="condition.sources[0].url"
+                  target="_blank"
+                  rel="noopener"
+                >
                   <UIcon
                     name="i-lucide-book-open"
                     class="link-icon"
-	                  /> Learn more
-	                </a>
-	              </div>
-	            </article>
-	          </div>
-	        </section>
+                  /> Learn more
+                </a>
+              </div>
+            </article>
+          </div>
+        </section>
 
         <section
           id="docs-library"
           class="docs-library content-section section-docs"
-	        >
-	          <h2 class="title-with-icon">
-	            <UIcon
-	              name="i-lucide-file-down"
-	              class="title-icon"
-	            /> Downloadable PDFs (checklists + call scripts)
-	          </h2>
-	          <p class="section-subtitle">
-	            Download and use while you make calls. Your wizard answers are not stored.
-	          </p>
-	          <div class="filter-row">
-	            <div>
-	              <p class="filter-label">
+        >
+          <h2 class="title-with-icon">
+            <UIcon
+              name="i-lucide-file-down"
+              class="title-icon"
+            /> Downloadable PDFs (checklists + call scripts)
+          </h2>
+          <p class="section-subtitle">
+            Download and use while you make calls. Your wizard answers are not stored.
+          </p>
+          <div class="filter-row">
+            <div>
+              <p class="filter-label">
                 <UIcon
                   name="i-lucide-tags"
                   class="inline-icon"
-	                /> Filter by topic
-	              </p>
+                /> Filter by topic
+              </p>
               <div class="filter-chip-row">
                 <button
                   v-for="filter in topicFilters"
@@ -2189,42 +2192,42 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   class="inline-icon"
                 /> <span class="doc-row-copy">{{ compactCopy(document.summary, 92) }}</span>
               </p>
-	              <a
-	                :href="documentDownloadHref(document)"
-	                :download="document.filename"
-	              >
+              <a
+                :href="documentDownloadHref(document)"
+                :download="document.filename"
+              >
                 <UIcon
                   name="i-lucide-download"
                   class="link-icon"
-	                /> Download PDF
-	              </a>
-	            </article>
-	          </div>
-	        </section>
+                /> Download PDF
+              </a>
+            </article>
+          </div>
+        </section>
 
         <section
           id="help-directory"
           class="help-directory content-section section-directory"
-	        >
-	          <h2 class="title-with-icon">
-	            <UIcon
-	              name="i-lucide-layers-3"
-	              class="title-icon"
-	            /> Free help directory
-	          </h2>
-	          <p class="section-subtitle">
-	            Previewing {{ directoryPreviewLimit }} links per group. Expand a group to see more, or download the full directory.
-	          </p>
-	          <a
-	            class="section-download-link"
-	            :href="helpDirectoryDownloadHref"
-	            download="full-free-help-directory.pdf"
-	          >
-	            <UIcon
-	              name="i-lucide-download"
-	              class="link-icon"
-	            /> Download full directory (PDF)
-	          </a>
+        >
+          <h2 class="title-with-icon">
+            <UIcon
+              name="i-lucide-layers-3"
+              class="title-icon"
+            /> Free help directory
+          </h2>
+          <p class="section-subtitle">
+            Previewing {{ directoryPreviewLimit }} links per group. Expand a group to see more, or download the full directory.
+          </p>
+          <a
+            class="section-download-link"
+            :href="helpDirectoryDownloadHref"
+            download="full-free-help-directory.pdf"
+          >
+            <UIcon
+              name="i-lucide-download"
+              class="link-icon"
+            /> Download full directory (PDF)
+          </a>
 
           <div class="directory-grid">
             <article
@@ -2232,24 +2235,18 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               :key="group.group"
               class="directory-group"
             >
-	              <h3>
+              <h3>
                 <UIcon
                   name="i-lucide-folder-open"
                   class="title-icon"
-	                /> {{ group.group }}
-	              </h3>
-	              <p class="group-count">
-	                <UIcon
-	                  name="i-lucide-list"
-	                  class="inline-icon"
-	                /> {{ group.items.length }} links
-	              </p>
-	              <p
-	                v-if="group.items.length > directoryPreviewLimit"
-	                class="group-more-hint"
-	              >
-	                Showing {{ directoryPreviewLimit }} of {{ group.items.length }} links.
-	              </p>
+                /> {{ group.group }}
+              </h3>
+              <p class="group-count">
+                <UIcon
+                  name="i-lucide-list"
+                  class="inline-icon"
+                /> {{ group.items.length }} links
+              </p>
               <ul>
                 <li
                   v-for="resource in visibleDirectoryResources(group)"
@@ -2304,11 +2301,11 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           </div>
         </section>
 
-	        <section
-	          id="faq"
-	          class="faq-section content-section section-faq"
-	        >
-		          <h2 class="title-with-icon">
+        <section
+          id="faq"
+          class="faq-section content-section section-faq"
+        >
+          <h2 class="title-with-icon">
             <UIcon
               name="i-lucide-help-circle"
               class="title-icon"
@@ -2328,64 +2325,64 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               </summary>
               <p>{{ item.answer }}</p>
             </details>
-	          </div>
-	        </section>
+          </div>
+        </section>
 
-	        <section
-	          id="updates"
-	          class="updates-section content-section section-updates"
-	        >
-	          <h2 class="title-with-icon">
-	            <UIcon
-	              name="i-lucide-mail"
-	              class="title-icon"
-	            /> Get updates (optional)
-		          </h2>
-		          <p>Occasional Billings updates. We only store your email (not your answers).</p>
-	          <form
-	            class="updates-form"
-	            @submit.prevent="submitUpdatesEmail"
-	          >
-	            <input
-	              v-model="updatesEmail"
-	              type="email"
-	              inputmode="email"
-	              autocomplete="email"
-	              placeholder="you@example.com"
-	              :disabled="updatesStatus === 'sending'"
-	              @input="resetUpdatesForm"
-	            >
-	            <button
-	              type="submit"
-	              class="primary-btn"
-	              :disabled="updatesStatus === 'sending'"
-	            >
-	              {{ updatesStatus === 'sending' ? 'Sending...' : 'Sign up' }}
-	            </button>
-	          </form>
-	          <p
-	            v-if="updatesStatus === 'success'"
-	            class="updates-status updates-status--success"
-	          >
-	            Thanks. You are on the list.
-	          </p>
-	          <p
-	            v-else-if="updatesStatus === 'error'"
-	            class="updates-status updates-status--error"
-	          >
-	            {{ updatesError }}
-	          </p>
-	        </section>
+        <section
+          id="updates"
+          class="updates-section content-section section-updates"
+        >
+          <h2 class="title-with-icon">
+            <UIcon
+              name="i-lucide-mail"
+              class="title-icon"
+            /> Get updates (optional)
+          </h2>
+          <p>Occasional Billings updates. We only collect your email address (we do not collect your wizard answers).</p>
+          <form
+            class="updates-form"
+            @submit.prevent="submitUpdatesEmail"
+          >
+            <input
+              v-model="updatesEmail"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              placeholder="you@example.com"
+              :disabled="updatesStatus === 'sending'"
+              @input="resetUpdatesForm"
+            >
+            <button
+              type="submit"
+              class="primary-btn"
+              :disabled="updatesStatus === 'sending'"
+            >
+              {{ updatesStatus === 'sending' ? 'Sending...' : 'Sign up' }}
+            </button>
+          </form>
+          <p
+            v-if="updatesStatus === 'success'"
+            class="updates-status updates-status--success"
+          >
+            Thanks. You are on the list.
+          </p>
+          <p
+            v-else-if="updatesStatus === 'error'"
+            class="updates-status updates-status--error"
+          >
+            {{ updatesError }}
+          </p>
+        </section>
 
-		        <section class="footer-lines content-section section-footer">
-	          <a href="mailto:resources@billings.app?subject=Resource%20update">
-	            <UIcon
-	              name="i-lucide-mail"
-	              class="inline-icon"
+        <section class="footer-lines content-section section-footer">
+          <a href="mailto:resources@billings.app?subject=Resource%20update">
+            <UIcon
+              name="i-lucide-mail"
+              class="inline-icon"
             />
-	            Report a broken link or suggest a resource
-	          </a>
-	        </section>
+            Report a broken link or suggest a resource
+          </a>
+        </section>
       </div>
     </main>
   </div>
@@ -2432,7 +2429,6 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   max-height: var(--hero-available-height);
   padding: var(--hero-top-pad) var(--space-6);
   overflow: hidden;
-  max-width: 1320px;
   margin: 0 auto;
 }
 
@@ -2488,6 +2484,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: 34%;
 }
 
 .hero-transform.is-result {
