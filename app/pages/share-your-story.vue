@@ -245,7 +245,7 @@ onMounted(async () => {
       void loadMoreStories()
     }
   }, {
-    rootMargin: '0rem 0rem 75rem 0rem',
+    rootMargin: '0px 0px 1200px 0px',
     threshold: 0.01
   })
 
