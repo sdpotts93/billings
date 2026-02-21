@@ -598,16 +598,13 @@ onBeforeUnmount(() => {
 }
 
 @media screen and (max-width: 1024px) {
-  .intro-copy h2 {
-    font-size: var(--theme-font-size-hero-mobile);
-  }
 
   .hero-title {
     /* top: 0.75rem; */
     right: 0.75rem;
     max-width: min(84%, 12ch);
-    font-size: 4rem;
-    line-height: 1.1;
+    font-size: 3.5rem;
+    line-height: 1;
     text-align: right;
   }
 

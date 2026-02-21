@@ -71,7 +71,7 @@ const isMobileViewport = () => {
     return false
   }
 
-  return window.innerWidth <= 767
+  return window.innerWidth <= 991
 }
 
 const closeMobileMenu = () => {
@@ -723,12 +723,14 @@ watch(
     gap: 0.9rem;
     padding-bottom: 0;
   }
-}
 
-@media screen and (max-width: 991px) {
   .mobile-nav-toggle {
     display: inline-flex;
   }
+
+}
+
+@media screen and (max-width: 991px) {
 
   .nav-links {
     display: none;
@@ -780,7 +782,7 @@ watch(
   }
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 992px) {
   .mobile-menu,
   .mobile-menu-backdrop {
     display: none;
