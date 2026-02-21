@@ -2655,7 +2655,7 @@ h1 {
   margin-top: 1rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(13.75rem, 1fr));
-  gap: var(--space-3);
+  gap: var(--space-2);
   max-width: 35rem;
   align-content: start;
 }

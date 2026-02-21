@@ -543,7 +543,7 @@ onBeforeUnmount(() => {
 
 .story-sticky {
   position: sticky;
-  top: 4.75rem;
+  top: 4.15rem;
   min-height: calc(100vh - 4.875rem);
   overflow: hidden;
   display: grid;
@@ -609,7 +609,7 @@ onBeforeUnmount(() => {
 
 .hero-mission-panel {
   width: min(90vw, 106.25rem);
-  height: clamp(26.25rem, calc(100vh - 9.375rem), 47.5rem);
+  height: clamp(26.25rem, calc(100vh - 7.375rem), 47.5rem);
   border-radius: var(--radius-sm);
   background: linear-gradient(180deg, #f1f2f4 0%, #ececef 100%);
   box-shadow: 0 1.75rem 2.625rem rgba(35, 37, 45, 0.1);

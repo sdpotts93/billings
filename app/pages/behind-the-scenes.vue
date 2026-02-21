@@ -417,7 +417,7 @@ onBeforeUnmount(() => {
 }
 
 .hero {
-  padding: var(--frame-gap) 0;
+  padding: 2rem 0;
 }
 
 .intro-copy {
@@ -531,7 +531,7 @@ onBeforeUnmount(() => {
   border-radius: 1.5rem;
   overflow: hidden;
   width: 100%;
-  height: calc(100vh - 4.25rem - (var(--frame-gap) * 2));
+  height: calc(100vh - 3.5rem - (var(--frame-gap) * 2));
   min-height: 23.75rem;
   background: #d5ddd6;
   box-shadow: 1.5rem 1.5rem 0 var(--theme-color-muted);

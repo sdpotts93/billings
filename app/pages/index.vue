@@ -869,7 +869,6 @@ const goToResourcesWithNeed = (need: string) => {
 
 @media screen and (max-width: 991px) {
   .shell {
-    max-width: 61.25rem;
     padding-inline: var(--space-5);
   }
 
@@ -1007,7 +1006,7 @@ const goToResourcesWithNeed = (need: string) => {
 
   .stats p {
     max-width: unset;
-    font-size: var(  --theme-font-size-brand);
+    font-size: var(--theme-font-size-brand);
   }
   .quote-foot {
     flex-direction: column;

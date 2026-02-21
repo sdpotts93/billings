@@ -567,7 +567,7 @@ onBeforeUnmount(() => {
 
 .hero {
   text-align: center;
-  padding: 2.8rem 0 1.25rem;
+  padding: 3rem 0 1.25rem;
 }
 
 .eyebrow {
@@ -977,7 +977,6 @@ p.submit-notice {
     font-weight: 760;
     letter-spacing: 0.01em;
     min-height: 3.25rem;
-    box-shadow: 0 0.875rem 2.125rem rgba(205, 83, 45, 0.34);
     cursor: pointer;
   }
 }
