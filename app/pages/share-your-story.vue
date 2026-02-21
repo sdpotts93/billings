@@ -401,7 +401,7 @@ onBeforeUnmount(() => {
 
           <h2>Share your story</h2>
           <p>
-            Tell us what happened and how it impacted you. Your post appears in the feed right away.
+            Tell us what happened and how it impacted you.
           </p>
 
           <form
@@ -453,6 +453,7 @@ onBeforeUnmount(() => {
                     type="button"
                     :label="selectedPhoto ? 'Change image' : 'Upload image'"
                     color="neutral"
+                    size="xs"
                     variant="outline"
                     @click="open()"
                   />
@@ -553,7 +554,7 @@ onBeforeUnmount(() => {
   --fs-mobile-cta: var(--theme-font-size-mobile-cta);
   --fs-quote-mark: var(--theme-font-size-quote-mark);
   --fs-panel-title: var(--theme-font-size-panel-title);
-  --fs-hero-lg: var(--theme-font-size-hero-lg);
+  --fs-hero-lg: var(--theme-font-size-hero-xl);
   --fs-hero-mobile: var(--theme-font-size-hero-mobile);
   min-height: 100vh;
   background:var(--theme-color-bg);
@@ -563,7 +564,7 @@ onBeforeUnmount(() => {
 
 .page-shell {
   width: 100%;
-  max-width: 76.25rem;
+  max-width: 1220px;
   margin-inline: auto;
   padding-inline: var(--space-6);
 }
@@ -617,7 +618,7 @@ onBeforeUnmount(() => {
 
 .hero h1 {
   margin: 0.45rem auto 0;
-  max-width: 45rem;
+  max-width: 29ch;
   font-family: var(--font-title);
   font-size: var(--fs-hero-lg);
   line-height: 1.02;
@@ -625,7 +626,7 @@ onBeforeUnmount(() => {
 
 .hero p {
   margin: 0.9rem auto 0;
-  max-width: 38.75rem;
+  max-width: 50ch;
   color: var(--muted);
   line-height: 1.45;
   font-size: var(--fs-brand);
@@ -633,7 +634,7 @@ onBeforeUnmount(() => {
 
 .content-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 21.25rem;
+  grid-template-columns: minmax(0,1fr) 340px;
   align-items: start;
   gap: var(--space-4);
   padding-bottom: 5rem;
@@ -810,7 +811,7 @@ onBeforeUnmount(() => {
 .share-panel p {
   margin: 0.5rem 0 0;
   color: var(--theme-color-accent);
-  font-size: var(--fs-md);
+  font-size: var(--fs-brand);
   line-height: 1.44;
 }
 
@@ -834,13 +835,13 @@ onBeforeUnmount(() => {
   border-radius: var(--radius-sm);
   background: var(--paper);
   padding: var(--space-2) var(--space-3);
-  font-size: var(--fs-brand);
+  font-size: var(--theme-font-size-form);
   color: var(--accent-contrast);
 }
 
 .share-form textarea {
   resize: vertical;
-  min-height: 8rem;
+  max-height: 6rem;
 }
 
 .upload-label {
@@ -889,7 +890,7 @@ onBeforeUnmount(() => {
   border-radius: var(--radius-sm);
   background: var(--ink);
   color: white;
-  font-size: var(--fs-body);
+  font-size: var(--fs-btn);
   font-weight: 700;
   padding: var(--space-3) var(--space-4);
   cursor: pointer;
@@ -901,16 +902,6 @@ onBeforeUnmount(() => {
   cursor: not-allowed;
 }
 
-.submit-notice {
-  margin: var(--space-3) 0 0;
-  border-radius: var(--radius-sm);
-  padding: var(--space-2) var(--space-3);
-  background: var(--notice-bg);
-  color: var(--notice-text);
-  font-size: var(--fs-sm);
-  font-weight: 600;
-}
-
 .mobile-close {
   display: none;
 }
@@ -918,6 +909,14 @@ onBeforeUnmount(() => {
 .mobile-backdrop,
 .mobile-share-cta {
   display: none;
+}
+
+p.submit-notice {
+  margin: var(--space-3) 0 0;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  color: var(--ui-error);
+  font-size: var(--fs-sm);
 }
 
 @media screen and (max-width: 1280px) {

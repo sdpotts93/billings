@@ -373,7 +373,7 @@ const goToResourcesWithNeed = (need: string) => {
 
 .shell {
   width: 100%;
-  max-width: 1120px;
+  max-width: 1220px;
   margin-inline: auto;
   padding-inline: var(--space-6);
 }

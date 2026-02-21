@@ -49,6 +49,7 @@
   --theme-font-size-body-lg: var(--text-lg);
   --theme-font-size-brand: 15px;
   --theme-font-size-brand-mobile: 16px;
+  --theme-font-size-form: 16px;
   --theme-font-size-mobile-cta: var(--text-md);
   --theme-font-size-quote-mark: 4rem;
   --theme-font-size-panel-title: var(--text-2xl);
