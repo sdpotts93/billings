@@ -2282,10 +2282,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               :key="item.question"
             >
               <summary>
-                <UIcon
-                  name="i-lucide-circle-help"
-                  class="inline-icon"
-                /> {{ item.question }}
+                {{ item.question }}
               </summary>
               <p>{{ item.answer }}</p>
             </details>
@@ -3449,9 +3446,31 @@ h1 {
 
 .faq-list summary {
   cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
   font-weight: 700;
   color: var(--theme-color-accent-contrast);
   font-size: var(--theme-font-size-brand-lg);
+}
+
+.faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-list summary::before {
+  content: '';
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.14em;
+  flex: 0 0 auto;
+  background: center / contain no-repeat url('/images/arrow-faqs.svg');
+  transition: transform 0.18s ease;
+}
+
+.faq-list details[open] summary::before {
+  transform: rotate(90deg);
 }
 
 .faq-list p {
@@ -3482,6 +3501,12 @@ h1 {
 
 .directory-group .group-count {
   color: var(--theme-color-muted);
+}
+
+@media screen and (max-width: 1320px) {
+  .options-grid {
+    grid-template-columns: repeat(auto-fit, minmax(8.75rem, 1fr));
+  }
 }
 
 @media screen and (max-width: 1024px) {
@@ -3581,8 +3606,12 @@ h1 {
   .hero-media-title {
     max-width: min(86%, 14ch);
   }
-  .back-btn {
+  .back-btn, .ghost-btn {
     margin-top: 2rem;
+  }
+
+    .options-grid {
+    grid-template-columns: 1fr;
   }
 
 }

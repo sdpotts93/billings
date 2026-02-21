@@ -40,6 +40,8 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': { prerender: true },
+    '/about-the-film': { prerender: true },
+    '/about-the-film/': { prerender: true },
     '/share-your-story': { prerender: true },
     '/share-your-story/': { prerender: true },
     '/resources': { prerender: true },
@@ -52,7 +54,7 @@ export default defineNuxtConfig({
 
   nitro: {
     prerender: {
-      routes: ['/', '/share-your-story', '/share-your-story/', '/resources', '/resources/', '/behind-the-scenes', '/behind-the-scenes/']
+      routes: ['/', '/about-the-film', '/about-the-film/', '/share-your-story', '/share-your-story/', '/resources', '/resources/', '/behind-the-scenes', '/behind-the-scenes/']
     }
   },
 
