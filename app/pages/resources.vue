@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 
-type QuestionId = 'need' | 'stage' | 'condition' | 'insurance' | 'barrier' | 'age' | 'format' | 'email'
+import { createPdfBytes } from '../utils/pdf.js'
+
+type QuestionId = 'need' | 'condition' | 'insurance' | 'barrier' | 'format'
 type RouteKey = 'emergency' | 'uninsured' | 'meds' | 'bills' | 'care' | 'caregiver'
 
 type Option = {
@@ -13,8 +15,7 @@ type WizardQuestion = {
   id: QuestionId
   prompt: string
   optional?: boolean
-  input?: 'email'
-  options?: Option[]
+  options: Option[]
 }
 
 type RouteRecipe = {
@@ -94,30 +95,20 @@ type FaqItem = {
 const wizardQuestions: WizardQuestion[] = [
   {
     id: 'need',
-    prompt: 'What do you need most right now?',
+    prompt: 'What do you want help with today?',
     options: [
-      { label: 'Emergency / urgent symptoms', value: 'emergency' },
-      { label: 'Finding care (appointments, specialists)', value: 'finding-care' },
-      { label: 'Paying for meds', value: 'meds' },
-      { label: 'Paying medical bills / debt', value: 'bills' },
-      { label: 'Insurance help / uninsured', value: 'insurance' },
-      { label: 'Understanding a diagnosis', value: 'diagnosis' },
+      { label: 'Emergency / crisis (911 / 988)', value: 'emergency' },
+      { label: 'Finding care (clinics, appointments, specialists)', value: 'finding-care' },
+      { label: 'Prescription costs / paying for meds', value: 'meds' },
+      { label: 'Medical bills, debt, or collections', value: 'bills' },
+      { label: 'Insurance / coverage problems (including uninsured)', value: 'insurance' },
+      { label: 'Understanding a diagnosis and next steps', value: 'diagnosis' },
       { label: 'Helping someone else (caregiver)', value: 'caregiver' }
     ]
   },
   {
-    id: 'stage',
-    prompt: 'Where are you in the process?',
-    options: [
-      { label: 'New symptoms', value: 'new-symptoms' },
-      { label: 'New diagnosis', value: 'new-diagnosis' },
-      { label: 'Ongoing condition', value: 'ongoing-condition' },
-      { label: 'Post-hospital / recent flare', value: 'post-hospital' }
-    ]
-  },
-  {
     id: 'condition',
-    prompt: 'Do you want to focus on a condition? (optional)',
+    prompt: 'Want condition-specific resources too? (optional)',
     optional: true,
     options: [
       { label: 'Cystic fibrosis (CF)', value: 'cf' },
@@ -134,7 +125,7 @@ const wizardQuestions: WizardQuestion[] = [
   },
   {
     id: 'insurance',
-    prompt: 'Insurance status',
+    prompt: 'What’s your insurance right now?',
     options: [
       { label: 'Employer plan', value: 'employer' },
       { label: 'Marketplace (ACA)', value: 'marketplace' },
@@ -146,40 +137,26 @@ const wizardQuestions: WizardQuestion[] = [
   },
   {
     id: 'barrier',
-    prompt: 'Biggest barrier',
+    prompt: 'Biggest barrier right now',
     options: [
       { label: 'Med costs', value: 'med-costs' },
       { label: 'Visit / test costs', value: 'visit-costs' },
       { label: 'Bills / debt', value: 'bills-debt' },
       { label: 'Transportation', value: 'transportation' },
       { label: 'Finding specialists', value: 'specialists' },
-      { label: 'Paperwork / denials / appeals', value: 'denials' }
-    ]
-  },
-  {
-    id: 'age',
-    prompt: 'Age group',
-    options: [
-      { label: 'Child/teen', value: 'child-teen' },
-      { label: 'Adult', value: 'adult' },
-      { label: 'Older adult', value: 'older-adult' }
+      { label: 'Paperwork / denials / appeals', value: 'denials' },
+      { label: 'Not sure / multiple things', value: 'not-sure' }
     ]
   },
   {
     id: 'format',
-    prompt: 'Preferred help format',
+    prompt: 'How do you want help right now?',
     options: [
-      { label: 'Call now', value: 'call-now' },
-      { label: 'Checklist', value: 'checklist' },
-      { label: 'Download documents', value: 'download' },
+      { label: 'Call someone / talk to a human', value: 'call-now' },
+      { label: 'Checklist I can follow', value: 'checklist' },
+      { label: 'Download PDFs', value: 'download' },
       { label: 'Find clinics', value: 'find-clinics' }
     ]
-  },
-  {
-    id: 'email',
-    prompt: 'Email for movie news updates? (optional)',
-    optional: true,
-    input: 'email'
   }
 ]
 
@@ -196,34 +173,34 @@ const needToRoute: Record<string, RouteKey> = {
 const routeRecipes: Record<RouteKey, RouteRecipe> = {
   emergency: {
     key: 'emergency',
-    title: 'Emergency and urgent symptoms',
-    summary: 'Immediate safety first, then rapid follow-up to avoid repeat emergencies.',
+    title: 'Emergency or urgent symptoms',
+    summary: 'Immediate safety first, then follow-up and documentation so you do not have to start over.',
     doToday: [
-      'Call 911 or go to the nearest ER.',
-      'Bring a list of meds, allergies, and recent symptoms if possible.',
-      'Ask for written discharge and follow-up instructions before leaving.'
+      'If this might be life-threatening, call 911 or go to the nearest ER now.',
+      'If this is a mental health crisis, call or text 988 for immediate support.',
+      'If you can, bring (or screenshot) your med list, allergies, and recent symptoms. Ask for written discharge instructions.'
     ],
     thisWeek: [
-      'Schedule follow-up with primary care or specialist.',
-      'Request referrals plus copies of imaging, labs, and visit notes.',
-      'Confirm who to call first if symptoms return.'
+      'Schedule follow-up with primary care or a specialist and ask what to do if symptoms return.',
+      'Request copies of imaging, labs, and visit notes (paper copy or portal download).',
+      'Start a simple timeline: when symptoms started, what changed, and what helped.'
     ],
     ongoing: [
-      'Build a medical file with diagnoses, labs, visits, meds, and bills.',
-      'Track symptoms and triggers between visits.',
-      'Keep emergency contacts and current med list updated.'
+      'Keep a medical file: diagnoses, meds, labs, visits, bills, and insurer letters.',
+      'Track triggers and warning signs between visits.',
+      'Keep emergency contacts and your med list up to date.'
     ],
-    resourceIds: ['emergency-911', 'crisis-988', 'help-211', 'paf', 'findcare'],
-    documentIds: ['visit-prep', 'insurer-call-log', 'caregiver-starter', 'bill-review']
+    resourceIds: ['emergency-911', 'crisis-988', 'help-211', 'findcare', 'paf'],
+    documentIds: ['visit-prep', 'insurer-call-log', 'bill-review', 'financial-assistance']
   },
   uninsured: {
     key: 'uninsured',
     title: 'Insurance problems or uninsured',
-    summary: 'Prioritize coverage options and protect appeal rights with documented calls.',
+    summary: 'Get coverage moving and protect your appeal rights with documented calls.',
     doToday: [
       'Check Medicaid and Marketplace eligibility based on your state and household.',
-      'Gather income estimate, household size, and current coverage status.',
-      'Create a call log before contacting assisters or plans.'
+      'Gather basics: household size, income estimate, current coverage status, and any denial letters.',
+      'Start a call log before contacting assisters, providers, or plans.'
     ],
     thisWeek: [
       'Call your state Marketplace navigator or assister.',
@@ -240,8 +217,8 @@ const routeRecipes: Record<RouteKey, RouteRecipe> = {
   },
   meds: {
     key: 'meds',
-    title: 'Medication affordability',
-    summary: 'Lower immediate medication costs and prevent interruptions from authorization delays.',
+    title: 'Prescription costs / paying for meds',
+    summary: 'Lower costs now and prevent gaps from prior authorization delays.',
     doToday: [
       'Ask the pharmacy for lowest-cost equivalent options (generic, formulary, 90-day).',
       'Ask your clinician if there is a clinically acceptable lower-cost option.',
@@ -257,17 +234,17 @@ const routeRecipes: Record<RouteKey, RouteRecipe> = {
       'Save receipts, denials, and formulary notices for appeals.',
       'Recheck costs when coverage phases reset during the year.'
     ],
-    resourceIds: ['needymeds', 'paf', 'healthcare-gov', 'cf-compass', 'help-211'],
-    documentIds: ['rx-affordability', 'prior-auth', 'appeal-template', 'cf-coverage-continuity']
+    resourceIds: ['needymeds', 'rxassist', 'paf', 'help-211', 'healthcare-gov'],
+    documentIds: ['rx-affordability', 'prior-auth', 'appeal-template', 'insurer-call-log']
   },
   bills: {
     key: 'bills',
-    title: 'Medical bills and debt',
-    summary: 'Review bills for errors, apply for assistance, and negotiate manageable payment terms.',
+    title: 'Medical bills, debt, or collections',
+    summary: 'Verify charges, apply for assistance, then negotiate a plan you can actually keep.',
     doToday: [
-      'Request an itemized bill and check every line for coding errors.',
-      'Ask for financial assistance or charity care policies and application steps.',
-      'If payment is needed now, request a zero-interest payment plan.'
+      'Request an itemized bill and compare it to your EOB (Explanation of Benefits).',
+      'Ask for financial assistance / charity care and the application steps and deadlines.',
+      'If you need a plan, ask for a zero-interest payment plan and get it in writing.'
     ],
     thisWeek: [
       'Negotiate a discount for prompt or cash payment where possible.',
@@ -279,16 +256,16 @@ const routeRecipes: Record<RouteKey, RouteRecipe> = {
       'Document all payment agreements in writing.',
       'Escalate unresolved errors to patient financial services.'
     ],
-    resourceIds: ['paf', 'findhelp', 'healthcare-gov', 'help-211', 'medicare-rights'],
+    resourceIds: ['paf', 'findhelp', 'no-surprises', 'help-211', 'healthcare-gov'],
     documentIds: ['bill-review', 'payment-plan-script', 'financial-assistance', 'insurer-call-log']
   },
   care: {
     key: 'care',
     title: 'Finding care and specialists',
-    summary: 'Match clinic type to your needs and lock in records, estimates, and follow-up schedule.',
+    summary: 'Find the right clinic, then reduce wasted visits with good records and clear questions.',
     doToday: [
-      'Identify the right clinic type (primary care, specialist, center of excellence).',
-      'If insured, ask for in-network specialist directories.',
+      'Identify the next appointment you need (primary care, specialist, clinic) and what you want from it.',
+      'If insured, ask for an in-network directory. If uninsured, start with HRSA or free/charitable clinics.',
       'Prepare a one-page summary of symptoms, medications, and goals.'
     ],
     thisWeek: [
@@ -301,30 +278,30 @@ const routeRecipes: Record<RouteKey, RouteRecipe> = {
       'Track referral and authorization status before each visit.',
       'Update your medical file after each appointment.'
     ],
-    resourceIds: ['findcare', 'help-211', 'healthcare-gov', 'paf', 'findhelp'],
+    resourceIds: ['findcare', 'nafc-clinics', 'help-211', 'findhelp', 'paf'],
     documentIds: ['visit-prep', 'insurer-call-log', 'appeal-template', 'rx-affordability']
   },
   caregiver: {
     key: 'caregiver',
     title: 'Caregiver support',
-    summary: 'Stabilize daily support, formalize permissions, and protect caregiver capacity over time.',
+    summary: 'Make the next week sustainable: clarify roles, permissions, and a backup plan.',
     doToday: [
       'List top three daily needs and who can help with each one.',
       'Ask clinic social work about caregiver resources and respite options.',
       'Create an emergency contact and medication snapshot.'
     ],
     thisWeek: [
-      'Start permissions paperwork for speaking with providers.',
-      'Build a meds list and home emergency plan.',
-      'Identify backup caregivers for high-risk days.'
+      'Complete permission paperwork (HIPAA release / caregiver authorization) so you can speak with providers.',
+      'Set up a simple system for appointments, refills, and symptom notes.',
+      'Identify backup caregivers for high-risk or exhausting days.'
     ],
     ongoing: [
       'Protect caregiver capacity with planned breaks and support groups.',
       'Track costs and work impacts to plan financial support.',
       'Reassess care level as needs change.'
     ],
-    resourceIds: ['caregiver-action', 'alz-helpline', 'help-211', 'paf', 'findhelp'],
-    documentIds: ['caregiver-starter', 'dementia-cost-tracker', 'insurer-call-log', 'compass-one-pager']
+    resourceIds: ['caregiver-action', 'family-caregiver-alliance', 'help-211', 'findhelp', 'paf'],
+    documentIds: ['caregiver-starter', 'visit-prep', 'insurer-call-log', 'financial-assistance']
   }
 }
 
@@ -419,7 +396,8 @@ const conditionAdjustments: Record<string, Adjustment> = {
     resourceIds: ['arthritis-foundation']
   },
   'dementia': {
-    resourceIds: ['alz-helpline', 'caregiver-action']
+    resourceIds: ['alz-helpline', 'nia-dementia-caregiving', 'family-caregiver-alliance'],
+    documentIds: ['dementia-cost-tracker']
   }
 }
 
@@ -543,6 +521,16 @@ const helpResources: ResourceItem[] = [
     conditionTags: ['any']
   },
   {
+    id: 'no-surprises',
+    title: 'No Surprises billing protections (CMS)',
+    whoItHelps: 'People who received an unexpected out-of-network bill in the U.S.',
+    url: 'https://www.cms.gov/nosurprises',
+    urlLabel: 'CMS No Surprises',
+    group: 'Bills and debt',
+    needRoutes: ['bills'],
+    conditionTags: ['any']
+  },
+  {
     id: 'needymeds',
     title: 'NeedyMeds',
     whoItHelps: 'People comparing prescription assistance programs and discount tools.',
@@ -564,10 +552,10 @@ const helpResources: ResourceItem[] = [
   },
   {
     id: 'findcare',
-    title: 'Find a federally center',
-    whoItHelps: 'People seeking lower-cost primary or specialty referral access.',
+    title: 'Find a health center (HRSA)',
+    whoItHelps: 'People looking for community health centers and lower-cost primary care.',
     url: 'https://findahealthcenter.hrsa.gov',
-    urlLabel: 'HRSA clinic finder',
+    urlLabel: 'HRSA health center finder',
     group: 'Care and specialists',
     needRoutes: ['care', 'uninsured', 'bills', 'emergency'],
     conditionTags: ['any']
@@ -703,7 +691,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'Error checks, coding mismatch review, and itemized bill request prompts.',
     topicTags: ['bills-debt'],
     conditionTags: ['any'],
-    filename: 'medical-bill-review-checklist.txt'
+    filename: 'medical-bill-review-checklist.pdf'
   },
   {
     id: 'financial-assistance',
@@ -712,7 +700,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'Required documents, deadlines, and follow-up call structure.',
     topicTags: ['insurance', 'bills-debt'],
     conditionTags: ['any'],
-    filename: 'financial-assistance-checklist.txt'
+    filename: 'financial-assistance-checklist.pdf'
   },
   {
     id: 'payment-plan-script',
@@ -721,7 +709,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'How to request zero-interest plans and written agreements.',
     topicTags: ['bills-debt'],
     conditionTags: ['any'],
-    filename: 'payment-plan-negotiation-script.txt'
+    filename: 'payment-plan-negotiation-script.pdf'
   },
   {
     id: 'appeal-template',
@@ -730,7 +718,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'Appeal checklist with reason-code, evidence, and deadline sections.',
     topicTags: ['insurance', 'prior-auth'],
     conditionTags: ['any'],
-    filename: 'insurance-appeal-template.txt'
+    filename: 'insurance-appeal-template.pdf'
   },
   {
     id: 'prior-auth',
@@ -739,7 +727,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'Documents, call cadence, and escalation points for authorization delays.',
     topicTags: ['meds', 'prior-auth'],
     conditionTags: ['any'],
-    filename: 'prior-authorization-checklist.txt'
+    filename: 'prior-authorization-checklist.pdf'
   },
   {
     id: 'insurer-call-log',
@@ -748,7 +736,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'Structured call log for denials, billing questions, and coverage checks.',
     topicTags: ['insurance', 'bills-debt'],
     conditionTags: ['any'],
-    filename: 'insurer-call-log-template.txt'
+    filename: 'insurer-call-log-template.pdf'
   },
   {
     id: 'visit-prep',
@@ -757,7 +745,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'Symptom timeline, meds list, questions, and treatment goal prompts.',
     topicTags: ['visit-prep'],
     conditionTags: ['any'],
-    filename: 'specialist-visit-prep-worksheet.txt'
+    filename: 'specialist-visit-prep-worksheet.pdf'
   },
   {
     id: 'rx-affordability',
@@ -766,7 +754,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'Medication cost comparison and refill strategy worksheet.',
     topicTags: ['meds'],
     conditionTags: ['any'],
-    filename: 'prescription-affordability-checklist.txt'
+    filename: 'prescription-affordability-checklist.pdf'
   },
   {
     id: 'caregiver-starter',
@@ -775,7 +763,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'Provider permission checklist, med list template, and emergency plan.',
     topicTags: ['caregiver'],
     conditionTags: ['dementia', 'any'],
-    filename: 'caregiver-starter-kit.txt'
+    filename: 'caregiver-starter-kit.pdf'
   },
   {
     id: 'dementia-cost-tracker',
@@ -784,7 +772,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'Monthly cost tracker plus respite planning prompts.',
     topicTags: ['caregiver', 'disability-work'],
     conditionTags: ['dementia'],
-    filename: 'dementia-caregiver-cost-tracker.txt'
+    filename: 'dementia-caregiver-cost-tracker.pdf'
   },
   {
     id: 'cf-coverage-continuity',
@@ -793,7 +781,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'Renewal dates, pharmacy tasks, and escalation triggers.',
     topicTags: ['cf', 'prior-auth', 'meds'],
     conditionTags: ['cf'],
-    filename: 'cf-coverage-continuity-checklist.txt'
+    filename: 'cf-coverage-continuity-checklist.pdf'
   },
   {
     id: 'compass-one-pager',
@@ -802,7 +790,7 @@ const documentLibrary: DocumentItem[] = [
     summary: 'Compass scope, call prep, and handoff checklist for care teams.',
     topicTags: ['cf', 'insurance', 'caregiver'],
     conditionTags: ['cf'],
-    filename: 'cf-compass-one-pager.txt'
+    filename: 'cf-compass-one-pager.pdf'
   }
 ]
 
@@ -1020,42 +1008,74 @@ const faqItems: FaqItem[] = [
   },
   {
     question: 'Do you store my answers?',
-    answer: 'Only optional email is stored for movie-news invites. Health answers are not stored.'
+    answer: 'No. Wizard answers are not stored. If you sign up for updates, we store only your email.'
   },
   {
     question: 'What if I’m uninsured?',
-    answer: 'Start with Medicaid or Marketplace checks, then ask clinics for self-pay and financial-assistance options.'
+    answer: 'Start with Medicaid or Marketplace checks. If you need care while coverage is in progress, try an HRSA health center or a free/charitable clinic and call 211 for local help.'
   },
   {
     question: 'What if I can’t afford my meds?',
-    answer: 'Ask for lower-cost alternatives, prior-auth help, and medication assistance programs.'
+    answer: 'Ask for a generic or formulary alternative, request prior authorization help, and check assistance programs. If you are rationing a critical medication, contact your care team promptly.'
   },
   {
     question: 'How do I fight a denial?',
-    answer: 'Get the denial reason in writing and appeal before the deadline with supporting records.'
+    answer: 'Get the denial reason and appeal deadline in writing. Appeal before the deadline with supporting records and keep proof of submission.'
   },
   {
     question: 'What should I do about medical debt?',
-    answer: 'Request an itemized bill, apply for assistance, and negotiate written no-interest payment terms.'
+    answer: 'Request an itemized bill, compare it to your EOB, apply for assistance, and negotiate written zero-interest payment terms. Ask to pause collections while a dispute or assistance review is pending.'
   }
 ]
 
 const answers = reactive<Record<QuestionId, string>>({
   need: '',
-  stage: '',
   condition: '',
   insurance: '',
   barrier: '',
-  age: '',
-  format: '',
-  email: ''
+  format: ''
 })
 
 const questionIndex = ref(0)
 const result = ref<GeneratedResult | null>(null)
-const isSubmittingEmail = ref(false)
 const activeTopicFilter = ref('all')
 const route = useRoute()
+
+const updatesEmail = ref('')
+const updatesStatus = ref<'idle' | 'sending' | 'success' | 'error'>('idle')
+const updatesError = ref('')
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const submitUpdatesEmail = async () => {
+  const email = updatesEmail.value.trim()
+  updatesError.value = ''
+
+  if (!email || !EMAIL_PATTERN.test(email)) {
+    updatesStatus.value = 'error'
+    updatesError.value = 'Enter a valid email address.'
+    return
+  }
+
+  updatesStatus.value = 'sending'
+  try {
+    await $fetch('/api/resources-email', {
+      method: 'POST',
+      body: { email }
+    })
+    updatesStatus.value = 'success'
+  } catch (error) {
+    updatesStatus.value = 'error'
+    updatesError.value = 'Could not submit email right now. Please try again later.'
+    console.error('Could not submit updates email.', error)
+  }
+}
+
+const resetUpdatesForm = () => {
+  if (updatesStatus.value !== 'sending') {
+    updatesStatus.value = 'idle'
+  }
+  updatesError.value = ''
+}
 
 const needQuestion = wizardQuestions.find(question => question.id === 'need')
 const validNeedValues = new Set((needQuestion?.options ?? []).map(option => option.value))
@@ -1068,7 +1088,7 @@ if (typeof queryNeedValue === 'string' && validNeedValues.has(queryNeedValue)) {
 
 const fallbackQuestion: WizardQuestion = {
   id: 'need',
-  prompt: 'What do you need most right now?',
+  prompt: 'What do you want help with today?',
   options: []
 }
 
@@ -1103,7 +1123,7 @@ const groupedHelpResources = computed(() => {
 })
 
 const expandedDirectoryGroups = reactive<Record<string, boolean>>({})
-const directoryPreviewLimit = 1
+const directoryPreviewLimit = 2
 
 const isDirectoryGroupExpanded = (group: string) => {
   return Boolean(expandedDirectoryGroups[group])
@@ -1190,17 +1210,9 @@ useSeoMeta({
 })
 
 const findOptionLabel = (questionId: QuestionId, value: string) => {
-  if (questionId === 'email') {
-    return value
-  }
-
   const question = wizardQuestions.find(item => item.id === questionId)
 
-  if (!question?.options) {
-    return value
-  }
-
-  return question.options.find(option => option.value === value)?.label ?? value
+  return question?.options.find(option => option.value === value)?.label ?? value
 }
 
 const resultHeading = computed(() => {
@@ -1209,7 +1221,7 @@ const resultHeading = computed(() => {
   }
 
   const formatLabel = findOptionLabel('format', answers.format)
-  const formatFragment = formatLabel ? ` - ${formatLabel} support` : ''
+  const formatFragment = formatLabel ? ` (${formatLabel})` : ''
 
   return `${result.value.routeTitle}${formatFragment}`
 })
@@ -1287,19 +1299,27 @@ const mergePlanItems = (base: string[], additions: Array<string | undefined>) =>
   return merged.slice(0, 3)
 }
 
-const formatSummary = () => {
-  const needLabel = findOptionLabel('need', answers.need).toLowerCase()
-  const insuranceLabel = findOptionLabel('insurance', answers.insurance).toLowerCase()
-  const barrierLabel = findOptionLabel('barrier', answers.barrier).toLowerCase()
-  const formatLabel = findOptionLabel('format', answers.format).toLowerCase()
-  const conditionLabel = findOptionLabel('condition', answers.condition)
-  const stageLabel = findOptionLabel('stage', answers.stage).toLowerCase()
+const hasMeaningfulAnswer = (value: string) => {
+  return Boolean(value && value !== 'not-sure')
+}
 
-  const conditionFragment = answers.condition && answers.condition !== 'not-sure'
-    ? ` with focus on ${conditionLabel}`
-    : ''
+const formatSummary = (routeTitle: string) => {
+  const details: string[] = []
 
-  return `You asked for ${formatLabel} help. This plan prioritizes ${needLabel} during ${stageLabel}, with ${insuranceLabel} coverage and the main barrier of ${barrierLabel}${conditionFragment}.`
+  if (hasMeaningfulAnswer(answers.insurance)) {
+    details.push(findOptionLabel('insurance', answers.insurance))
+  }
+
+  if (hasMeaningfulAnswer(answers.barrier)) {
+    details.push(findOptionLabel('barrier', answers.barrier))
+  }
+
+  if (hasMeaningfulAnswer(answers.condition)) {
+    details.push(findOptionLabel('condition', answers.condition))
+  }
+
+  const detailFragment = details.length ? ` Based on: ${details.join(' • ')}.` : ''
+  return `A short action plan for ${routeTitle}.${detailFragment}`
 }
 
 const buildResultPlan = () => {
@@ -1353,7 +1373,7 @@ const buildResultPlan = () => {
 
   return {
     routeTitle: baseRoute.title,
-    summary: formatSummary(),
+    summary: formatSummary(baseRoute.title),
     doToday,
     thisWeek,
     ongoing,
@@ -1373,55 +1393,19 @@ const answerWithOption = (value: string) => {
   questionIndex.value += 1
 }
 
-const setOptionalInputValue = (value: string) => {
-  if (currentQuestion.value.input === 'email') {
-    answers.email = value
-  }
-}
-
-const sendResourcesEmail = async (email: string) => {
-  await $fetch('/api/resources-email', {
-    method: 'POST',
-    body: { email }
-  })
-}
-
-const submitOptionalInputAndContinue = async () => {
-  if (isSubmittingEmail.value) {
+const skipOptionalQuestion = () => {
+  if (!currentQuestion.value.optional) {
     return
   }
 
-  isSubmittingEmail.value = true
-  try {
-    if (currentQuestion.value.input === 'email') {
-      answers.email = answers.email.trim()
+  answers[currentQuestion.value.id] = ''
 
-      if (answers.email) {
-        try {
-          await sendResourcesEmail(answers.email)
-        } catch (error) {
-          console.error('Could not send resources email.', error)
-        }
-      }
-    }
-
-    if (questionIndex.value === wizardQuestions.length - 1) {
-      result.value = buildResultPlan()
-      return
-    }
-
-    questionIndex.value += 1
-  } finally {
-    isSubmittingEmail.value = false
-  }
-}
-
-const skipOptionalInput = async () => {
-  if (currentQuestion.value.input === 'email') {
-    answers.email = ''
+  if (questionIndex.value === wizardQuestions.length - 1) {
+    result.value = buildResultPlan()
+    return
   }
 
-  await submitOptionalInputAndContinue()
+  questionIndex.value += 1
 }
 
 const goBack = () => {
@@ -1441,68 +1425,83 @@ const returnToQuestions = () => {
 
 const restartWizard = () => {
   answers.need = ''
-  answers.stage = ''
   answers.condition = ''
   answers.insurance = ''
   answers.barrier = ''
-  answers.age = ''
   answers.format = ''
-  answers.email = ''
   questionIndex.value = 0
   result.value = null
 }
 
-const buildDocumentDownloadContent = (document: DocumentItem) => {
-  return [
-    document.title,
-    '',
-    `Who it helps: ${document.whoItHelps}`,
-    `Summary: ${document.summary}`,
-    '',
-    'Checklist notes:',
-    '- Date:',
-    '- Contact name:',
-    '- Phone / email:',
-    '- Next action:',
-    '- Deadline:'
-  ].join('\n')
-}
-
 const documentDownloadHref = (document: DocumentItem) => {
-  return `data:text/plain;charset=utf-8,${encodeURIComponent(buildDocumentDownloadContent(document))}`
-}
-
-const buildConditionGuideContent = (condition: ConditionCard) => {
-  return [
-    condition.title,
-    '',
-    `Summary: ${condition.summary}`,
-    `Main trigger: ${condition.triggers}`,
-    '',
-    'Top actions:',
-    `- Today: ${condition.actions.today}`,
-    `- This week: ${condition.actions.week}`,
-    `- Ongoing: ${condition.actions.ongoing}`,
-    '',
-    `Key stat: ${condition.stats[0] ?? 'See listed sources.'}`,
-    '',
-    'Sources:',
-    ...condition.sources.map(source => `- ${source.label}: ${source.url}`)
-  ].join('\n')
+  return `/downloads/documents/${document.filename}`
 }
 
 const conditionGuideFilename = (condition: ConditionCard) => {
-  return `${toSlug(condition.title)}-quick-guide.txt`
+  return `${toSlug(condition.title)}-quick-guide.pdf`
 }
 
 const conditionGuideDownloadHref = (condition: ConditionCard) => {
-  return `data:text/plain;charset=utf-8,${encodeURIComponent(buildConditionGuideContent(condition))}`
+  return `/downloads/conditions/${conditionGuideFilename(condition)}`
 }
 
-const buildActionPlanDownloadContent = (plan: GeneratedResult) => {
-  return [
-    plan.routeTitle,
-    '',
+type PdfLogo = {
+  width: number
+  height: number
+  rgbBytes: Uint8Array
+}
+
+const pdfLogoCache = ref<PdfLogo | null>(null)
+
+const loadPdfLogo = async (): Promise<PdfLogo> => {
+  if (pdfLogoCache.value) {
+    return pdfLogoCache.value
+  }
+
+  const response = await fetch('/images/billings-logo.png')
+  if (!response.ok) {
+    throw new Error(`Could not load logo (${response.status}).`)
+  }
+
+  const blob = await response.blob()
+  const bitmap = await createImageBitmap(blob)
+  const targetWidth = 320
+  const targetHeight = Math.max(1, Math.round((bitmap.height * targetWidth) / bitmap.width))
+  const canvas = document.createElement('canvas')
+  canvas.width = targetWidth
+  canvas.height = targetHeight
+  const context = canvas.getContext('2d')
+  if (!context) {
+    throw new Error('Canvas 2D context not available.')
+  }
+
+  context.clearRect(0, 0, targetWidth, targetHeight)
+  context.drawImage(bitmap, 0, 0, targetWidth, targetHeight)
+  bitmap.close?.()
+
+  const rgba = context.getImageData(0, 0, targetWidth, targetHeight).data
+  const rgbBytes = new Uint8Array(targetWidth * targetHeight * 3)
+  for (let i = 0, j = 0; i < rgba.length; i += 4, j += 3) {
+    const alpha = (rgba[i + 3] ?? 0) / 255
+    rgbBytes[j] = Math.round((rgba[i] ?? 0) * alpha + 255 * (1 - alpha))
+    rgbBytes[j + 1] = Math.round((rgba[i + 1] ?? 0) * alpha + 255 * (1 - alpha))
+    rgbBytes[j + 2] = Math.round((rgba[i + 2] ?? 0) * alpha + 255 * (1 - alpha))
+  }
+
+  pdfLogoCache.value = { width: targetWidth, height: targetHeight, rgbBytes }
+  return pdfLogoCache.value
+}
+
+const buildActionPlanPdfLines = (plan: GeneratedResult, origin: string) => {
+  const resources = plan.resourceIds
+    .map(resourceId => helpResources.find(resource => resource.id === resourceId))
+    .filter((resource): resource is ResourceItem => Boolean(resource))
+
+  const documents = plan.documentIds
+    .map(documentId => documentLibrary.find(document => document.id === documentId))
+    .filter((document): document is DocumentItem => Boolean(document))
+
+  const lines = [
     plan.summary,
     '',
     'Today:',
@@ -1513,43 +1512,88 @@ const buildActionPlanDownloadContent = (plan: GeneratedResult) => {
     '',
     'Ongoing:',
     ...plan.ongoing.map(item => `- ${item}`)
-  ].join('\n')
-}
+  ]
 
-const actionPlanDownloadHref = computed(() => {
-  if (!result.value) {
-    return ''
+  if (resources.length) {
+    lines.push('', 'Top free resources:')
+    for (const resource of resources) {
+      lines.push(`- ${resource.title}: ${resource.url}`)
+      if (resource.phone) {
+        lines.push(`  Phone: ${resource.phone}`)
+      }
+    }
   }
 
-  return `data:text/plain;charset=utf-8,${encodeURIComponent(buildActionPlanDownloadContent(result.value))}`
+  if (documents.length) {
+    lines.push('', 'Recommended PDFs to download:')
+    for (const document of documents) {
+      const href = `${origin}${documentDownloadHref(document)}`
+      lines.push(`- ${document.title}: ${href}`)
+    }
+  }
+
+  lines.push(
+    '',
+    `Resources page: ${origin}/resources`,
+    '',
+    'Not medical advice. If you are in danger, call 911. For crisis support, call/text 988.'
+  )
+
+  return lines
+}
+
+const actionPlanPdfHref = ref('')
+let actionPlanObjectUrl: string | null = null
+
+const revokeActionPlanUrl = () => {
+  if (!actionPlanObjectUrl) {
+    return
+  }
+
+  URL.revokeObjectURL(actionPlanObjectUrl)
+  actionPlanObjectUrl = null
+}
+
+watch(result, async (plan) => {
+  revokeActionPlanUrl()
+  actionPlanPdfHref.value = ''
+
+  if (!plan) {
+    return
+  }
+
+  try {
+    const logo = await loadPdfLogo()
+    const origin = typeof window === 'undefined' ? '' : window.location.origin
+    const pdfBytes = createPdfBytes({
+      title: plan.routeTitle,
+      lines: buildActionPlanPdfLines(plan, origin),
+      logo
+    })
+    const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+    actionPlanObjectUrl = URL.createObjectURL(blob)
+    actionPlanPdfHref.value = actionPlanObjectUrl
+  } catch (error) {
+    console.error('Could not build action plan PDF.', error)
+  }
+}, { immediate: true })
+
+onBeforeUnmount(() => {
+  revokeActionPlanUrl()
 })
+
+const actionPlanDownloadHref = computed(() => actionPlanPdfHref.value)
 
 const actionPlanFilename = computed(() => {
   if (!result.value) {
-    return 'action-plan.txt'
+    return 'action-plan.pdf'
   }
 
-  return `${toSlug(result.value.routeTitle)}-action-plan.txt`
+  return `${toSlug(result.value.routeTitle)}-action-plan.pdf`
 })
 
-const buildDirectoryDownloadContent = () => {
-  return helpResources.map((resource) => {
-    const lines = [
-      `${resource.group} - ${resource.title}`,
-      `Who it helps: ${resource.whoItHelps}`,
-      `Link: ${resource.url} (${resource.urlLabel})`
-    ]
-
-    if (resource.phone) {
-      lines.push(`Phone: ${resource.phone}`)
-    }
-
-    return lines.join('\n')
-  }).join('\n\n')
-}
-
 const helpDirectoryDownloadHref = computed(() => {
-  return `data:text/plain;charset=utf-8,${encodeURIComponent(buildDirectoryDownloadContent())}`
+  return '/downloads/full-free-help-directory.pdf'
 })
 
 const cfQuickDocuments = computed(() => {
@@ -1597,42 +1641,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                       </p>
                     </header>
 
-                    <div
-                      v-if="currentQuestion.input === 'email'"
-                      class="state-input-wrap"
-                    >
-                      <input
-                        :value="answers.email"
-                        type="email"
-                        placeholder="Enter email (optional)"
-                        autocomplete="email"
-                        @input="setOptionalInputValue(($event.target as HTMLInputElement).value)"
-                      >
-
-                      <div class="state-actions">
-                        <button
-                          type="button"
-                          class="primary-btn"
-                          :disabled="isSubmittingEmail"
-                          @click="submitOptionalInputAndContinue"
-                        >
-                          Continue
-                        </button>
-                        <button
-                          type="button"
-                          class="ghost-btn"
-                          :disabled="isSubmittingEmail"
-                          @click="skipOptionalInput"
-                        >
-                          Skip
-                        </button>
-                      </div>
-                    </div>
-
-                    <div
-                      v-else
-                      class="options-grid"
-                    >
+                    <div class="options-grid">
                       <button
                         v-for="option in currentQuestionOptions"
                         :key="option.value"
@@ -1646,14 +1655,24 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   </div>
                 </Transition>
 
-                <button
-                  type="button"
-                  class="back-btn"
-                  :disabled="questionIndex === 0"
-                  @click="goBack"
-                >
-                  Back
-                </button>
+                <div class="wizard-nav">
+                  <button
+                    type="button"
+                    class="back-btn"
+                    :disabled="questionIndex === 0"
+                    @click="goBack"
+                  >
+                    Back
+                  </button>
+                  <button
+                    v-if="currentQuestion.optional"
+                    type="button"
+                    class="ghost-btn"
+                    @click="skipOptionalQuestion"
+                  >
+                    Skip
+                  </button>
+                </div>
               </article>
             </div>
 
@@ -1706,13 +1725,13 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                     <p class="resource-meta">
                       {{ compactCopy(topDocument.summary, 96) }}
                     </p>
-                    <a
-                      :href="documentDownloadHref(topDocument)"
-                      :download="topDocument.filename"
-                    >
-                      Download template <UIcon name="i-lucide-download" />
-                    </a>
-                  </template>
+	                    <a
+	                      :href="documentDownloadHref(topDocument)"
+	                      :download="topDocument.filename"
+	                    >
+	                      Download PDF <UIcon name="i-lucide-download" />
+	                    </a>
+	                  </template>
                   <p
                     v-else
                     class="resource-meta"
@@ -1722,7 +1741,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                 </article>
               </section>
 
-              <section class="result-plan-card result-panel result-panel--plan">
+	              <section class="result-plan-card result-panel result-panel--plan">
                 <p class="result-card-label">
                   <UIcon
                     name="i-lucide-list-checks"
@@ -1790,13 +1809,36 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                 >
                   Download full action plan <UIcon name="i-lucide-download" />
                 </a>
-              </section>
+	              </section>
 
-              <section class="result-resource-list-card result-panel result-panel--resources">
-                <p class="result-card-label">
-                  <UIcon
-                    name="i-lucide-link-2"
-                    class="result-label-icon"
+	              <section class="result-documents-card result-panel result-panel--documents">
+	                <p class="result-card-label">
+	                  <UIcon
+	                    name="i-lucide-file-down"
+	                    class="result-label-icon"
+	                  />
+	                  <span>Recommended PDFs</span>
+	                </p>
+	                <h2 class="result-resource-list-title">
+	                  Recommended PDFs
+	                </h2>
+	                <div class="inline-downloads">
+	                  <a
+	                    v-for="document in orderedResultDocuments.slice(0, 5)"
+	                    :key="document.id"
+	                    :href="documentDownloadHref(document)"
+	                    :download="document.filename"
+	                  >
+	                    <UIcon name="i-lucide-download" class="inline-icon" /> {{ document.title }}
+	                  </a>
+	                </div>
+	              </section>
+
+	              <section class="result-resource-list-card result-panel result-panel--resources">
+	                <p class="result-card-label">
+	                  <UIcon
+	                    name="i-lucide-link-2"
+	                    class="result-label-icon"
                   />
                   <span>All free resources</span>
                 </p>
@@ -1880,28 +1922,28 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
         <section
           id="help-now"
           class="help-now content-section section-help"
-        >
-          <h2 class="title-with-icon">
-            <UIcon
-              name="i-lucide-siren"
-              class="title-icon"
-            /> Help now
-          </h2>
-          <p>Use one of these first if you need immediate support.</p>
-          <div class="help-now-grid">
-            <figure class="section-photo section-photo--help section-photo--wide grid-photo-item">
-              <NuxtImg
-                src="/images/resources-emergency.jpg"
-                alt="A police car driving towards the camera"
-                loading="lazy"
-              />
-            </figure>
-            <a href="tel:911">
+	        >
+	          <h2 class="title-with-icon">
+	            <UIcon
+	              name="i-lucide-siren"
+	              class="title-icon"
+	            /> Help now
+	          </h2>
+	          <p>Start here if you need help right now. For emergencies call 911. For crisis support call/text 988. For local services (housing, food, rides) call 211.</p>
+	          <div class="help-now-grid">
+	            <figure class="section-photo section-photo--help section-photo--wide grid-photo-item">
+	              <NuxtImg
+	                src="/images/resources-emergency.jpg"
+	                alt="A police car with emergency lights"
+	                loading="lazy"
+	              />
+	            </figure>
+	            <a href="tel:911">
               <UIcon
                 name="i-lucide-siren"
                 class="link-icon"
-              /> Emergency: 911
-            </a>
+	              /> Emergency: Call 911
+	            </a>
             <a
               href="https://988lifeline.org"
               target="_blank"
@@ -1909,7 +1951,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             ><UIcon
               name="i-lucide-phone-call"
               class="link-icon"
-            /> Crisis support: 988</a>
+	            /> Crisis support: Call/text 988</a>
             <a
               href="https://www.211.org"
               target="_blank"
@@ -1917,36 +1959,36 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             ><UIcon
               name="i-lucide-map-pin"
               class="link-icon"
-            /> Local services: 211</a>
+	            /> Local services: 211 (housing, food, rides)</a>
             <a
               href="https://www.cff.org/support/get-help-cf-foundation-compass"
               target="_blank"
               rel="noopener"
-            >
-              <span>
+	            >
+	              <span>
                 <UIcon
                   name="i-lucide-heart-pulse"
                   class="link-icon"
-                /> CF help: CF Foundation Compass
-              </span>
-            </a>
-          </div>
-        </section>
+	                /> CF help: CF Foundation Compass (coverage + financial)
+	              </span>
+	            </a>
+	          </div>
+	        </section>
 
         <section
           id="cf-quick-guide"
           class="cf-spotlight content-section section-cf"
-        >
-          <h2 class="title-with-icon">
-            <UIcon
-              name="i-lucide-heart-pulse"
-              class="title-icon"
-            /> Cystic fibrosis quick guide
-          </h2>
-          <p class="section-subtitle">
-            Focus on support first, then download a guide for details.
-          </p>
-          <div class="spotlight-grid">
+	        >
+	          <h2 class="title-with-icon">
+	            <UIcon
+	              name="i-lucide-heart-pulse"
+	              class="title-icon"
+	            /> Cystic fibrosis (CF) quick guide
+	          </h2>
+	          <p class="section-subtitle">
+	            Start with Compass for navigation help, then download PDFs to track refills and prior authorizations.
+	          </p>
+	          <div class="spotlight-grid">
             <figure class="section-photo section-photo--cf section-photo--portrait grid-photo-item">
               <NuxtImg
                 src="/images/resources-cf.jpg"
@@ -1954,32 +1996,32 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                 loading="lazy"
               />
             </figure>
-            <article>
-              <h3>
-                Main pressure
-              </h3>
-              <ul>
-                <li>Specialty meds and frequent follow-up can raise monthly costs.</li>
-                <li>Care time can affect school or work stability.</li>
-              </ul>
-            </article>
+	            <article>
+	              <h3>
+	                Why it gets expensive
+	              </h3>
+	              <ul>
+	                <li>Specialty meds and frequent follow-up can drive high monthly out-of-pocket costs.</li>
+	                <li>Prior authorizations and specialty pharmacies can delay refills if renewals slip.</li>
+	              </ul>
+	            </article>
 
-            <article>
-              <h3>
-                Start now
-              </h3>
-              <ul>
-                <li>Call CF Foundation Compass for navigation support.</li>
-                <li>Track prior-auth and pharmacy renewal dates.</li>
-              </ul>
-            </article>
+	            <article>
+	              <h3>
+	                Fast next steps
+	              </h3>
+	              <ul>
+	                <li>Contact CF Foundation Compass for insurance and financial navigation.</li>
+	                <li>Write down prior authorization and pharmacy renewal dates (a simple calendar helps).</li>
+	              </ul>
+	            </article>
 
-            <article>
-              <h3>
-                Download guides
-              </h3>
-              <p>Use these if you want the full step-by-step checklist.</p>
-              <div class="inline-downloads">
+	            <article>
+	              <h3>
+	                Download PDFs
+	              </h3>
+	              <p>Use these checklists to track calls, renewals, and next steps.</p>
+	              <div class="inline-downloads">
                 <a
                   v-for="document in cfQuickDocuments"
                   :key="document.id"
@@ -1991,33 +2033,33 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                     class="link-icon"
                   /> {{ document.title }}
                 </a>
-              </div>
-              <a
-                v-if="cfCompassResource"
-                :href="cfCompassResource.url"
-                target="_blank"
-                rel="noopener"
-              ><UIcon
-                name="i-lucide-phone"
-                class="link-icon"
-              /> Call CF Foundation Compass</a>
-            </article>
-          </div>
-        </section>
+	              </div>
+	              <a
+	                v-if="cfCompassResource"
+	                :href="cfCompassResource.url"
+	                target="_blank"
+	                rel="noopener"
+	              ><UIcon
+	                name="i-lucide-arrow-up-right"
+	                class="link-icon"
+	              /> CF Foundation Compass (get help)</a>
+	            </article>
+	          </div>
+	        </section>
 
         <section
           id="conditions-section"
           class="conditions-section content-section section-conditions"
-        >
-          <h2 class="title-with-icon">
-            <UIcon
-              name="i-lucide-bar-chart-3"
-              class="title-icon"
-            /> Top Conditions people struggle with financially
-          </h2>
-          <p class="section-subtitle">
-            Keep this simple: main risk, next steps, then download a quick guide.
-          </p>
+	        >
+	          <h2 class="title-with-icon">
+	            <UIcon
+	              name="i-lucide-bar-chart-3"
+	              class="title-icon"
+	            /> Conditions that often create high costs
+	          </h2>
+	          <p class="section-subtitle">
+	            Skim the overview, then download a 1-page guide you can save or print.
+	          </p>
           <div class="conditions-grid">
             <figure class="section-photo section-photo--conditions section-photo--square grid-photo-item">
               <NuxtImg
@@ -2041,9 +2083,8 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   name="i-lucide-alert-circle"
                   class="inline-icon"
                 />
-                <span class="condition-impact-copy"><strong>Main cost trigger:</strong> {{ compactCopy(condition.triggers, 96) }}</span>
+                <span class="condition-impact-copy"><strong>Where costs spike:</strong> {{ compactCopy(condition.triggers, 96) }}</span>
               </p>
-
               <p class="condition-stat">
                 <UIcon
                   name="i-lucide-bar-chart-3"
@@ -2053,52 +2094,52 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               </p>
 
               <div class="condition-links">
-                <a
-                  :href="conditionGuideDownloadHref(condition)"
-                  :download="conditionGuideFilename(condition)"
-                >
+	                <a
+	                  :href="conditionGuideDownloadHref(condition)"
+	                  :download="conditionGuideFilename(condition)"
+	                >
                   <UIcon
                     name="i-lucide-file-down"
                     class="link-icon"
-                  /> Download quick guide
-                </a>
-                <a
-                  v-if="condition.sources[0]"
-                  :href="condition.sources[0].url"
-                  target="_blank"
-                  rel="noopener"
-                >
+	                  /> Download 1-page guide
+	                </a>
+	                <a
+	                  v-if="condition.sources[0]"
+	                  :href="condition.sources[0].url"
+	                  target="_blank"
+	                  rel="noopener"
+	                >
                   <UIcon
                     name="i-lucide-book-open"
                     class="link-icon"
-                  /> Source
-                </a>
-              </div>
-            </article>
-          </div>
-        </section>
+	                  /> Learn more
+	                </a>
+	              </div>
+	            </article>
+	          </div>
+	        </section>
 
         <section
           id="docs-library"
           class="docs-library content-section section-docs"
-        >
-          <h2 class="title-with-icon">
-            <UIcon
-              name="i-lucide-file-down"
-              class="title-icon"
-            /> Downloadable templates
-          </h2>
-          <p class="section-subtitle">
-            Filter quickly, then download only what you need.
-          </p>
-          <div class="filter-row">
-            <div>
-              <p class="filter-label">
+	        >
+	          <h2 class="title-with-icon">
+	            <UIcon
+	              name="i-lucide-file-down"
+	              class="title-icon"
+	            /> Downloadable PDFs (checklists + call scripts)
+	          </h2>
+	          <p class="section-subtitle">
+	            Download and use while you make calls. Your wizard answers are not stored.
+	          </p>
+	          <div class="filter-row">
+	            <div>
+	              <p class="filter-label">
                 <UIcon
                   name="i-lucide-tags"
                   class="inline-icon"
-                /> Topic tags
-              </p>
+	                /> Filter by topic
+	              </p>
               <div class="filter-chip-row">
                 <button
                   v-for="filter in topicFilters"
@@ -2148,42 +2189,42 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   class="inline-icon"
                 /> <span class="doc-row-copy">{{ compactCopy(document.summary, 92) }}</span>
               </p>
-              <a
-                :href="documentDownloadHref(document)"
-                :download="document.filename"
-              >
+	              <a
+	                :href="documentDownloadHref(document)"
+	                :download="document.filename"
+	              >
                 <UIcon
                   name="i-lucide-download"
                   class="link-icon"
-                /> Download template
-              </a>
-            </article>
-          </div>
-        </section>
+	                /> Download PDF
+	              </a>
+	            </article>
+	          </div>
+	        </section>
 
         <section
           id="help-directory"
           class="help-directory content-section section-directory"
-        >
-          <h2 class="title-with-icon">
-            <UIcon
-              name="i-lucide-layers-3"
-              class="title-icon"
-            /> Grouped by need
-          </h2>
-          <p class="section-subtitle">
-            Showing all links in each group.
-          </p>
-          <a
-            class="section-download-link"
-            :href="helpDirectoryDownloadHref"
-            download="full-free-help-directory.txt"
-          >
-            <UIcon
-              name="i-lucide-download"
-              class="link-icon"
-            /> Download full free-help directory
-          </a>
+	        >
+	          <h2 class="title-with-icon">
+	            <UIcon
+	              name="i-lucide-layers-3"
+	              class="title-icon"
+	            /> Free help directory
+	          </h2>
+	          <p class="section-subtitle">
+	            Previewing {{ directoryPreviewLimit }} links per group. Expand a group to see more, or download the full directory.
+	          </p>
+	          <a
+	            class="section-download-link"
+	            :href="helpDirectoryDownloadHref"
+	            download="full-free-help-directory.pdf"
+	          >
+	            <UIcon
+	              name="i-lucide-download"
+	              class="link-icon"
+	            /> Download full directory (PDF)
+	          </a>
 
           <div class="directory-grid">
             <article
@@ -2191,24 +2232,24 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               :key="group.group"
               class="directory-group"
             >
-              <h3>
+	              <h3>
                 <UIcon
                   name="i-lucide-folder-open"
                   class="title-icon"
-                /> {{ group.group }}
-              </h3>
-              <!-- <p class="group-count">
-                <UIcon
-                  name="i-lucide-list"
-                  class="inline-icon"
-                /> {{ group.items.length }} links
-              </p>
-              <p
-                v-if="group.items.length > directoryPreviewLimit"
-                class="group-more-hint"
-              >
-                Showing {{ directoryPreviewLimit }} of {{ group.items.length }} links.
-              </p> -->
+	                /> {{ group.group }}
+	              </h3>
+	              <p class="group-count">
+	                <UIcon
+	                  name="i-lucide-list"
+	                  class="inline-icon"
+	                /> {{ group.items.length }} links
+	              </p>
+	              <p
+	                v-if="group.items.length > directoryPreviewLimit"
+	                class="group-more-hint"
+	              >
+	                Showing {{ directoryPreviewLimit }} of {{ group.items.length }} links.
+	              </p>
               <ul>
                 <li
                   v-for="resource in visibleDirectoryResources(group)"
@@ -2263,11 +2304,11 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           </div>
         </section>
 
-        <section
-          id="faq"
-          class="faq-section content-section section-faq"
-        >
-          <h2 class="title-with-icon">
+	        <section
+	          id="faq"
+	          class="faq-section content-section section-faq"
+	        >
+		          <h2 class="title-with-icon">
             <UIcon
               name="i-lucide-help-circle"
               class="title-icon"
@@ -2287,18 +2328,64 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               </summary>
               <p>{{ item.answer }}</p>
             </details>
-          </div>
-        </section>
+	          </div>
+	        </section>
 
-        <section class="footer-lines content-section section-footer">
-          <a href="mailto:resources@billings.app?subject=Resource%20update">
-            <UIcon
-              name="i-lucide-mail"
-              class="inline-icon"
+	        <section
+	          id="updates"
+	          class="updates-section content-section section-updates"
+	        >
+	          <h2 class="title-with-icon">
+	            <UIcon
+	              name="i-lucide-mail"
+	              class="title-icon"
+	            /> Get updates (optional)
+		          </h2>
+		          <p>Occasional Billings updates. We only store your email (not your answers).</p>
+	          <form
+	            class="updates-form"
+	            @submit.prevent="submitUpdatesEmail"
+	          >
+	            <input
+	              v-model="updatesEmail"
+	              type="email"
+	              inputmode="email"
+	              autocomplete="email"
+	              placeholder="you@example.com"
+	              :disabled="updatesStatus === 'sending'"
+	              @input="resetUpdatesForm"
+	            >
+	            <button
+	              type="submit"
+	              class="primary-btn"
+	              :disabled="updatesStatus === 'sending'"
+	            >
+	              {{ updatesStatus === 'sending' ? 'Sending...' : 'Sign up' }}
+	            </button>
+	          </form>
+	          <p
+	            v-if="updatesStatus === 'success'"
+	            class="updates-status updates-status--success"
+	          >
+	            Thanks. You are on the list.
+	          </p>
+	          <p
+	            v-else-if="updatesStatus === 'error'"
+	            class="updates-status updates-status--error"
+	          >
+	            {{ updatesError }}
+	          </p>
+	        </section>
+
+		        <section class="footer-lines content-section section-footer">
+	          <a href="mailto:resources@billings.app?subject=Resource%20update">
+	            <UIcon
+	              name="i-lucide-mail"
+	              class="inline-icon"
             />
-            Report broken link / suggest resource
-          </a>
-        </section>
+	            Report a broken link or suggest a resource
+	          </a>
+	        </section>
       </div>
     </main>
   </div>
@@ -2708,6 +2795,43 @@ h1 {
   outline: none;
 }
 
+.updates-form {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.updates-form input {
+  flex: 1 1 16rem;
+  max-width: 26rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  font: inherit;
+  background: #ffffff;
+  color: var(--theme-color-accent-contrast);
+  font-size: var(--theme-font-size-form);
+}
+
+.updates-form input:focus {
+  outline: none;
+}
+
+.updates-status {
+  margin: var(--space-2) 0 0;
+  font-size: var(--theme-font-size-brand);
+}
+
+.updates-status--success {
+  color: var(--theme-color-muted);
+}
+
+.updates-status--error {
+  color: #b84a4a;
+}
+
 .state-actions {
   margin-top: var(--space-3);
   display: flex;
@@ -2736,8 +2860,14 @@ h1 {
   font-size: var(--theme-font-size-btn);
 }
 
-.back-btn {
+.wizard-nav {
   margin-top: auto;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.back-btn {
   width: fit-content;
 }
 
@@ -2860,6 +2990,20 @@ h1 {
 
 .result-panel--plan {
   background: var(--theme-color-muted);
+}
+
+.result-panel--documents {
+  border-color: white;
+  background: white;
+}
+
+.results-state .result-documents-card .inline-downloads a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: 0;
+  color: var(--result-link);
+  font-weight: 700;
 }
 
 .plan-columns {
