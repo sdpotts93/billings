@@ -526,7 +526,7 @@ onBeforeUnmount(() => {
 
 .page-shell {
   width: 100%;
-  max-width: 1220px;
+  max-width: var(--layout-max-width);
   margin-inline: auto;
   padding-inline: var(--space-6);
 }
@@ -584,7 +584,7 @@ onBeforeUnmount(() => {
   max-width: 29ch;
   font-family: var(--theme-font-title);
   font-size: var(--theme-font-size-hero-xl);
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .hero p {
@@ -630,7 +630,7 @@ onBeforeUnmount(() => {
   right: 0.62rem;
   font-family: var(--theme-font-title);
   font-size: var(--theme-font-size-quote-mark);
-  line-height: 1;
+  line-height: 1.1;
   color: var(--theme-color-text);
   pointer-events: none;
 }

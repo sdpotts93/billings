@@ -323,7 +323,7 @@ const goToResourcesWithNeed = (need: string) => {
 
 .shell {
   width: 100%;
-  max-width: 1220px;
+  max-width: var(--layout-max-width);
   margin-inline: auto;
   padding-inline: var(--space-6);
 }
@@ -366,7 +366,7 @@ const goToResourcesWithNeed = (need: string) => {
 }
 
 .hero {
-  padding-top: 4rem;
+  padding-top: 3rem;
 }
 
 .hero-header h1 {
@@ -374,7 +374,7 @@ const goToResourcesWithNeed = (need: string) => {
   margin: 0 auto;
   text-align: center;
   font-size: var(--theme-font-size-hero-xl);
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .hero-rail {
@@ -506,7 +506,7 @@ const goToResourcesWithNeed = (need: string) => {
 
 .social-proof p {
   margin: 0;
-  font-size: var(--theme-font-size-xs);
+  font-size: var(--theme-font-size-small);
   color: var(--theme-color-muted);
 }
 
@@ -586,7 +586,7 @@ const goToResourcesWithNeed = (need: string) => {
 .quote-logo {
   margin: 0;
   font-size: var(--theme-font-size-display-lg);
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: 0.009em;
 }
 
@@ -611,7 +611,7 @@ const goToResourcesWithNeed = (need: string) => {
 .stats h3 {
   margin: 0;
   font-size: var(--theme-font-size-display-xl);
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .stats p {
@@ -630,7 +630,7 @@ const goToResourcesWithNeed = (need: string) => {
   max-width: 38.75rem;
   margin: 0;
   font-size: var(--theme-font-size-heading-md);
-  line-height: 1;
+  line-height: 1.1;
 }
 
 :deep(.stories-btn) {
@@ -697,7 +697,7 @@ const goToResourcesWithNeed = (need: string) => {
 .impact-card h3 {
   margin: 8px 0 16px;
   font-size: var(--theme-font-size-display-md);
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .card-copy {
@@ -902,7 +902,7 @@ const goToResourcesWithNeed = (need: string) => {
   .quote-title {
     margin-inline: 0;
     font-size: 1.5rem;
-    line-height: 1.2;
+    line-height: 1.1;
     text-align: left;
     width: 100%;
   }
@@ -985,7 +985,7 @@ const goToResourcesWithNeed = (need: string) => {
     border-bottom: 1px solid var(--theme-color-muted-2);
     margin-inline: 0;
     font-size: 1.5rem;
-    line-height: 1.2;
+    line-height: 1.1;
     text-align: left;
     width: 100%;
   }

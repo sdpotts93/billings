@@ -28,6 +28,8 @@
   --space-24: 6rem;
   --space-30: 7.5rem;
 
+  --layout-max-width: 1220px;
+
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
@@ -50,18 +52,22 @@
   --theme-font-size-hero-lg: clamp(2rem, 5vw, 3.75rem);
   --theme-font-size-hero-mobile: clamp(2rem, 9vw, 2.75rem);
   --theme-font-size-heading-lg: clamp(2rem, 3.7vw, 3rem);
-  --theme-font-size-heading-md: clamp(1.75rem, 5vw, 2.5rem);
+  --theme-font-size-heading-md: clamp(1.95rem, 5vw, 2.5rem);
   --theme-font-size-display-md: clamp(1.5rem, 2.7vw, 2rem);
   --theme-font-size-display-lg: clamp(2.25rem, 4vw, 3rem);
   --theme-font-size-display-xl: clamp(2rem, 5vw, 3rem);
   --theme-font-size-card-title: clamp(1rem, 1.6vw, 24px);
   --theme-font-size-quote: clamp(1.125rem, 2.2vw, 1.5rem);
+  
+  --theme-font-size-card-title-big: clamp(2rem, 3vw, 2.5rem);
 
   --theme-font-size-form: 16px;
   --theme-font-size-brand: max(15px, 0.75rem);
+  --theme-font-size-brand-lg: max(16px, 0.875rem);
   --theme-font-size-caption: max(14px, 0.6rem);
   --theme-font-size-note: max(14px, 0.6rem);
   --theme-font-size-btn: max(14px, 0.6rem);
+  --theme-font-size-small: max(12px, 0.5rem);
 
   --theme-color-bg: #334549;
   --theme-color-surface: #e8e5de;
@@ -86,7 +92,7 @@
 
 :where(h1, h2, h3, h4, h5, h6) {
   font-family: var(--theme-font-title);
-  line-height: 1;
+  line-height: 1.1;
 }
 
 @theme static {

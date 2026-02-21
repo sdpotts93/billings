@@ -443,7 +443,7 @@ onBeforeUnmount(() => {
   max-width: 45rem;
   font-family: var(--theme-font-title);
   font-size: var(--theme-font-size-hero-lg);
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .intro-copy > p:not(.eyebrow) {
@@ -520,7 +520,7 @@ onBeforeUnmount(() => {
   max-width: min(78%, 10ch);
   font-family: var(--theme-font-title);
   font-size: clamp(2.1rem, 8.8vw, 7.2rem);
-  line-height: 1;
+  line-height: 1.1;
   text-transform: lowercase;
   text-wrap: balance;
   color: var(--theme-color-text);
@@ -553,6 +553,7 @@ onBeforeUnmount(() => {
   height: 100%;
   display: block;
   object-fit: cover;
+  object-position: 35%;
 }
 
 .hero-play {
@@ -606,7 +607,7 @@ onBeforeUnmount(() => {
     right: 0.75rem;
     max-width: min(84%, 12ch);
     font-size: 4rem;
-    line-height: 1;
+    line-height: 1.1;
     text-align: right;
   }
 

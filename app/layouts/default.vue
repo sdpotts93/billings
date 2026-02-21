@@ -364,7 +364,7 @@ watch(
 
 .layout-shell {
   width: 100%;
-  max-width: 1220px;
+  max-width: var(--layout-max-width);
   margin-inline: auto;
   padding-inline: var(--space-6);
 }
@@ -388,7 +388,7 @@ watch(
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
-  max-width: 1220px;
+  max-width: var(--layout-max-width);
 }
 
 .nav-brand-row {
@@ -404,7 +404,7 @@ watch(
   /* font-weight: 800; */
   letter-spacing: -0.02em;
   font-family: var(--theme-font-title);
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: 0.009em;
 }
 
@@ -659,6 +659,8 @@ watch(
 .footer-column a:hover,
 .footer-column a:focus-visible {
   color: #111;
+  text-decoration: underline;
+  text-underline-offset: 0.5em;
 }
 
 .footer-bottom {
@@ -674,7 +676,7 @@ watch(
   font-family: var(--theme-font-title);
   font-size: 9rem;
   font-weight: 900;
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: 0.009em;
   text-transform: uppercase;
 }

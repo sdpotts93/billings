@@ -501,7 +501,7 @@ onBeforeUnmount(() => {
 
 .shell {
   width: 100%;
-  max-width: 86.25rem;
+  max-width: var(--layout-max-width);
   margin-inline: auto;
   padding-inline: var(--space-5);
 }
@@ -525,7 +525,7 @@ onBeforeUnmount(() => {
   margin: 0.68rem auto 0;
   max-width: 61.25rem;
   font-size: clamp(1.8rem, 4.3vw, 3.75rem);
-  line-height: 1;
+  line-height: 1.1;
   font-family: var(--theme-font-title);
 }
 
@@ -584,7 +584,7 @@ onBeforeUnmount(() => {
   font-size: 2rem;
   font-weight: 800;
   letter-spacing: -0.025em;
-  line-height: 1;
+  line-height: 1.1;
   font-family: var(--theme-font-title);
 }
 
@@ -640,7 +640,7 @@ onBeforeUnmount(() => {
   max-width: 16ch;
   font-family: var(--theme-font-title);
   font-size: clamp(1.9rem, 3.5vw, 3.7rem);
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .hero-mission-image {
@@ -704,7 +704,7 @@ onBeforeUnmount(() => {
   margin: 0;
   font-family: var(--theme-font-title);
   font-size: 10rem;
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: -0.034em;
   color: var(--muted);
 }
@@ -1005,7 +1005,7 @@ onBeforeUnmount(() => {
     margin: 0;
     display: block;
     font-size: clamp(1.4rem, 6.2vw, 2.3rem);
-    line-height: 1;
+    line-height: 1.1;
     /* letter-spacing: -0.03em; */
     font-family: var(--theme-font-title);
   }
