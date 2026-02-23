@@ -40,6 +40,12 @@ const teamMembers: TeamMember[] = [
     imageAlt: 'Portrait of Grace Beedie'
   },
   {
+    name: 'Taylor Hickson',
+    role: 'Aubrey',
+    imageSrc: '/images/taylor.jpg',
+    imageAlt: 'Portrait of Taylor Hickson'
+  },
+  {
     name: 'James Jordan',
     role: '"Deputy Chief"',
     imageSrc: '/images/james.jpg',
