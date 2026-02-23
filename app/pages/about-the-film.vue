@@ -41,7 +41,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     name: 'Taylor Hickson',
-    role: 'Aubrey',
+    role: '"Aubrey"',
     imageSrc: '/images/taylor.jpg',
     imageAlt: 'Portrait of Taylor Hickson'
   },
