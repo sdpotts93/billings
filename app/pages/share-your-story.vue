@@ -669,7 +669,7 @@ onBeforeUnmount(() => {
   line-height: 1.25;
   margin: 0 0 .5rem;
   font-size: 1.2rem !important;
-  color: #4c4c4c;
+  color: #535353;
   letter-spacing: 0.01em;
 }
 
