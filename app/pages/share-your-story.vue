@@ -4,6 +4,7 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 type Story = {
   id: string
   author: string
+  title: string
   message: string
   initials: string
   photoUrl?: string
@@ -12,6 +13,7 @@ type Story = {
 type ApiStory = {
   id: string
   author: string
+  title: string
   message: string
   createdAt: string
   imageUrl?: string
@@ -54,6 +56,7 @@ const skeletonCardIds = Array.from({ length: 6 }, (_, index) => `story-skeleton-
 
 const formState = reactive({
   name: '',
+  title: '',
   message: ''
 })
 
@@ -66,6 +69,7 @@ const toClientStory = (story: ApiStory): Story => {
   return {
     id: story.id,
     author: story.author,
+    title: story.title,
     message: story.message,
     initials: getInitials(story.author),
     photoUrl: story.imageUrl
@@ -171,6 +175,7 @@ const clearSelectedPhotoPreview = () => {
 
 const resetForm = () => {
   formState.name = ''
+  formState.title = ''
   formState.message = ''
   selectedPhoto.value = null
 }
@@ -181,9 +186,10 @@ const submitStory = async () => {
   }
 
   const name = formState.name.trim()
+  const title = formState.title.trim()
   const message = formState.message.trim()
 
-  if (!name || !message) {
+  if (!name || !title || !message) {
     return
   }
 
@@ -200,6 +206,7 @@ const submitStory = async () => {
       method: 'POST',
       body: {
         name,
+        title,
         message,
         imageDataUrl
       }
@@ -327,6 +334,13 @@ onBeforeUnmount(() => {
                 :key="story.id"
                 class="story-card"
               >
+                <h3
+                  v-if="story.title"
+                  class="story-title"
+                >
+                  {{ story.title }}
+                </h3>
+
                 <p class="story-message">
                   {{ story.message }}
                 </p>
@@ -417,6 +431,15 @@ onBeforeUnmount(() => {
               type="text"
               placeholder="Your name"
               autocomplete="name"
+              required
+            >
+
+            <label for="story-title">Story Title</label>
+            <input
+              id="story-title"
+              v-model="formState.title"
+              type="text"
+              placeholder="Give your story a title"
               required
             >
 
@@ -639,6 +662,16 @@ onBeforeUnmount(() => {
   content: '';
 }
 
+.story-title {
+  margin: 0 0 0.4rem;
+  font-family: var(--theme-font-title);
+  font-size: var(--theme-font-size-brand);
+  font-weight: 760;
+  line-height: 1.25;
+  color: var(--theme-color-text);
+  padding-right: 1.2rem;
+}
+
 .story-message {
   margin: 0;
   color: var(--theme-color-accent-contrast);
@@ -804,7 +837,7 @@ onBeforeUnmount(() => {
 
 .share-form textarea {
   resize: vertical;
-  max-height: 6rem;
+  max-height: 4rem;
 }
 
 .upload-label {

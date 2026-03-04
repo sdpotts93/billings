@@ -81,6 +81,7 @@ type ConditionCard = {
     ongoing: string
   }
   stats: string[]
+  statRefs: number[]
   sources: Array<{
     label: string
     url: string
@@ -826,6 +827,7 @@ const conditionCards: ConditionCard[] = [
       'Heart failure family mean annual out-of-pocket: $4,423; 14% high burden, 5% catastrophic burden.',
       'Nearly 50% of people with ASCVD and diabetes reported medical bill hardship.'
     ],
+    statRefs: [1],
     sources: [
       { label: 'AHA journals', url: 'https://www.ahajournals.org' },
       { label: 'CDC heart disease', url: 'https://www.cdc.gov/heartdisease' }
@@ -850,6 +852,7 @@ const conditionCards: ConditionCard[] = [
       'Cancer survivors had mean annual out-of-pocket spending up to $5,000+.',
       'U.S. out-of-pocket cancer treatment spending reached $5.6B in 2018.'
     ],
+    statRefs: [2],
     sources: [
       { label: 'NCI financial toxicity', url: 'https://www.cancer.gov/about-cancer/managing-care/track-care-costs/financial-toxicity-pdq' },
       { label: 'American Cancer Society', url: 'https://www.cancer.org/treatment/finding-and-paying-for-treatment.html' }
@@ -874,6 +877,7 @@ const conditionCards: ConditionCard[] = [
       'Estimated U.S. diagnosed diabetes cost in 2022: $412.9B.',
       'Average annual medical expenditures per person: $19,736.'
     ],
+    statRefs: [3],
     sources: [
       { label: 'American Diabetes Association', url: 'https://diabetes.org/about-diabetes/statistics/cost-diabetes' },
       { label: 'CDC diabetes', url: 'https://www.cdc.gov/diabetes' }
@@ -898,6 +902,7 @@ const conditionCards: ConditionCard[] = [
       'MEPS 2018–2021: 2.4% of psychiatric outpatients had high OOP burden.',
       'Among those below poverty level, high OOP burden rose to 12.8%.'
     ],
+    statRefs: [5],
     sources: [
       { label: 'NIMH', url: 'https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health' },
       { label: 'NAMI', url: 'https://www.nami.org/Your-Journey/Individuals-with-Mental-Illness/Finding-Treatment' }
@@ -922,6 +927,7 @@ const conditionCards: ConditionCard[] = [
       'Non-dialysis CKD mean annual out-of-pocket: $1,439 in MEPS analysis.',
       'Medicare ESRD costs reached $55.3B in 2023.'
     ],
+    statRefs: [4],
     sources: [
       { label: 'National Kidney Foundation', url: 'https://www.kidney.org' },
       { label: 'USRDS', url: 'https://usrds-adr.niddk.nih.gov' }
@@ -946,6 +952,7 @@ const conditionCards: ConditionCard[] = [
       'Mean annual OOP spending estimated at $325 in referenced COPD analysis.',
       'COPD-specific national cost in that analysis: $24.0B.'
     ],
+    statRefs: [6],
     sources: [
       { label: 'COPD Foundation', url: 'https://www.copdfoundation.org' },
       { label: 'CDC COPD', url: 'https://www.cdc.gov/copd' }
@@ -970,6 +977,7 @@ const conditionCards: ConditionCard[] = [
       'Medicare Part D RA biologics projected annual OOP mean: $4,613 (2019).',
       'Arthritis-attributable medical spending plus earnings losses: $303.5B (2013).'
     ],
+    statRefs: [7],
     sources: [
       { label: 'Arthritis Foundation', url: 'https://www.arthritis.org' },
       { label: 'CDC arthritis', url: 'https://www.cdc.gov/arthritis' }
@@ -994,11 +1002,23 @@ const conditionCards: ConditionCard[] = [
       'Projected 2025 dementia health + long-term care costs: $384B, with $97B OOP.',
       'Caregivers average annual OOP around $7,200, higher for dementia caregivers.'
     ],
+    statRefs: [8],
     sources: [
       { label: 'Alzheimer’s Association', url: 'https://www.alz.org' },
       { label: 'NIH Alzheimer’s disease', url: 'https://www.nia.nih.gov/health/alzheimers' }
     ]
   }
+]
+
+const statReferences: Array<{ id: number, label: string, url: string }> = [
+  { id: 1, label: 'Urbanski D et al. Out-of-Pocket Expenditures and Financial Hardship Among Families of Children and Adults With Heart Failure. J Am Heart Assoc. 2022.', url: 'https://www.ahajournals.org/doi/10.1161/JAHA.121.022164' },
+  { id: 2, label: 'NCI. Financial Toxicity and Cancer Treatment (PDQ) \u2013 Health Professional Version.', url: 'https://www.cancer.gov/about-cancer/managing-care/track-care-costs/financial-toxicity-hp-pdq' },
+  { id: 3, label: 'Parker ED et al. Economic Costs of Diabetes in the U.S. in 2022. Diabetes Care. 2024;47(1):26\u201343.', url: 'https://diabetesjournals.org/care/article/47/1/26/153797/Economic-Costs-of-Diabetes-in-the-U-S-in-2022' },
+  { id: 4, label: 'Honeycutt AA et al. Medical Costs of CKD in the Medicare Population. J Am Soc Nephrol. 2013;24(9):1478\u20131483.', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5217199' },
+  { id: 5, label: 'Kim Y et al. Out-of-Pocket Burden Among Psychiatric Outpatients in the United States. PMC. 2025.', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11786981/' },
+  { id: 6, label: 'Sullivan J et al. National Costs of COPD in the United States. Chest. 2023.', url: 'https://pubmed.ncbi.nlm.nih.gov/37270431/' },
+  { id: 7, label: 'Yazdany J et al. Out-of-Pocket Costs for Rheumatoid Arthritis Biologics Under Medicare Part D. JAMA Netw Open. 2020;3(1):e1920927.', url: 'https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2764813' },
+  { id: 8, label: 'Alzheimer\u2019s Association. 2025 Alzheimer\u2019s Disease Facts and Figures.', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12040760/' }
 ]
 
 const faqItems: FaqItem[] = [
@@ -2060,7 +2080,14 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
                   name="i-lucide-bar-chart-3"
                   class="inline-icon"
                 />
-                <span class="condition-stat-copy"><strong>Key stat:</strong> {{ compactCopy(condition.stats[0] ?? '', 98) }}</span>
+                <span class="condition-stat-copy">
+                  <strong>Key stat:</strong> {{ compactCopy(condition.stats[0] ?? '', 98) }}
+                  <a
+                    v-if="condition.statRefs[0]"
+                    :href="'#ref-' + condition.statRefs[0]"
+                    class="stat-ref"
+                  ><sup>[{{ condition.statRefs[0] }}]</sup></a>
+                </span>
               </p>
 
               <div class="condition-links">
@@ -2293,6 +2320,29 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           </div>
         </section>
 
+        <section
+          id="references"
+          class="content-section section-references"
+        >
+          <h2 class="title-with-icon">
+            References
+          </h2>
+          <ol class="references-list">
+            <li
+              v-for="source in statReferences"
+              :id="'ref-' + source.id"
+              :key="source.id"
+            >
+              {{ source.label }}
+              <a
+                :href="source.url"
+                target="_blank"
+                rel="noopener"
+              >{{ source.url }}</a>
+            </li>
+          </ol>
+        </section>
+
         <section class="footer-lines content-section section-footer">
           <a href="mailto:resources@billings.app?subject=Resource%20update">
             <UIcon
@@ -2457,6 +2507,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
 .section-docs { --section-rule: #c5862e;padding-top: var(--space-24); }
 .section-directory { --section-rule: #c5862e;padding-top: var(--space-24); }
 .section-faq { --section-rule: #c5862e;padding-top: var(--space-24); }
+.section-references { --section-rule: #c5862e;padding-top: var(--space-24); }
 .section-footer { --section-rule: #c5862e;padding-top: var(--space-24); }
 
 .wizard-state {
@@ -2508,6 +2559,9 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   gap: var(--space-2);
   line-height: 1 !important;
   margin-top: -0.5rem;
+  color: var(--theme-color-muted);
+  margin-bottom: 1rem !important;
+  font-size: 1.5rem !important;
 }
 
 .title-icon {
@@ -3491,6 +3545,42 @@ h1 {
   color: var(--theme-color-accent-contrast);
   line-height: 1.5;
   font-size: var(--theme-font-size-brand);
+}
+
+.stat-ref {
+  text-decoration: none;
+  color: #8398c2;
+  font-size: 0.75em;
+  margin-left: 0.1em;
+  vertical-align: super;
+  line-height: 0;
+}
+
+.stat-ref:hover {
+  text-decoration: underline;
+}
+
+.references-list {
+  list-style: decimal;
+  padding-left: 1.6em;
+  margin: 0;
+  font-size: var(--theme-font-size-brand);
+  color: var(--theme-color-muted);
+  line-height: 1.65;
+}
+
+.references-list li {
+  margin-bottom: 0.4rem;
+}
+
+.references-list li a {
+  color: #8398c2;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.references-list li a:hover {
+  text-decoration: underline;
 }
 
 .footer-lines {

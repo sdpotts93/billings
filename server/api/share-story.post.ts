@@ -4,6 +4,7 @@ import { buildStoryImageUrl, getStoryImagesBucket, parseImageDataUrl } from '../
 
 type ShareStoryRequestBody = {
   name?: unknown
+  title?: unknown
   message?: unknown
   imageDataUrl?: unknown
 }
@@ -20,6 +21,7 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody<ShareStoryRequestBody>(event)
   const author = typeof body?.name === 'string' ? body.name.trim() : ''
+  const title = typeof body?.title === 'string' ? body.title.trim() : ''
   const message = typeof body?.message === 'string' ? body.message.trim() : ''
   const imageDataUrl = typeof body?.imageDataUrl === 'string' ? body.imageDataUrl : ''
 
@@ -27,6 +29,13 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       statusMessage: 'Name must be between 2 and 80 characters.'
+    })
+  }
+
+  if (title.length < 2 || title.length > 120) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Title must be between 2 and 120 characters.'
     })
   }
 
@@ -40,6 +49,7 @@ export default defineEventHandler(async (event) => {
   const story = {
     id: crypto.randomUUID(),
     author,
+    title,
     message,
     createdAt: new Date().toISOString()
   } as const

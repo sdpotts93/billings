@@ -4,6 +4,7 @@ import type { H3Event } from 'h3'
 export type ApprovedStory = {
   id: string
   author: string
+  title: string
   message: string
   createdAt: string
   imageKey?: string
@@ -39,6 +40,7 @@ const isApprovedStory = (value: unknown): value is ApprovedStory => {
   return (
     typeof maybeStory.id === 'string'
     && typeof maybeStory.author === 'string'
+    && (typeof maybeStory.title === 'undefined' || typeof maybeStory.title === 'string')
     && typeof maybeStory.message === 'string'
     && typeof maybeStory.createdAt === 'string'
     && (typeof maybeStory.imageKey === 'undefined' || typeof maybeStory.imageKey === 'string')

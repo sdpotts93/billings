@@ -118,7 +118,14 @@ const goToResourcesWithNeed = (need: string) => {
     <main>
       <section class="hero">
         <div class="hero-header shell">
-          <h1>Real stories about navigating U.S. healthcare, with practical help you can use now.</h1>
+          <h1>
+            Millions of Americans Are Skipping Care - Because It Could Bankrupt Them
+          </h1>
+          <p>
+            The Brutal truth about the US healthcare is that millions of people are
+            gambling with their lives, skipping doctor visits, delaying critical
+            treatments, or rationing meds because the bills could bankrupt them.
+          </p>
         </div>
 
         <div class="hero-rail shell">
@@ -185,7 +192,7 @@ const goToResourcesWithNeed = (need: string) => {
 
       <section class="social-proof shell">
         <p>
-          Built to unite people affected by the U.S. healthcare system and share resources for patients and caregivers.
+          Lets Unite and share resources!  For patients, caregivers and anyone who needs assistance.
         </p>
       </section>
 
@@ -193,6 +200,13 @@ const goToResourcesWithNeed = (need: string) => {
         <h2 class="quote-title">
           36% of adults said they skipped or postponed getting the health care they needed because of the cost.
         </h2>
+        <a
+          class="quote-link"
+          href="https://files.kff.org/attachment/kff-topline-health-tracking-poll-june-2025.pdf"
+          target="_blank"
+        >
+          KFF Health Tracking Poll
+        </a>
         <article class="quote-card">
           <div class="quote-left">
             <p class="quote">
@@ -308,6 +322,15 @@ const goToResourcesWithNeed = (need: string) => {
 </template>
 
 <style scoped>
+.quote-link {
+  margin-inline: auto;
+  display: block;
+  text-align: center;
+  font-size: var(--text-xs);
+  margin-bottom: var(--space-8);
+  color: #959595;
+}
+
 .home-page {
   --lane-gap: var(--space-3);
   width: 100%;
@@ -375,6 +398,14 @@ const goToResourcesWithNeed = (need: string) => {
   text-align: center;
   font-size: var(--theme-font-size-hero-xl);
   line-height: 1.1;
+}
+
+.hero-header p {
+  color: var(--theme-color-muted);
+  text-align: center;
+  max-width: 80ch;
+  margin-inline: auto;
+  margin-top: 1.5rem;
 }
 
 .hero-rail {
@@ -496,7 +527,7 @@ const goToResourcesWithNeed = (need: string) => {
   line-height: 1.4;
   width: 75%;
   margin: 0 auto;
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-4);
   letter-spacing: 0;
 }
 .social-proof {
@@ -870,6 +901,10 @@ const goToResourcesWithNeed = (need: string) => {
 @media screen and (max-width: 991px) {
   .shell {
     padding-inline: var(--space-5);
+  }
+
+  .quote-link {
+    text-align: left;
   }
 
   .nav-links {
