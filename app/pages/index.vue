@@ -191,7 +191,7 @@ const goToResourcesWithNeed = (need: string) => {
 
       <section class="testimonial shell">
         <h2 class="quote-title">
-          Around 7.3% U.S. adults did not get needed medical care in the past year because of cost.
+          36% of adults said they skipped or postponed getting the health care they needed because of the cost.
         </h2>
         <article class="quote-card">
           <div class="quote-left">
@@ -199,7 +199,7 @@ const goToResourcesWithNeed = (need: string) => {
               "My real hope for this film is that it inspires people to start using their voices for good and really fight for those who can't fight for themselves."
             </p>
             <p class="meta">
-              Quote from Alexander Ludwig
+              - Alexander Ludwig
             </p>
           </div>
           <div class="quote-foot">

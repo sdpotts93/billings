@@ -11,7 +11,7 @@ type TeamMember = {
 }
 
 const heroMissionImageSrc = '/images/why.jpg'
-const uninsuredPeopleTotal = 27_200_000
+const uninsuredPeopleTotal = 27_100_000
 
 const teamMembers: TeamMember[] = [
   {
@@ -410,7 +410,7 @@ onBeforeUnmount(() => {
                 people in the U.S. were uninsured in 2024
               </p>
               <p class="hero-metric-source">
-                CDC / NHIS, 2024
+                U.S. Census Bureau
               </p>
             </article>
           </div>

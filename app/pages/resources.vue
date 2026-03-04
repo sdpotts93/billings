@@ -847,7 +847,7 @@ const conditionCards: ConditionCard[] = [
       ongoing: 'Track EOBs and denials at each treatment phase and recheck coverage.'
     },
     stats: [
-      'Insured patients can face a median $500/month out-of-pocket burden.',
+      'Cancer survivors had mean annual out-of-pocket spending up to $5,000+.',
       'U.S. out-of-pocket cancer treatment spending reached $5.6B in 2018.'
     ],
     sources: [

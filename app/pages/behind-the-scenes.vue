@@ -584,6 +584,7 @@ onBeforeUnmount(() => {
     calc(-50% + var(--play-offset-y))
   );
   transition: transform 170ms cubic-bezier(0.2, 0.75, 0.2, 1), background-color 170ms ease;
+  display: none;
 }
 
 .hero-play :deep(.iconify) {

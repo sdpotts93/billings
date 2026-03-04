@@ -128,3 +128,8 @@ p {
 :where(button, [type='button'], [type='submit'], [type='reset']) {
   line-height: 1.5;
 }
+
+.source-link {
+  font-size: var(--text-xs);
+  text-decoration: underline;
+}
