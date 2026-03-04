@@ -663,13 +663,14 @@ onBeforeUnmount(() => {
 }
 
 .story-title {
-  margin: 0 0 0.4rem;
-  font-family: var(--theme-font-title);
-  font-size: var(--theme-font-size-brand);
-  font-weight: 760;
-  line-height: 1.25;
   color: var(--theme-color-text);
-  padding-right: 1.2rem;
+  font-family: var(--theme-font-title);
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0 0 .5rem;
+  font-size: 1.2rem !important;
+  color: #4c4c4c;
+  letter-spacing: 0.01em;
 }
 
 .story-message {
