@@ -1873,13 +1873,15 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
             v-if="!result"
             class="hero-media"
           >
+            <div class="hero-media__overlay" />
             <p class="hero-media-title">
               Explore our<br>resources
             </p>
             <NuxtImg
-              src="/images/form-alter.jpg"
+              src="/images/official/bts-3.jpg"
               alt="A woman grabbing a medical device"
               loading="lazy"
+              width="700"
             />
           </figure>
         </div>
@@ -1958,9 +1960,10 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
           <div class="spotlight-grid">
             <figure class="section-photo section-photo--cf section-photo--portrait grid-photo-item">
               <NuxtImg
-                src="/images/resources-cf.jpg"
+                src="/images/official/about-medicine-2.jpg"
                 alt="A caregiver helping a patient with Cystic Fibrosis"
                 loading="lazy"
+                width="600"
               />
             </figure>
             <article>
@@ -2128,9 +2131,10 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
               class="section-photo section-photo--docs section-photo--landscape grid-photo-item"
             >
               <NuxtImg
-                src="/images/resources-paperwork.jpg"
+                src="/images/official/about-medicine.jpg"
                 alt="A man observes medical records and medicine on a desk"
                 loading="lazy"
+                width="400"
               />
             </figure>
             <article
@@ -2376,6 +2380,15 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   box-shadow: 1.5rem 1.5rem 0 var(--theme-color-muted);
 }
 
+.hero-media__overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(1deg, #000000 0%, #00000000 100%);
+}
+
 .hero-media-title {
   position: absolute;
   bottom: clamp(0.9rem, 2.6vw, 1.7rem);
@@ -2389,7 +2402,7 @@ const cfCompassResource = helpResources.find(resource => resource.id === 'cf-com
   text-transform: lowercase;
   text-wrap: balance;
   text-align: right;
-  color: var(--theme-color-muted);
+  color: var(--theme-color);
   text-shadow: 0 0.125rem 1.125rem rgba(18, 25, 34, 0.45);
   pointer-events: none;
 }

@@ -3,7 +3,7 @@ import { Flip } from 'gsap/Flip'
 import { gsap } from 'gsap'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
-const heroImageSrc = '/images/behind-the-scenes.jpg'
+const heroImageSrc = '/images/official/bts-6.jpg'
 const heroVideoHref = 'https://example.com'
 const maxPullOffset = 12
 const enableStudioGridAnimation = false
@@ -37,37 +37,37 @@ type StudioMove = {
 const studioTiles: StudioTile[] = [
   {
     id: 'bts-1',
-    src: '/images/bts_1.jpg',
+    src: '/images/official/bts-2.jpg',
     alt: 'Behind-the-scenes moment from the Billings production'
   },
   {
     id: 'bts-2',
-    src: '/images/bts_2.jpg',
+    src: '/images/official/bts-4.jpg',
     alt: 'Crew coordinating on set during filming'
   },
   {
     id: 'bts-3',
-    src: '/images/bts_3.jpg',
+    src: '/images/official/bts-7.jpeg',
     alt: 'Cast and crew preparing a scene'
   },
   {
     id: 'bts-4',
-    src: '/images/bts_4.jpg',
+    src: '/images/official/bts-8.jpeg',
     alt: 'Production team reviewing footage'
   },
   {
     id: 'bts-5',
-    src: '/images/bts_5.jpg',
+    src: '/images/official/bts-9.jpeg',
     alt: 'On-set collaboration during the Billings shoot'
   },
   {
     id: 'bts-6',
-    src: '/images/bts_6.jpg',
+    src: '/images/official/bts-1.jpg',
     alt: 'Filmmakers working through a setup between takes'
   },
   {
     id: 'bts-7',
-    src: '/images/bts_7.jpg',
+    src: '/images/official/bts-3.jpg',
     alt: 'Behind-the-scenes portrait from production'
   }
 ]
@@ -339,6 +339,8 @@ onBeforeUnmount(() => {
             :src="heroImageSrc"
             alt="Behind-the-scenes still"
             loading="eager"
+            width="1412"
+            height="574"
             decoding="async"
           />
 
@@ -381,6 +383,8 @@ onBeforeUnmount(() => {
             <NuxtImg
               :src="tile.src"
               :alt="tile.alt"
+              width="230"
+              height="230"
               loading="lazy"
               decoding="async"
             />
