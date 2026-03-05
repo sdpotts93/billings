@@ -3,7 +3,8 @@
 const isDev = process.env.NODE_ENV !== 'production'
 
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/fonts', '@nuxt/ui', '@nuxt/image'],
+
+  modules: ['@nuxt/eslint', '@nuxt/fonts', '@nuxt/ui', '@nuxt/image', '@nuxtjs/robots', '@nuxtjs/sitemap'],
 
   devtools: {
     enabled: true
@@ -18,9 +19,7 @@ export default defineNuxtConfig({
       },
       meta: [
         { name: 'format-detection', content: 'telephone=no' },
-        { name: 'theme-color', content: '#f8f5ee' },
-        { name: 'robots', content: 'noindex,nofollow,noarchive' },
-        { name: 'googlebot', content: 'noindex,nofollow,noarchive' }
+        { name: 'theme-color', content: '#f8f5ee' }
       ],
       link: [
         { rel: 'icon', href: '/favicon.ico' }
@@ -29,6 +28,10 @@ export default defineNuxtConfig({
   },
 
   css: ['~/assets/css/main.css'],
+
+  site: {
+    url: 'https://billingsforamerica.com'
+  },
 
   ui: {
     experimental: {
@@ -51,7 +54,6 @@ export default defineNuxtConfig({
     '/privacy-policy': { prerender: true },
     '/privacy-policy/': { prerender: true }
   },
-
   compatibilityDate: '2025-01-15',
 
   nitro: {
@@ -90,6 +92,7 @@ export default defineNuxtConfig({
       }
     ]
   },
+
   image: {
     provider: isDev ? 'ipx' : 'ipxStatic',
     format: ['webp'],
